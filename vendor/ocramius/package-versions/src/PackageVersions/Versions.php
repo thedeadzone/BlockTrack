@@ -102,7 +102,7 @@ final class Versions
   'symfony/stopwatch' => 'v3.4.9@eb17cfa072cab26537ac37e9c4ece6c0361369af',
   'symfony/var-dumper' => 'v3.4.9@0e6545672d8c9ce70dd472adc2f8b03155a46f73',
   'symfony/web-profiler-bundle' => 'v3.4.9@226a66ffa9afb1aaffa1ef4e75028185e2f0283a',
-  '__root__' => 'No version set (parsed as 1.0.0)@',
+  '__root__' => 'dev-master@0ec84f92495ac2f05bf70894390f722a46a06adb',
 );
 
     private function __construct()

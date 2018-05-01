@@ -1,4 +1,3 @@
-
 .idea/blocktrack.p.iml
 .idea/copyright/profiles_settings.xml
 .idea/misc.xml
@@ -6,3 +5,4 @@
 .idea/workspace.xml
 .idea/symfony2.xml
 .idea/blade.xml
+var/
