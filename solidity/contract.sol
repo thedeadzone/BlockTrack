@@ -48,13 +48,6 @@ library SafeMath {
 }
 
 /**
- * Here comes text explaining whatever I'm doing in this contract
- */
-contract TrackAndTrace {
-  
-}
-
-/**
  * @title Ownable
  * @dev The Ownable contract has an owner address, and provides basic authorization control
  * functions, this simplifies the implementation of "user permissions".
@@ -115,37 +108,11 @@ contract ERC721 {
     function supportsInterface(bytes4 _interfaceID) external view returns (bool);
 }
 
-
-/// @title Interface for contracts conforming to ERC-721: Non-Fungible Tokens
-/// @author Dieter Shirley <dete@axiomzen.co> (https://github.com/dete)
-contract ERC721 {
-    // Required methods
-    function totalSupply() public view returns (uint256 total);
-    function balanceOf(address _owner) public view returns (uint256 balance);
-    function ownerOf(uint256 _tokenId) external view returns (address owner);
-    function approve(address _to, uint256 _tokenId) external;
-    function transfer(address _to, uint256 _tokenId) external;
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    // Events
-    event Transfer(address from, address to, uint256 tokenId);
-    event Approval(address owner, address approved, uint256 tokenId);
-
-    // Optional
-    // function name() public view returns (string name);
-    // function symbol() public view returns (string symbol);
-    // function tokensOfOwner(address _owner) external view returns (uint256[] tokenIds);
-    // function tokenMetadata(uint256 _tokenId, string _preferredTransport) public view returns (string infoUrl);
-
-    // ERC-165 Compatibility (https://github.com/ethereum/EIPs/issues/165)
-    function supportsInterface(bytes4 _interfaceID) external view returns (bool);
-}
-
 contract MyNonFungibleToken is ERC721 {
   /*** CONSTANTS ***/
 
-  string public constant name = "MyNonFungibleToken";
-  string public constant symbol = "MNFT";
+  string public constant name = "BlockTrack";
+  string public constant symbol = "BT";
 
   bytes4 constant InterfaceID_ERC165 =
     bytes4(keccak256('supportsInterface(bytes4)'));
@@ -167,6 +134,8 @@ contract MyNonFungibleToken is ERC721 {
   struct Token {
     address mintedBy;
     uint64 mintedAt;
+    uint64 company;
+    address receiver;
   }
 
 
@@ -175,15 +144,18 @@ contract MyNonFungibleToken is ERC721 {
   // Array containing all the structs for all tokens in existince, id of the struct is the index in the array.
   Token[] tokens;
 
+  // Array containing all the verified addresses for parcel receiving.
+  address[] verifiedAddresses;
+
   // Mapping of all the 
   mapping (uint256 => address) public tokenIndexToOwner;
   mapping (address => uint256) ownershipTokenCount;
   mapping (uint256 => address) public tokenIndexToApproved;
 
-
   /*** EVENTS ***/
 
   event Mint(address owner, uint256 tokenId);
+  event handOff(address owner, uint256 tokenId, address receiver, uint64 location)
 
 
   /*** INTERNAL FUNCTIONS ***/
@@ -257,6 +229,9 @@ contract MyNonFungibleToken is ERC721 {
     require(_to != address(0));
     require(_to != address(this));
     require(_owns(msg.sender, _tokenId));
+
+    //require(_verified(_to))
+    // Hier moet checken of het receiver address verified is.
 
     _transfer(msg.sender, _to, _tokenId);
   }
