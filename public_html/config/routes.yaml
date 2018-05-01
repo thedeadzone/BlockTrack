@@ -1,3 +1,11 @@
 #index:
 #    path: /
-#    defaults: { _controller: 'App\Controller\DefaultController::index' }
+#    defaults: { _controller: 'App\Controller\HomeController::index' }
+#
+#customer:
+#    path: /customer
+#    defaults: { _controller: 'App\Controller\CustomerController::index' }
+
+#delivery:
+#    path: /delivery
+#    defaults: { _controller: 'App\Controller\DeliveryController::deliveryAction' }
