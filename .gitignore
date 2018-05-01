@@ -8,3 +8,4 @@
 var/
 var/log/dev.log
 vendor/
+node_modules/
