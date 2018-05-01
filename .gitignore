@@ -6,3 +6,4 @@
 .idea/symfony2.xml
 .idea/blade.xml
 var/
+var/log/dev.log
