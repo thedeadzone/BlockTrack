@@ -1,7 +1,9 @@
 <?php
 namespace App\Controller;
 
-class HomeController
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+class HomeController extends AbstractController
 {
 
 }
