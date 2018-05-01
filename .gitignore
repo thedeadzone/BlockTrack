@@ -7,3 +7,4 @@
 .idea/blade.xml
 var/
 var/log/dev.log
+vendor/
