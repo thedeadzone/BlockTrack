@@ -172,8 +172,10 @@ contract MyNonFungibleToken is ERC721 {
 
   /*** STORAGE ***/
 
+  // Array containing all the structs for all tokens in existince, id of the struct is the index in the array.
   Token[] tokens;
 
+  // Mapping of all the 
   mapping (uint256 => address) public tokenIndexToOwner;
   mapping (address => uint256) ownershipTokenCount;
   mapping (uint256 => address) public tokenIndexToApproved;
@@ -181,7 +183,6 @@ contract MyNonFungibleToken is ERC721 {
 
   /*** EVENTS ***/
 
-  // This event contains the information regarding initial parcel creation
   event Mint(address owner, uint256 tokenId);
 
 
