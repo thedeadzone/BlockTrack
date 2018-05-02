@@ -72,34 +72,6 @@ library AddressUtils {
 
 }
 
-/**
- * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Enumerable is ERC721Basic {
-  function totalSupply() public view returns (uint256);
-  function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId);
-  function tokenByIndex(uint256 _index) public view returns (uint256);
-}
-
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Metadata is ERC721Basic {
-  function name() public view returns (string _name);
-  function symbol() public view returns (string _symbol);
-  function tokenURI(uint256 _tokenId) public view returns (string);
-}
-
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, full implementation interface
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {
-}
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic interface
@@ -130,6 +102,64 @@ contract ERC721Basic {
   )
     public;
 }
+
+/**
+ * @title ERC721 token receiver interface
+ * @dev Interface for any contract that wants to support safeTransfers
+ *  from ERC721 asset contracts.
+ */
+contract ERC721Receiver {
+  /**
+   * @dev Magic value to be returned upon successful reception of an NFT
+   *  Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`,
+   *  which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
+   */
+  bytes4 constant ERC721_RECEIVED = 0xf0b9e5ba;
+
+  /**
+   * @notice Handle the receipt of an NFT
+   * @dev The ERC721 smart contract calls this function on the recipient
+   *  after a `safetransfer`. This function MAY throw to revert and reject the
+   *  transfer. This function MUST use 50,000 gas or less. Return of other
+   *  than the magic value MUST result in the transaction being reverted.
+   *  Note: the contract address is always the message sender.
+   * @param _from The sending address
+   * @param _tokenId The NFT identifier which is being transfered
+   * @param _data Additional data with no specified format
+   * @return `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
+   */
+  function onERC721Received(address _from, uint256 _tokenId, bytes _data) public returns(bytes4);
+}
+
+/**
+ * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
+ * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+ */
+contract ERC721Enumerable is ERC721Basic {
+  function totalSupply() public view returns (uint256);
+  function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId);
+  function tokenByIndex(uint256 _index) public view returns (uint256);
+}
+
+
+/**
+ * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
+ * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+ */
+contract ERC721Metadata is ERC721Basic {
+  function name() public view returns (string _name);
+  function symbol() public view returns (string _symbol);
+  function tokenURI(uint256 _tokenId) public view returns (string);
+}
+
+
+/**
+ * @title ERC-721 Non-Fungible Token Standard, full implementation interface
+ * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+ */
+contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {
+}
+
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation

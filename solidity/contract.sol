@@ -75,7 +75,7 @@ contract Ownable {
    * @dev Allows the current owner to transfer control of the contract to a newOwner.
    * @param newOwner The address to transfer ownership to.
    */
-  function transferOwnership(address newOwner) onlyOwner {
+  function transferOwnership(address newOwner) external onlyOwner {
     if (newOwner != address(0)) {
       owner = newOwner;
     }
@@ -132,10 +132,11 @@ contract MyNonFungibleToken is ERC721 {
   /*** DATA TYPES ***/
 
   struct Token {
-    address mintedBy;
-    uint64 mintedAt;
-    uint64 company;
-    address receiver;
+    address mintedBy; // Address of token creator
+    uint64 mintedAt; // Time of token creation
+    uint64 shippingCompany; // Company that processes the shipment as first
+    address receivingAddress; // Public key of receiving party
+    uint256 receivingPostalAddress; // Stored as Json for easy handeling
   }
 
 
@@ -147,6 +148,9 @@ contract MyNonFungibleToken is ERC721 {
   // Array containing all the verified addresses for parcel receiving.
   address[] verifiedAddresses;
 
+  // Array containing all the verified shipping company addresses.
+  address[] shippingCompanyAddresses;
+
   // Mapping of all the 
   mapping (uint256 => address) public tokenIndexToOwner;
   mapping (address => uint256) ownershipTokenCount;
@@ -154,8 +158,9 @@ contract MyNonFungibleToken is ERC721 {
 
   /*** EVENTS ***/
 
-  event Mint(address owner, uint256 tokenId);
-  event handOff(address owner, uint256 tokenId, address receiver, uint64 location)
+  event createParcel(address owner, uint256 tokenId, uint64 shippingCompany, address receivingAddress);
+  event handOff(address owner, address receiver, uint256 tokenId); //, uint64 location
+  event registerDeliverer(address deliverer, uint64 name, uint64 company);
 
 
   /*** INTERNAL FUNCTIONS ***/
@@ -171,7 +176,7 @@ contract MyNonFungibleToken is ERC721 {
   function _approve(address _to, uint256 _tokenId) internal {
     tokenIndexToApproved[_tokenId] = _to;
 
-    Approval(tokenIndexToOwner[_tokenId], tokenIndexToApproved[_tokenId], _tokenId);
+    emit Approval(tokenIndexToOwner[_tokenId], tokenIndexToApproved[_tokenId], _tokenId);
   }
 
   function _transfer(address _from, address _to, uint256 _tokenId) internal {
@@ -183,21 +188,23 @@ contract MyNonFungibleToken is ERC721 {
       delete tokenIndexToApproved[_tokenId];
     }
 
-    Transfer(_from, _to, _tokenId);
+    emit handOff(_from, _to, _tokenId);
   }
 
-  function _mint(address _owner) internal returns (uint256 tokenId) {
+  function _mint(address _owner, uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) internal returns (uint256 tokenId) {
     Token memory token = Token({
       mintedBy: _owner,
-      mintedAt: uint64(now)
+      mintedAt: uint64(now),
+      shippingCompany: shippingCompany,
+      receivingAddress: receivingAddress,
+      receivingPostalAddress: receivingPostalAddress
     });
     tokenId = tokens.push(token) - 1;
 
-    Mint(_owner, tokenId);
+    emit createParcel(_owner, tokenId, shippingCompany, receivingAddress);
 
     _transfer(0, _owner, tokenId);
   }
-
 
   /*** ERC721 IMPLEMENTATION ***/
 
@@ -267,17 +274,25 @@ contract MyNonFungibleToken is ERC721 {
     return result;
   }
 
-
   /*** OTHER EXTERNAL FUNCTIONS ***/
 
-  function mint() external onlyOwner returns (uint256) {
-    return _mint(msg.sender);
+  function mint(uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) external onlyOwner returns (uint256) {
+    return _mint(msg.sender, shippingCompany, receivingAddress, receivingPostalAddress);
   }
 
-  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt) {
+  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) {
     Token memory token = tokens[_tokenId];
 
     mintedBy = token.mintedBy;
     mintedAt = token.mintedAt;
+    shippingCompany = token.shippingCompany;
+    receivingAddress = token.receivingAddress;
+    receivingPostalAddress = token.receivingPostalAddress;
   }
+
+  // TODO: Function to add shpimentCompany to list (Don't forget to use event?)
+  // TODO: Function to register public key with company (Don't forget to hook to event)
+
+
+
 }
