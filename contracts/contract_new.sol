@@ -46,59 +46,12 @@ library SafeMath {
   }
 }
 
-/**
- * Utility library of inline functions on addresses
- */
-library AddressUtils {
-
-  /**
-   * Returns whether the target address is a contract
-   * @dev This function will return false if invoked during the constructor of a contract,
-   *  as the code is not actually created until after the constructor finishes.
-   * @param addr address to check
-   * @return whether the target address is a contract
-   */
-  function isContract(address addr) internal view returns (bool) {
-    uint256 size;
-    // XXX Currently there is no better way to check if there is a contract in an address
-    // than to check the size of the code at that address.
-    // See https://ethereum.stackexchange.com/a/14016/36603
-    // for more details about how this works.
-    // TODO Check this again before the Serenity release, because all addresses will be
-    // contracts then.
-    assembly { size := extcodesize(addr) }  // solium-disable-line security/no-inline-assembly
-    return size > 0;
-  }
-
-}
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Enumerable is ERC721Basic {
-  function totalSupply() public view returns (uint256);
-  function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId);
-  function tokenByIndex(uint256 _index) public view returns (uint256);
-}
-
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Metadata is ERC721Basic {
-  function name() public view returns (string _name);
-  function symbol() public view returns (string _symbol);
-  function tokenURI(uint256 _tokenId) public view returns (string);
-}
-
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, full implementation interface
  * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
-contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {
+contract ERC721 {
 
 }
 
@@ -110,10 +63,6 @@ contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {
 contract ERC721BasicToken {
   using SafeMath for uint256;
   using AddressUtils for address;
-
-  // Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
-  // which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
-  bytes4 constant ERC721_RECEIVED = 0xf0b9e5ba;
 
   // Mapping from token ID to owner
   mapping (uint256 => address) internal tokenOwner;
@@ -313,31 +262,6 @@ contract ERC721BasicToken {
     require(ownerOf(_tokenId) == _from);
     ownedTokensCount[_from] = ownedTokensCount[_from].sub(1);
     tokenOwner[_tokenId] = address(0);
-  }
-
-  /**
-   * @dev Internal function to invoke `onERC721Received` on a target address
-   * @dev The call is not executed if the target address is not a contract
-   * @param _from address representing the previous owner of the given token ID
-   * @param _to target address that will receive the tokens
-   * @param _tokenId uint256 ID of the token to be transferred
-   * @param _data bytes optional data to send along with the call
-   * @return whether the call correctly returned the expected magic value
-   */
-  function checkAndCallSafeTransfer(
-    address _from,
-    address _to,
-    uint256 _tokenId,
-    bytes _data
-  )
-    internal
-    returns (bool)
-  {
-    if (!_to.isContract()) {
-      return true;
-    }
-    bytes4 retval = ERC721Receiver(_to).onERC721Received(_from, _tokenId, _data);
-    return (retval == ERC721_RECEIVED);
   }
 }
 
