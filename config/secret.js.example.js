@@ -1,3 +1,3 @@
 module.exports = {
-    MNEMONIC: '' // Requires own api key, see https://infura.io/ for more info
+    MNEMONIC: '' // Requires own MNEMONIC phrase to be entered and then renamed to secret.js
 }
