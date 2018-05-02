@@ -46,15 +46,43 @@ library SafeMath {
   }
 }
 
-
 /**
- * @title ERC-721 Non-Fungible Token Standard, full implementation interface
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+ * @title Ownable
+ * @dev The Ownable contract has an owner address, and provides basic authorization control
+ * functions, this simplifies the implementation of "user permissions".
  */
-contract ERC721 {
+contract Ownable {
+  address public owner;
+
+  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+  /**
+   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+   * account.
+   */
+  function Ownable() public {
+    owner = msg.sender;
+  }
+
+  /**
+   * @dev Throws if called by any account other than the owner.
+   */
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  /**
+   * @dev Allows the current owner to transfer control of the contract to a newOwner.
+   * @param newOwner The address to transfer ownership to.
+   */
+  function transferOwnership(address newOwner) public onlyOwner {
+    require(newOwner != address(0));
+    emit OwnershipTransferred(owner, newOwner);
+    owner = newOwner;
+  }
 
 }
-
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation
@@ -187,6 +215,10 @@ contract ERC721BasicToken {
     require(_to != address(0));
 
     clearApproval(_from, _tokenId);
+
+    //require(_verified(_to))
+    // Hier moet checken of het receiver address verified is.
+
     removeTokenFrom(_from, _tokenId);
     addTokenTo(_to, _tokenId);
 
@@ -271,7 +303,7 @@ contract ERC721BasicToken {
  * Moreover, it includes approve all functionality using operator terminology
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
-contract ERC721Token is ERC721, ERC721BasicToken {
+contract ERC721Token is ERC721BasicToken {
   // Token name
   string internal name_;
 
@@ -442,5 +474,26 @@ contract ERC721Token is ERC721, ERC721BasicToken {
     allTokensIndex[_tokenId] = 0;
     allTokensIndex[lastToken] = tokenIndex;
   }
+
+  /*** OTHER EXTERNAL FUNCTIONS ***/
+
+  function mint(uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) external returns (uint256) {
+    return _mint(msg.sender, shippingCompany, receivingAddress, receivingPostalAddress);
+  }
+
+  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) {
+    Token memory token = tokens[_tokenId];
+
+    mintedBy = token.mintedBy;
+    mintedAt = token.mintedAt;
+    shippingCompany = token.shippingCompany;
+    receivingAddress = token.receivingAddress;
+    receivingPostalAddress = token.receivingPostalAddress;
+  }
+
+  // TODO: Function to add shpimentCompany to list (Don't forget to use event?)
+  // TODO: Function to register public key with company (Don't forget to hook to event)
+
+
 
 }
