@@ -3,3 +3,5 @@
 var/
 var/log/dev.log
 vendor/
+homebrew/
+config/secret.js
