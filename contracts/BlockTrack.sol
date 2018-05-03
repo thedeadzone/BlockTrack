@@ -1,7 +1,7 @@
 pragma solidity ^0.4.21;
 
-import "zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
-import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
+import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 /**
  * @title BlockTrack
@@ -32,9 +32,9 @@ contract BlockTrack is ERC721Token, Ownable {
   struct Token {
     address mintedBy; // Address of token creator
     uint64 mintedAt; // Time of token creation
-    uint64 shippingCompany; // Company that processes the shipment as first
-    address receivingAddress; // Public key of receiving party
-    uint256 receivingPostalAddress; // Stored as Json for easy handeling
+    // uint64 shippingCompany; // Company that processes the shipment as first
+    // address receivingAddress; // Public key of receiving party
+    // uint256 receivingPostalAddress; // Stored as Json for easy handeling
   }
 
   function _mint(address _to, uint256 _tokenId) internal {
@@ -52,16 +52,16 @@ contract BlockTrack is ERC721Token, Ownable {
   function mintTo(address _to, string _tokenURI) public onlyOwner {
     
     Token memory token = Token({
-      mintedBy: _owner,
-      mintedAt: uint64(now),
-      shippingCompany: shippingCompany,
-      receivingAddress: receivingAddress,
-      receivingPostalAddress: receivingPostalAddress
+      mintedBy: msg.sender,
+      mintedAt: uint64(now)
+      // shippingCompany: shippingCompany,
+      // receivingAddress: receivingAddress,
+      // receivingPostalAddress: receivingPostalAddress
     });
 
-    emit createParcel(_owner, tokenId, shippingCompany, receivingAddress);
-    
-    tokenId = tokens.push(token) - 1;
+    // emit createParcel(_owner, tokenId, shippingCompany, receivingAddress);
+
+    uint256 newTokenId = tokens.push(token) - 1;
     // uint256 newTokenId = _getNextTokenId(); // -> Indien bovenstaande tokenId niet werkt dan weer via functie hieronder
     _mint(_to, newTokenId);
     // _setTokenURI(newTokenId, _tokenURI);
@@ -80,9 +80,9 @@ contract BlockTrack is ERC721Token, Ownable {
 
     mintedBy = token.mintedBy;
     mintedAt = token.mintedAt;
-    shippingCompany = token.shippingCompany;
-    receivingAddress = token.receivingAddress;
-    receivingPostalAddress = token.receivingPostalAddress;
+    // shippingCompany = token.shippingCompany;
+    // receivingAddress = token.receivingAddress;
+    // receivingPostalAddress = token.receivingPostalAddress;
   }
 
   

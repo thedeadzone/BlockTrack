@@ -1,6 +1,6 @@
-var MyNonFungibleToken = artifacts.require("MyNonFungibleToken");
+var blockTrack = artifacts.require("BlockTrack");
 
 module.exports = function(deployer) {
     // deployment steps
-    deployer.deploy(MyNonFungibleToken);
+    deployer.deploy(blockTrack);
 };
