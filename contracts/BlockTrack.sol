@@ -27,16 +27,16 @@ contract BlockTrack is ERC721Token, Ownable {
 
   /**** Events ****/
 
-  event createParcel(address owner, uint256 tokenId, uint64 shippingCompany, address receivingAddress); // AKA Mint
+  event createParcel(address owner, uint256 tokenId, string shippingCompany, address receivingAddress); // AKA Mint
   event handOff(address owner, address receiver, uint256 tokenId); //, uint64 location
-  event registerDeliverer(address deliverer, uint64 name, uint64 company);
+  event registerDeliverer(address deliverer, string name, string company);
 
   struct Token {
     address mintedBy; // Address of token creator
     uint64 mintedAt; // Time of token creation
-    // uint64 shippingCompany; // Company that processes the shipment as first
-    // address receivingAddress; // Public key of receiving party
-    // uint256 receivingPostalAddress; // Stored as Json for easy handeling
+    uint256 shippingCompany; // Company that processes the shipment as first
+    address receivingAddress; // Public key of receiving party
+    uint256 receivingPostalAddress; // Stored as Json for easy handeling
   }
 
   function _mint(address _to, uint256 _tokenId) internal {
@@ -48,13 +48,12 @@ contract BlockTrack is ERC721Token, Ownable {
   /**
     * @dev Mints a token to an address with a tokenURI.
     * @param _to address of the future owner of the token
-    * @param _tokenURI token URI for the token
     */
-  function mintTo(address _to, uint256 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) public onlyOwner {
+  function mintTo(address _to, string shippingCompany, address receivingAddress, string receivingPostalAddress) public onlyOwner {
     
     Token memory token = Token({
       mintedBy: msg.sender,
-      mintedAt: uint64(now)
+      mintedAt: uint64(now),
       shippingCompany: shippingCompany,
       receivingAddress: receivingAddress,
       receivingPostalAddress: receivingPostalAddress
@@ -62,7 +61,7 @@ contract BlockTrack is ERC721Token, Ownable {
 
     uint256 newTokenId = tokens.push(token) - 1;
 
-    emit createParcel()to, newTokenId, shippingCompany, receivingAddress);
+    emit createParcel(_to, newTokenId, shippingCompany, receivingAddress);
 
     // uint256 newTokenId = _getNextTokenId(); // -> Indien bovenstaande tokenId niet werkt dan weer via functie hieronder
     _mint(_to, newTokenId);
@@ -77,7 +76,7 @@ contract BlockTrack is ERC721Token, Ownable {
     //     return totalSupply().add(1); 
     // }
 
-  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, uint256 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) {
+  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, string shippingCompany, address receivingAddress, string receivingPostalAddress) {
     Token memory token = tokens[_tokenId];
 
     mintedBy = token.mintedBy;

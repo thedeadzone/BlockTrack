@@ -11,7 +11,7 @@ module.exports = {
         //     gas: 4600000
         // }
         rinkeby: {
-            provider: new HDWalletProvider(secret.MNEMONIC, 'https://rinkeby.infura.io/'), //infura api key ALZ6zu5v1wM4s4xnMU7a
+            provider: new HDWalletProvider(secret.MNEMONIC, 'https://rinkeby.infura.io/ALZ6zu5v1wM4s4xnMU7a'),
             network_id: 4,
             gas: 4600000
         }

@@ -6,10 +6,8 @@ window.addEventListener('load', function() {
         web3 = new Web3(web3.currentProvider);
     } else {
         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-
-    // Now you can start your app & access web3 freely:
     startApp();
 });
 
@@ -25,6 +23,8 @@ function startApp() {
         }
     }, 100);
 
+    //TODO: Check for right network or display stuff otherwise
+
     web3.eth.getBalance(coinbase, function(error, result){
     if(!error)
         console.log(web3.fromWei(result.toNumber()), 'ether');
@@ -32,7 +32,7 @@ function startApp() {
         console.error(error);
     });
 
-    var smartContract = new web3.eth.Contract([
+    var myContract = web3.eth.contract([
         {
             "constant": true,
             "inputs": [],
@@ -391,7 +391,7 @@ function startApp() {
                 {
                     "indexed": false,
                     "name": "shippingCompany",
-                    "type": "uint64"
+                    "type": "uint256"
                 },
                 {
                     "indexed": false,
@@ -537,8 +537,16 @@ function startApp() {
                     "type": "address"
                 },
                 {
-                    "name": "_tokenURI",
-                    "type": "string"
+                    "name": "shippingCompany",
+                    "type": "uint256"
+                },
+                {
+                    "name": "receivingAddress",
+                    "type": "address"
+                },
+                {
+                    "name": "receivingPostalAddress",
+                    "type": "uint256"
                 }
             ],
             "name": "mintTo",
@@ -567,7 +575,7 @@ function startApp() {
                 },
                 {
                     "name": "shippingCompany",
-                    "type": "uint64"
+                    "type": "uint256"
                 },
                 {
                     "name": "receivingAddress",
@@ -582,8 +590,31 @@ function startApp() {
             "stateMutability": "view",
             "type": "function"
         }
-    ], '0xc3fd467deffd0131e9918e46fc9bbadf90cf9313');
-    console.log(smartContract);
+    ]).at('0x903b37be5b63d5f0a771b6c1788b594a932bb977');
+
+    myContract.totalSupply.call(function(error, result) {
+            if (!error)
+                console.log(JSON.stringify(result));
+            else
+                console.error(error);
+        }
+    );
+
+    myContract.name.call(function(error, result) {
+            if (!error)
+                console.log(result);
+            else
+                console.error(error);
+        }
+    );
+
+    myContract.getToken.call(0, function(error, result) {
+            if (!error)
+                console.log(result);
+            else
+                console.error(error);
+        }
+    );
 }
 
 function getNetwork() {

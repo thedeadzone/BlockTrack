@@ -1,6 +1,5 @@
-var blockTrack = artifacts.require("BlockTrack");
+var blockTrack = artifacts.require("./BlockTrack.sol");
 
 module.exports = function(deployer) {
-    // deployment steps
     deployer.deploy(blockTrack);
 };
