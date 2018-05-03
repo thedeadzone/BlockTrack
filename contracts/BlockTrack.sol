@@ -23,6 +23,8 @@ contract BlockTrack is ERC721Token, Ownable {
   address[] shippingCompanyAddresses;
 
 
+  mapping (uint256 => address) internal ParcelReceivers;
+
   /**** Events ****/
 
   event createParcel(address owner, uint256 tokenId, uint64 shippingCompany, address receivingAddress); // AKA Mint
@@ -38,10 +40,9 @@ contract BlockTrack is ERC721Token, Ownable {
   }
 
   function _mint(address _to, uint256 _tokenId) internal {
+    super._mint(_to, _tokenId);
 
     emit handOff(address(0), _to, _tokenId);
-
-    super._mint(_to, _tokenId);
   }
 
   /**
@@ -49,19 +50,20 @@ contract BlockTrack is ERC721Token, Ownable {
     * @param _to address of the future owner of the token
     * @param _tokenURI token URI for the token
     */
-  function mintTo(address _to, string _tokenURI) public onlyOwner {
+  function mintTo(address _to, uint256 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) public onlyOwner {
     
     Token memory token = Token({
       mintedBy: msg.sender,
       mintedAt: uint64(now)
-      // shippingCompany: shippingCompany,
-      // receivingAddress: receivingAddress,
-      // receivingPostalAddress: receivingPostalAddress
+      shippingCompany: shippingCompany,
+      receivingAddress: receivingAddress,
+      receivingPostalAddress: receivingPostalAddress
     });
 
-    // emit createParcel(_owner, tokenId, shippingCompany, receivingAddress);
-
     uint256 newTokenId = tokens.push(token) - 1;
+
+    emit createParcel()to, newTokenId, shippingCompany, receivingAddress);
+
     // uint256 newTokenId = _getNextTokenId(); // -> Indien bovenstaande tokenId niet werkt dan weer via functie hieronder
     _mint(_to, newTokenId);
     // _setTokenURI(newTokenId, _tokenURI);
@@ -75,19 +77,20 @@ contract BlockTrack is ERC721Token, Ownable {
     //     return totalSupply().add(1); 
     // }
 
-  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) {
+  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, uint256 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) {
     Token memory token = tokens[_tokenId];
 
     mintedBy = token.mintedBy;
     mintedAt = token.mintedAt;
-    // shippingCompany = token.shippingCompany;
-    // receivingAddress = token.receivingAddress;
-    // receivingPostalAddress = token.receivingPostalAddress;
+    shippingCompany = token.shippingCompany;
+    receivingAddress = token.receivingAddress;
+    receivingPostalAddress = token.receivingPostalAddress;
   }
 
   
   // TODO: Function to add shpimentCompany to list (Don't forget to use event?)
   // TODO: Function to register public key with company (Don't forget to hook to event)
   // TODO: Transfer from moet checken of public key registered is.
+  // TODO: Function that checks if you have parcels that you should receive.
 
 }
