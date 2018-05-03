@@ -32,7 +32,8 @@ function startApp() {
         console.error(error);
     });
 
-    var myContract = web3.eth.contract([
+    // Hardcoded address to the contract being used
+    myContract = web3.eth.contract([
         {
             "constant": true,
             "inputs": [],
@@ -141,28 +142,6 @@ function startApp() {
             ],
             "payable": false,
             "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_from",
-                    "type": "address"
-                },
-                {
-                    "name": "_to",
-                    "type": "address"
-                },
-                {
-                    "name": "_tokenId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "safeTransferFrom",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
@@ -288,32 +267,6 @@ function startApp() {
             "type": "function"
         },
         {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_from",
-                    "type": "address"
-                },
-                {
-                    "name": "_to",
-                    "type": "address"
-                },
-                {
-                    "name": "_tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "name": "_data",
-                    "type": "bytes"
-                }
-            ],
-            "name": "safeTransferFrom",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
             "constant": true,
             "inputs": [
                 {
@@ -391,7 +344,7 @@ function startApp() {
                 {
                     "indexed": false,
                     "name": "shippingCompany",
-                    "type": "uint256"
+                    "type": "string"
                 },
                 {
                     "indexed": false,
@@ -435,12 +388,12 @@ function startApp() {
                 {
                     "indexed": false,
                     "name": "name",
-                    "type": "uint64"
+                    "type": "string"
                 },
                 {
                     "indexed": false,
                     "name": "company",
-                    "type": "uint64"
+                    "type": "string"
                 }
             ],
             "name": "registerDeliverer",
@@ -538,7 +491,7 @@ function startApp() {
                 },
                 {
                     "name": "shippingCompany",
-                    "type": "uint256"
+                    "type": "string"
                 },
                 {
                     "name": "receivingAddress",
@@ -546,13 +499,32 @@ function startApp() {
                 },
                 {
                     "name": "receivingPostalAddress",
-                    "type": "uint256"
+                    "type": "string"
                 }
             ],
             "name": "mintTo",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_receiver",
+                    "type": "address"
+                }
+            ],
+            "name": "balanceOfReceiver",
+            "outputs": [
+                {
+                    "name": "count",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -575,7 +547,7 @@ function startApp() {
                 },
                 {
                     "name": "shippingCompany",
-                    "type": "uint256"
+                    "type": "string"
                 },
                 {
                     "name": "receivingAddress",
@@ -583,38 +555,126 @@ function startApp() {
                 },
                 {
                     "name": "receivingPostalAddress",
-                    "type": "uint256"
+                    "type": "string"
                 }
             ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_owner",
+                    "type": "address"
+                }
+            ],
+            "name": "tokensOfOwner",
+            "outputs": [
+                {
+                    "name": "ownerTokens",
+                    "type": "uint256[]"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_receiver",
+                    "type": "address"
+                }
+            ],
+            "name": "parcelsOfReceiver",
+            "outputs": [
+                {
+                    "name": "receiverTokens",
+                    "type": "uint256[]"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "name": "_to",
+                    "type": "address"
+                },
+                {
+                    "name": "_tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "name": "_to",
+                    "type": "address"
+                },
+                {
+                    "name": "_tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_data",
+                    "type": "bytes"
+                }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
         }
-    ]).at('0x903b37be5b63d5f0a771b6c1788b594a932bb977');
+    ]).at('0x6c3538be99a62e9375df536ecb61b6617c0898e3');
 
-    myContract.totalSupply.call(function(error, result) {
-            if (!error)
-                console.log(JSON.stringify(result));
-            else
-                console.error(error);
-        }
-    );
+    // myContract.totalSupply.call(function(error, result) {
+    //         if (!error)
+    //             console.log(JSON.stringify(result));
+    //         else
+    //             console.error(error);
+    //     }
+    // );
+    //
+    // myContract.name.call(function(error, result) {
+    //         if (!error)
+    //             console.log(result);
+    //         else
+    //             console.error(error);
+    //     }
+    // );
+    //
+    // myContract.getToken.call(0, function(error, result) {
+    //         if (!error)
+    //             console.log(result);
+    //         else
+    //             console.error(error);
+    //     }
+    // );
 
-    myContract.name.call(function(error, result) {
-            if (!error)
-                console.log(result);
-            else
-                console.error(error);
-        }
-    );
 
-    myContract.getToken.call(0, function(error, result) {
-            if (!error)
-                console.log(result);
-            else
-                console.error(error);
-        }
-    );
 }
 
 function getNetwork() {

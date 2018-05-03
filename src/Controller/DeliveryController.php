@@ -14,8 +14,11 @@ class DeliveryController extends AbstractController
      */
     public function homeAction()
     {
+        // ACTION THAT GETS INFO FROM Blockchain
 
-        return new Response('Test 123');
+        return $this->render('delivery/index.html.twig', [
+
+        ]);
     }
 
     /**
@@ -31,7 +34,7 @@ class DeliveryController extends AbstractController
         // ACTION THAT GETS INFO FROM Blockchain
 
         return $this->render('delivery/detail.html.twig', [
-            'title' => ucwords(str_replace('-', ' ', $slug)),
+            'slug' => $slug,
         ]);
     }
 }
