@@ -29,7 +29,7 @@ contract BlockTrack is ERC721Token, Ownable {
   /**** Events ****/
 
   event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress); // AKA Mint
-  event handOff(address owner, address indexed receiver, uint256 indexed tokenId); //, uint64 location
+  event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time); //, uint64 location
   event registerDeliverer(address deliverer, string name, string company);
 
   struct Token {
@@ -43,7 +43,7 @@ contract BlockTrack is ERC721Token, Ownable {
   function _mint(address _to, uint256 _tokenId) internal {
     super._mint(_to, _tokenId);
 
-    emit handOff(address(0), _to, _tokenId);
+    emit handOff(address(0), _to, _tokenId, uint64(now));
   }
 
   /**

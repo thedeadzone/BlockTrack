@@ -337,17 +337,17 @@ function startApp() {
                     "type": "address"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "tokenId",
                     "type": "uint256"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "shippingCompany",
                     "type": "string"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "receivingAddress",
                     "type": "address"
                 }
@@ -364,12 +364,12 @@ function startApp() {
                     "type": "address"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "receiver",
                     "type": "address"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "tokenId",
                     "type": "uint256"
                 }
@@ -648,7 +648,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x6c3538be99a62e9375df536ecb61b6617c0898e3');
+    ]).at('0xc23eac42658217d9859a6bf02eb34d4835a2153e');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
