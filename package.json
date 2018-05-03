@@ -11,6 +11,7 @@
         "build": "encore production"
     },
     "dependencies": {
+        "openzeppelin-solidity": "1.9.0",
         "truffle-hdwallet-provider": "0.0.5"
     }
 }

@@ -47,131 +47,50 @@ library SafeMath {
 }
 
 /**
- * Utility library of inline functions on addresses
+ * @title Ownable
+ * @dev The Ownable contract has an owner address, and provides basic authorization control
+ * functions, this simplifies the implementation of "user permissions".
  */
-library AddressUtils {
+contract Ownable {
+  address public owner;
+
+  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
   /**
-   * Returns whether the target address is a contract
-   * @dev This function will return false if invoked during the constructor of a contract,
-   *  as the code is not actually created until after the constructor finishes.
-   * @param addr address to check
-   * @return whether the target address is a contract
+   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+   * account.
    */
-  function isContract(address addr) internal view returns (bool) {
-    uint256 size;
-    // XXX Currently there is no better way to check if there is a contract in an address
-    // than to check the size of the code at that address.
-    // See https://ethereum.stackexchange.com/a/14016/36603
-    // for more details about how this works.
-    // TODO Check this again before the Serenity release, because all addresses will be
-    // contracts then.
-    assembly { size := extcodesize(addr) }  // solium-disable-line security/no-inline-assembly
-    return size > 0;
+  function Ownable() public {
+    owner = msg.sender;
+  }
+
+  /**
+   * @dev Throws if called by any account other than the owner.
+   */
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  /**
+   * @dev Allows the current owner to transfer control of the contract to a newOwner.
+   * @param newOwner The address to transfer ownership to.
+   */
+  function transferOwnership(address newOwner) public onlyOwner {
+    require(newOwner != address(0));
+    emit OwnershipTransferred(owner, newOwner);
+    owner = newOwner;
   }
 
 }
-
-
-/**
- * @title ERC721 Non-Fungible Token Standard basic interface
- * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Basic {
-  event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
-  event Approval(address indexed _owner, address indexed _approved, uint256 _tokenId);
-  event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
-
-  function balanceOf(address _owner) public view returns (uint256 _balance);
-  function ownerOf(uint256 _tokenId) public view returns (address _owner);
-  function exists(uint256 _tokenId) public view returns (bool _exists);
-
-  function approve(address _to, uint256 _tokenId) public;
-  function getApproved(uint256 _tokenId) public view returns (address _operator);
-
-  function setApprovalForAll(address _operator, bool _approved) public;
-  function isApprovedForAll(address _owner, address _operator) public view returns (bool);
-
-  function transferFrom(address _from, address _to, uint256 _tokenId) public;
-  function safeTransferFrom(address _from, address _to, uint256 _tokenId) public;
-  function safeTransferFrom(
-    address _from,
-    address _to,
-    uint256 _tokenId,
-    bytes _data
-  )
-    public;
-}
-
-/**
- * @title ERC721 token receiver interface
- * @dev Interface for any contract that wants to support safeTransfers
- *  from ERC721 asset contracts.
- */
-contract ERC721Receiver {
-  /**
-   * @dev Magic value to be returned upon successful reception of an NFT
-   *  Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`,
-   *  which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
-   */
-  bytes4 constant ERC721_RECEIVED = 0xf0b9e5ba;
-
-  /**
-   * @notice Handle the receipt of an NFT
-   * @dev The ERC721 smart contract calls this function on the recipient
-   *  after a `safetransfer`. This function MAY throw to revert and reject the
-   *  transfer. This function MUST use 50,000 gas or less. Return of other
-   *  than the magic value MUST result in the transaction being reverted.
-   *  Note: the contract address is always the message sender.
-   * @param _from The sending address
-   * @param _tokenId The NFT identifier which is being transfered
-   * @param _data Additional data with no specified format
-   * @return `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
-   */
-  function onERC721Received(address _from, uint256 _tokenId, bytes _data) public returns(bytes4);
-}
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Enumerable is ERC721Basic {
-  function totalSupply() public view returns (uint256);
-  function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId);
-  function tokenByIndex(uint256 _index) public view returns (uint256);
-}
-
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721Metadata is ERC721Basic {
-  function name() public view returns (string _name);
-  function symbol() public view returns (string _symbol);
-  function tokenURI(uint256 _tokenId) public view returns (string);
-}
-
-
-/**
- * @title ERC-721 Non-Fungible Token Standard, full implementation interface
- * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721 is ERC721Basic, ERC721Enumerable, ERC721Metadata {
-}
-
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
-contract ERC721BasicToken is ERC721Basic {
+contract ERC721BasicToken {
   using SafeMath for uint256;
   using AddressUtils for address;
-
-  // Equals to `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`
-  // which can be also obtained as `ERC721Receiver(0).onERC721Received.selector`
-  bytes4 constant ERC721_RECEIVED = 0xf0b9e5ba;
 
   // Mapping from token ID to owner
   mapping (uint256 => address) internal tokenOwner;
@@ -286,7 +205,6 @@ contract ERC721BasicToken is ERC721Basic {
 
   /**
    * @dev Transfers the ownership of a given token ID to another address
-   * @dev Usage of this method is discouraged, use `safeTransferFrom` whenever possible
    * @dev Requires the msg sender to be the owner, approved, or operator
    * @param _from current owner of the token
    * @param _to address to receive the ownership of the given token ID
@@ -297,59 +215,14 @@ contract ERC721BasicToken is ERC721Basic {
     require(_to != address(0));
 
     clearApproval(_from, _tokenId);
+
+    //require(_verified(_to))
+    // Hier moet checken of het receiver address verified is.
+
     removeTokenFrom(_from, _tokenId);
     addTokenTo(_to, _tokenId);
 
     emit Transfer(_from, _to, _tokenId);
-  }
-
-  /**
-   * @dev Safely transfers the ownership of a given token ID to another address
-   * @dev If the target address is a contract, it must implement `onERC721Received`,
-   *  which is called upon a safe transfer, and return the magic value
-   *  `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`; otherwise,
-   *  the transfer is reverted.
-   * @dev Requires the msg sender to be the owner, approved, or operator
-   * @param _from current owner of the token
-   * @param _to address to receive the ownership of the given token ID
-   * @param _tokenId uint256 ID of the token to be transferred
-  */
-  function safeTransferFrom(
-    address _from,
-    address _to,
-    uint256 _tokenId
-  )
-    public
-    canTransfer(_tokenId)
-  {
-    // solium-disable-next-line arg-overflow
-    safeTransferFrom(_from, _to, _tokenId, "");
-  }
-
-  /**
-   * @dev Safely transfers the ownership of a given token ID to another address
-   * @dev If the target address is a contract, it must implement `onERC721Received`,
-   *  which is called upon a safe transfer, and return the magic value
-   *  `bytes4(keccak256("onERC721Received(address,uint256,bytes)"))`; otherwise,
-   *  the transfer is reverted.
-   * @dev Requires the msg sender to be the owner, approved, or operator
-   * @param _from current owner of the token
-   * @param _to address to receive the ownership of the given token ID
-   * @param _tokenId uint256 ID of the token to be transferred
-   * @param _data bytes data to send along with a safe transfer check
-   */
-  function safeTransferFrom(
-    address _from,
-    address _to,
-    uint256 _tokenId,
-    bytes _data
-  )
-    public
-    canTransfer(_tokenId)
-  {
-    transferFrom(_from, _to, _tokenId);
-    // solium-disable-next-line arg-overflow
-    require(checkAndCallSafeTransfer(_from, _to, _tokenId, _data));
   }
 
   /**
@@ -422,31 +295,6 @@ contract ERC721BasicToken is ERC721Basic {
     ownedTokensCount[_from] = ownedTokensCount[_from].sub(1);
     tokenOwner[_tokenId] = address(0);
   }
-
-  /**
-   * @dev Internal function to invoke `onERC721Received` on a target address
-   * @dev The call is not executed if the target address is not a contract
-   * @param _from address representing the previous owner of the given token ID
-   * @param _to target address that will receive the tokens
-   * @param _tokenId uint256 ID of the token to be transferred
-   * @param _data bytes optional data to send along with the call
-   * @return whether the call correctly returned the expected magic value
-   */
-  function checkAndCallSafeTransfer(
-    address _from,
-    address _to,
-    uint256 _tokenId,
-    bytes _data
-  )
-    internal
-    returns (bool)
-  {
-    if (!_to.isContract()) {
-      return true;
-    }
-    bytes4 retval = ERC721Receiver(_to).onERC721Received(_from, _tokenId, _data);
-    return (retval == ERC721_RECEIVED);
-  }
 }
 
 /**
@@ -455,7 +303,7 @@ contract ERC721BasicToken is ERC721Basic {
  * Moreover, it includes approve all functionality using operator terminology
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
  */
-contract ERC721Token is ERC721, ERC721BasicToken {
+contract ERC721Token is ERC721BasicToken {
   // Token name
   string internal name_;
 
@@ -626,5 +474,43 @@ contract ERC721Token is ERC721, ERC721BasicToken {
     allTokensIndex[_tokenId] = 0;
     allTokensIndex[lastToken] = tokenIndex;
   }
+}
+
+contract BlockTrack is ERC721Token, Ownable {
+
+  function BlockTrack() ERC721Token ("BlockTrack", "BT") public { }
+
+  /**
+    * @dev Mints a token to an address with a tokenURI.
+    * @param _to address of the future owner of the token
+    * @param _tokenURI token URI for the token
+    */
+  function mintTo(address _to, string _tokenURI) public onlyOwner {
+    uint256 newTokenId = _getNextTokenId();
+    mint(_to, newTokenId);
+    _setTokenURI(newTokenId, _tokenURI);
+  }
+
+  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, uint64 shippingCompany, address receivingAddress, uint256 receivingPostalAddress) {
+    Token memory token = tokens[_tokenId];
+
+    mintedBy = token.mintedBy;
+    mintedAt = token.mintedAt;
+    shippingCompany = token.shippingCompany;
+    receivingAddress = token.receivingAddress;
+    receivingPostalAddress = token.receivingPostalAddress;
+  }
+
+  /**
+    * @dev calculates the next token ID based on totalSupply
+    * @return uint256 for the next token ID
+    */
+    function _getNextTokenId() private view returns (uint256) {
+        return totalSupply().add(1); 
+    }
+
+  // TODO: Function to add shpimentCompany to list (Don't forget to use event?)
+  // TODO: Function to register public key with company (Don't forget to hook to event)
+  // TODO: Transfer from moet checken of public key registered is.
 
 }
