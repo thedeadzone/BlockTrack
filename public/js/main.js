@@ -25,12 +25,12 @@ function startApp() {
 
     //TODO: Check for right network or display stuff otherwise
 
-    web3.eth.getBalance(coinbase, function(error, result){
-    if(!error)
-        console.log(web3.fromWei(result.toNumber()), 'ether');
-    else
-        console.error(error);
-    });
+    // web3.eth.getBalance(coinbase, function(error, result){
+    // if(!error)
+    //     console.log(web3.fromWei(result.toNumber()), 'ether');
+    // else
+    //     console.error(error);
+    // });
 
     // Hardcoded address to the contract being used
     myContract = web3.eth.contract([
@@ -648,7 +648,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0xc23eac42658217d9859a6bf02eb34d4835a2153e');
+    ]).at('0x00872138e305bc5be3d203a46ac96fcb711e4859');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)

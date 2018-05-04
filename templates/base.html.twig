@@ -21,8 +21,9 @@
             <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
             <script src="{{ asset('js/web3.min.js') }}"></script>
             <script src="{{ asset('js/main.js') }}"></script>
+            <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
 
-        {% if app.request.get('_route') == 'app_delivery_detail' %}
+            {% if app.request.get('_route') == 'app_delivery_detail' %}
             <script src="{{ asset('js/delivery_detail.js') }}"></script>
         {% elseif app.request.get('_route') == 'app_delivery_home'  %}
             <script src="{{ asset('js/delivery_index.js') }}"></script>

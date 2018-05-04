@@ -9,10 +9,10 @@ $(document).ready(function() {
                     if (!error) {
                         $('#delivery-index').append(
                             "<tr>" +
-                            "<td>"+ b +"</td>" +
-                            "<td>"+ result[2] +"</td>" +
-                            "<td>"+ result[3] +"</td>" +
-                            "<td>"+ result[4] +"</td>" +
+                                "<td>"+ b +"</td>" +
+                                "<td>"+ result[2] +"</td>" +
+                                "<td>"+ result[3] +"</td>" +
+                                "<td>"+ result[4] +"</td>" +
                             "</tr>");
                     }
                     else
