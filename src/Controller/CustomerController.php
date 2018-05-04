@@ -10,12 +10,13 @@ class CustomerController extends AbstractController
     /**
      * @Route("/parcels");
      *
-     * Shows all the parcels the customer is expecting
+     * Shows all the parcels the receiver is receiving
      */
     public function homeAction()
     {
+        return $this->render('customer/index.html.twig', [
 
-        return new Response('Test 123');
+        ]);
     }
 
     /**

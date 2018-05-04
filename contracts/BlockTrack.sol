@@ -40,9 +40,8 @@ contract BlockTrack is ERC721Token, Ownable {
   // event registerShippingCompany(address shippingcompany, string name);
 
   struct Token {
-    address mintedBy; // Address of token creator
     uint64 mintedAt; // Time of token creation
-    string shippingCompany; // Company that processes the shipment as first
+    address shippingCompany; // Company that processes the shipment as first
     address receivingAddress; // Public key of receiving party
     string receivingPostalAddress; // Stored as Json for easy handeling
   }
@@ -63,6 +62,11 @@ contract BlockTrack is ERC721Token, Ownable {
     _;
   }
 
+  function isReceiver(uint256 _tokenId, address _receiver) internal view returns (bool) {
+    Token memory token = tokens[_tokenId];
+    return token.receivingAddress  == _receiver;
+  }
+
   /// @notice Returns the number of parcels owned by a specific address.
   /// @param _receiver The owner address to check.
   /// @dev Required for ERC-721 compliance
@@ -70,12 +74,11 @@ contract BlockTrack is ERC721Token, Ownable {
       return ReceivingParcelsCount[_receiver];
   }
 
-  function getToken(uint256 _tokenId) external view returns (address mintedBy, uint64 mintedAt, string shippingCompany, address receivingAddress, string receivingPostalAddress) {
+  function getToken(uint256 _tokenId) external view returns (uint64 mintedAt, address shippingCompany, address receivingAddress, string receivingPostalAddress) {
     Token memory token = tokens[_tokenId];
 
-    mintedBy = token.mintedBy;
     mintedAt = token.mintedAt;
-    shippingCompany = token.shippingCompany;
+    shippingCompany = NameToShippingCompany[token.shippingCompany];
     receivingAddress = token.receivingAddress;
     receivingPostalAddress = token.receivingPostalAddress;
   }
@@ -136,7 +139,20 @@ contract BlockTrack is ERC721Token, Ownable {
     }
   }
 
-  function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId) {
+   /**
+   * @dev Checks msg.sender can transfer a token, by being owner, approved, or operator
+   * @param _tokenId uint256 ID of the token to validate
+   */
+  modifier canTransfer(uint256 _tokenId, address _to) {
+    super.canTransfer(_tokenId);
+
+    require(
+        NameToDeliverer[msg.sender] ||
+        isReceiver(_tokenId, _to)
+      );
+  }
+
+  function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId, _to) {
     super.safeTransferFrom(_from, _to, _tokenId);
 
     emit handOff(_from, _to, _tokenId, uint64(now));
@@ -145,7 +161,6 @@ contract BlockTrack is ERC721Token, Ownable {
       // Removes 1 from the total amount of parcels to be received by receiver.
       ReceivingParcelsCount[_to] = ReceivingParcelsCount[_to].sub(1);
     }
-    // TODO: Statement toevoegen (zoals CanTransfer) die checkt of public key registered is en dus mag ontvanger
   }
 
   function registerShippingCompany(address _shippingCompany, string _name) public onlyOwner {
@@ -163,13 +178,12 @@ contract BlockTrack is ERC721Token, Ownable {
     * @dev Mints a token to an address.
     * @param _to address of the future owner of the token
     */
-  function RegisterParcel(address _to, address receivingAddress, string receivingPostalAddress) public OnlyDeliverer {
+  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany {
     Token memory token = Token({
-      mintedBy: msg.sender,
       mintedAt: uint64(now),
-      shippingCompany: shippingCompany,
-      receivingAddress: receivingAddress,
-      receivingPostalAddress: receivingPostalAddress
+      shippingCompany: msg.sender,
+      receivingAddress: _receivingAddress,
+      receivingPostalAddress: _receivingPostalAddress
     });
 
     // Adds 1 to the total amount of parcels to be received by receiver.
@@ -181,13 +195,9 @@ contract BlockTrack is ERC721Token, Ownable {
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = receivingAddress;
 
-    emit createParcel(_to, newTokenId, shippingCompany, receivingAddress, uint64(now));
+    emit createParcel(_to, newTokenId, NameToShippingCompany[msg.sender], receivingAddress, uint64(now));
     // emit handOff(address(0), _to, _tokenId, uint64(now));
 
     super._mint(_to, newTokenId);
   }
-  
-  // TODO: Function to register public key (deliverer) with company (Don't forget to hook to event) + add to list of allowed public keys
-  // TODO: Transfer from moet checken of public key registered is.
-
 }
