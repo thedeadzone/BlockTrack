@@ -16,17 +16,11 @@ contract BlockTrack is ERC721Token, Ownable {
   // Containing all structs for the tokens in existence, struct is the index in array.
   Token[] tokens;
 
-  // // Array containing all the verified addresses for parcel receiving.
-  // address[] verifiedAddresses;
-
-  // // Array containing all the verified shipping company addresses.
-  // address[] shippingCompanyAddresses;
-
   mapping (uint256 => address) internal ParcelToReceiver;
 
-  mapping (string => address) internal NameToShippingCompany;
+  mapping (address => string) internal NameToShippingCompany;
 
-  mapping (string => address) internal NameToDeliverer;
+  mapping (address => string) internal NameToDeliverer;
 
   mapping (address => uint256) internal ReceivingParcelsCount;
 
@@ -37,6 +31,7 @@ contract BlockTrack is ERC721Token, Ownable {
   event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress, uint64 time); // AKA Mint
   event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time); //, uint64 location
   event registerDeliverer(address deliverer, string name, string company);
+  event parcelDelivered(uint256 indexed tokenId, address indexed deliverer, uint64 time);
   // event registerShippingCompany(address shippingcompany, string name);
 
   struct Token {
@@ -49,16 +44,16 @@ contract BlockTrack is ERC721Token, Ownable {
     /**
    * @dev Throws if called by anyone thats not a shippingcompany.
    */
-  modifier onlyShippingCompany() {
-    require(NameToShippingCompany[msg.sender]);
+  modifier onlyShippingCompany(address _address) {
+    require(NameToShippingCompany[_address]);
     _;
   }
 
    /**
    * @dev Throws if called by anyone thats not a deliverer.
    */
-  modifier OnlyDeliverer() {
-    require(NameToDeliverer[msg.sender]);
+  modifier OnlyDeliverer(address _address) {
+    require(NameToDeliverer[_address]);
     _;
   }
 
@@ -113,7 +108,7 @@ contract BlockTrack is ERC721Token, Ownable {
 
   /// @notice Returns a list of all tokens being received by an address.
   /// @param _receiver The owner whose parcels we are looking for.
-  function parcelsOfReceiver(address _receiver) external view returns(uint256[] receiverTokens) {
+  function parcelsOfReceiver(address _receiver) external view returns(uint256[] receiverParcels) {
     uint256 tokenCount = balanceOfReceiver(_receiver);
 
     if (tokenCount == 0) {
@@ -139,25 +134,18 @@ contract BlockTrack is ERC721Token, Ownable {
     }
   }
 
-   /**
-   * @dev Checks msg.sender can transfer a token, by being owner, approved, or operator
-   * @param _tokenId uint256 ID of the token to validate
-   */
-  modifier canTransfer(uint256 _tokenId, address _to) {
-    super.canTransfer(_tokenId);
+  function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId, _to) {
+    super.safeTransferFrom(_from, _to, _tokenId);
 
     require(
         NameToDeliverer[msg.sender] ||
         isReceiver(_tokenId, _to)
       );
-  }
-
-  function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId, _to) {
-    super.safeTransferFrom(_from, _to, _tokenId);
 
     emit handOff(_from, _to, _tokenId, uint64(now));
 
     if (ParcelToReceiver[_tokenId] == _to) {
+      emit parcelDelivered(_tokenId, _from, uint64(now));
       // Removes 1 from the total amount of parcels to be received by receiver.
       ReceivingParcelsCount[_to] = ReceivingParcelsCount[_to].sub(1);
     }
@@ -167,7 +155,7 @@ contract BlockTrack is ERC721Token, Ownable {
     NameToShippingCompany[_shippingCompany] = _name;
   }
 
-  function registerDeliverer(address _deliverer, string _name) public onlyShippingCompany {
+  function registerDeliverer(address _deliverer, string _name) public onlyShippingCompany(msg.sender) {
     NameToDeliverer[_deliverer] = _name;
     CompanyToDeliverer[_deliverer] = msg.sender;
 
@@ -178,7 +166,7 @@ contract BlockTrack is ERC721Token, Ownable {
     * @dev Mints a token to an address.
     * @param _to address of the future owner of the token
     */
-  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany {
+  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany(msg.sender) {
     Token memory token = Token({
       mintedAt: uint64(now),
       shippingCompany: msg.sender,
@@ -187,17 +175,17 @@ contract BlockTrack is ERC721Token, Ownable {
     });
 
     // Adds 1 to the total amount of parcels to be received by receiver.
-    ReceivingParcelsCount[receivingAddress] = ReceivingParcelsCount[receivingAddress].add(1);
+    ReceivingParcelsCount[_receivingAddress] = ReceivingParcelsCount[_receivingAddress].add(1);
     
     // Generates new ID for the token.
     uint256 newTokenId = tokens.push(token) - 1;
 
     // Maps Parcel to it's receiver.
-    ParcelToReceiver[newTokenId] = receivingAddress;
+    ParcelToReceiver[newTokenId] = _receivingAddress;
 
-    emit createParcel(_to, newTokenId, NameToShippingCompany[msg.sender], receivingAddress, uint64(now));
+    emit createParcel(_deliverer, newTokenId, NameToShippingCompany[msg.sender], _receivingAddress, uint64(now));
     // emit handOff(address(0), _to, _tokenId, uint64(now));
 
-    super._mint(_to, newTokenId);
+    super._mint(_deliverer, newTokenId);
   }
 }

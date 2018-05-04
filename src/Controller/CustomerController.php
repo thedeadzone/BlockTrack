@@ -23,11 +23,14 @@ class CustomerController extends AbstractController
      * @Route("/parcels/{slug}");
      *
      * Detail page of a single parcel with all it's information on it
+     *
+     * @param $slug
+     * @return Response
      */
     public function detailAction($slug)
     {
-        return new Response(sprintf(
-            'Something: %s', $slug
-        ));
+        return $this->render('customer/detail.html.twig', [
+            'slug' => $slug,
+        ]);
     }
 }

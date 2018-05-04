@@ -14,8 +14,6 @@ class DeliveryController extends AbstractController
      */
     public function homeAction()
     {
-        // ACTION THAT GETS INFO FROM Blockchain
-
         return $this->render('delivery/index.html.twig', [
 
         ]);
@@ -31,9 +29,22 @@ class DeliveryController extends AbstractController
      */
     public function detailAction($slug)
     {
-        // ACTION THAT GETS INFO FROM Blockchain
-
         return $this->render('delivery/detail.html.twig', [
+            'slug' => $slug,
+        ]);
+    }
+
+    /**
+     * @Route("/delivery/{slug}/transfer");
+     *
+     * Transfer page of a parcel to receiver
+     *
+     * @param $slug
+     * @return Response
+     */
+    public function transferAction($slug)
+    {
+        return $this->render('delivery/transfer.html.twig', [
             'slug' => $slug,
         ]);
     }
