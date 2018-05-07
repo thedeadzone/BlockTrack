@@ -3,6 +3,8 @@ $(document).ready(function() {
         if (!error) {
             var i = 0;
             var b = 0;
+
+            //TODO Clean no parcels found message based on different tables and content already
             for (i = 0; i < result.length; i++) {
                 var tokenId = result[i];
 
@@ -30,7 +32,7 @@ $(document).ready(function() {
                         } else {
                             table = $('#customer-todo tbody');
                         }
-                        table.empty();
+
                         table.append(
                             "<tr data-token-id='" + tokenId + "'>" +
                             "<td>" + b + "</td>" +

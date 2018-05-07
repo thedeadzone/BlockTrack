@@ -18,7 +18,10 @@ $(document).ready(function() {
     myContract.handOff({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
         if (!error) {
             var i = 0;
-            $('#delivery-details tbody').empty();
+
+            if (result.length >= 1) {
+                $('#customer-details tbody').empty();
+            }
 
             for (i = 0; i < result.length; i++) {
                 var date = new Date(result[i]['args']['time']*1000);

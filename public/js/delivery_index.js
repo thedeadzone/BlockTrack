@@ -3,7 +3,10 @@ $(document).ready(function() {
         if (!error) {
             var i = 0;
             var b = 0;
-            $('#delivery-index').empty();
+
+            if (result.length >= 1) {
+                $('#delivery-index tbody').empty();
+            }
 
             for (i = 0; i < result.length; i++) {
                 var tokenId = result[i];
