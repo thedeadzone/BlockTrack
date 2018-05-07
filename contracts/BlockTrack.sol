@@ -9,6 +9,7 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
  */
 contract BlockTrack is ERC721Token, Ownable {
 
+  // Constructor function to initialize the name and tag of the token.
   function BlockTrack() ERC721Token ("BlockTrack", "BT") public { }
 
   /**** Storage ****/
@@ -16,24 +17,29 @@ contract BlockTrack is ERC721Token, Ownable {
   // Containing all structs for the tokens in existence, struct is the index in array.
   Token[] tokens;
 
+  // Mapping of all parcels (uint256) with their receiver (address).
   mapping (uint256 => address) internal ParcelToReceiver;
 
+  // Mapping a shippingCompany (address) to it's name (string).
   mapping (address => string) internal NameToShippingCompany;
 
+  // Mapping a deliverer (adddress) to it's name or identifier (string).
   mapping (address => string) internal NameToDeliverer;
 
+  // Mapping of parcels (uint256) to be received by a receiver (address).
   mapping (address => uint256) internal ReceivingParcelsCount;
 
+  // Mapping a deliverer (address) to an existing ShippingCompany (address)
   mapping (address => address) internal CompanyToDeliverer;
 
   /**** Events ****/
 
   event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress, uint64 time); // AKA Mint
-  event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time); //, uint64 location
-  event registerDeliverer(address deliverer, string name, string company);
-  event parcelDelivered(uint256 indexed tokenId, address indexed deliverer, uint64 time);
+  event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered); //, uint64 location
+  event delivererRegistered(address deliverer, string name, string company);
   // event registerShippingCompany(address shippingcompany, string name);
 
+  // Consturctor of the token.
   struct Token {
     uint64 mintedAt; // Time of token creation
     address shippingCompany; // Company that processes the shipment as first
@@ -41,22 +47,25 @@ contract BlockTrack is ERC721Token, Ownable {
     string receivingPostalAddress; // Stored as Json for easy handeling
   }
 
-    /**
-   * @dev Throws if called by anyone thats not a shippingcompany.
-   */
-  modifier onlyShippingCompany(address _address) {
-    require(NameToShippingCompany[_address]);
+  /**
+  * @dev Throws if called by anyone thats not a shippingcompany.
+  */
+  modifier onlyShippingCompany() {
+    require(bytes(NameToShippingCompany[msg.sender]).length > 0);
     _;
   }
 
-   /**
-   * @dev Throws if called by anyone thats not a deliverer.
-   */
-  modifier OnlyDeliverer(address _address) {
-    require(NameToDeliverer[_address]);
+  /**
+  * @dev Throws if called by anyone thats not a deliverer.
+  */
+  modifier OnlyDeliverer() {
+    require(bytes(NameToDeliverer[msg.sender]).length > 0);
     _;
   }
 
+  /**
+  * @dev Checks if the receiving address in the receiver of the token.
+  */
   function isReceiver(uint256 _tokenId, address _receiver) internal view returns (bool) {
     Token memory token = tokens[_tokenId];
     return token.receivingAddress  == _receiver;
@@ -69,7 +78,10 @@ contract BlockTrack is ERC721Token, Ownable {
       return ReceivingParcelsCount[_receiver];
   }
 
-  function getToken(uint256 _tokenId) external view returns (uint64 mintedAt, address shippingCompany, address receivingAddress, string receivingPostalAddress) {
+  /**
+  * @dev Returns values for specific token id (uint256) that's called.
+  */
+  function getToken(uint256 _tokenId) external view returns (uint64 mintedAt, string shippingCompany, address receivingAddress, string receivingPostalAddress) {
     Token memory token = tokens[_tokenId];
 
     mintedAt = token.mintedAt;
@@ -134,39 +146,53 @@ contract BlockTrack is ERC721Token, Ownable {
     }
   }
 
-  function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId, _to) {
-    super.safeTransferFrom(_from, _to, _tokenId);
+  /// @notice checks couple values before calling safeTransferFrom to transfer token
+  /// @param _to the future owner incase function executes.
+  /// @param _tokenId id of the token to be transfered.
+  function transferTokenTo(address _to, uint256 _tokenId) public {
+    super.safeTransferFrom(msg.sender, _to, _tokenId);
 
     require(
-        NameToDeliverer[msg.sender] ||
+        bytes(NameToDeliverer[msg.sender]).length > 0 ||
         isReceiver(_tokenId, _to)
       );
 
-    emit handOff(_from, _to, _tokenId, uint64(now));
-
     if (ParcelToReceiver[_tokenId] == _to) {
-      emit parcelDelivered(_tokenId, _from, uint64(now));
+      emit handOff(_from, _to, _tokenId, uint64(now), true);
       // Removes 1 from the total amount of parcels to be received by receiver.
       ReceivingParcelsCount[_to] = ReceivingParcelsCount[_to].sub(1);
+    } else {
+      emit handOff(_from, _to, _tokenId, uint64(now), false);
     }
   }
 
+  /// @notice registers a new shippingCompany to it's mapping.
+  /// @param _shippingCompany address of the shipping company.
+  /// @param _name name of the shipping company.
   function registerShippingCompany(address _shippingCompany, string _name) public onlyOwner {
     NameToShippingCompany[_shippingCompany] = _name;
   }
 
-  function registerDeliverer(address _deliverer, string _name) public onlyShippingCompany(msg.sender) {
+  /// @notice registers a new deliverer to it's mapping.
+  /// @param _deliverer address of the deliverer.
+  /// @param _name name or identifier of the deliverer.
+  function registerDeliverer(address _deliverer, string _name) public onlyShippingCompany() {
     NameToDeliverer[_deliverer] = _name;
     CompanyToDeliverer[_deliverer] = msg.sender;
 
-    emit registerDeliverer(_deliverer, _name, NameToShippingCompany[msg.sender]);
+    emit delivererRegistered(_deliverer, _name, NameToShippingCompany[msg.sender]);
   }
 
    /**
     * @dev Mints a token to an address.
-    * @param _to address of the future owner of the token
+    * @param _deliverer address of the future owner of the token
+    * @param _receivingAddress address of the parcel receiver
+    * @param _receivingPostalAddress postal address of the receiving public key
     */
-  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany(msg.sender) {
+  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany() {
+    
+    // TODO: Checken of _deliverer ook in de lijst van deliverers staat
+
     Token memory token = Token({
       mintedAt: uint64(now),
       shippingCompany: msg.sender,

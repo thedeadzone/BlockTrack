@@ -648,7 +648,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x00872138e305bc5be3d203a46ac96fcb711e4859');
+    ]).at('0xdc4ab1dea7de88e782c88e6d8348b524b4ed62e2');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)

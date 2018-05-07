@@ -15,17 +15,16 @@ $(document).ready(function() {
         }
     );
 
-    myContract.handOff({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
+    myContract.createParcel({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
         if (!error) {
-            // console.log(result);
             var i = 0;
             for (i = 0; i < result.length; i++) {
-                // console.log(result[i]);
+                console.log(result[i]);
                 $('#delivery-details').append(
                     "<tr>" +
                     "<td>" + new Date(result[i]['args']['time']*1000) + "</td>" +
                     "<td>" + result[i]['args']['location'] + "</td>" +
-                    "<td>" + result[i]['args']['owner'] + "</td>" +
+                    "<td>0x00000000</td>" +
                     "<td>" + result[i]['args']['receiver'] + "</td>" +
                     "</tr>");
             }
@@ -33,18 +32,22 @@ $(document).ready(function() {
             console.error(error);
     });
 
-    myContract.createParcel({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
+    myContract.handOff({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
         if (!error) {
-            console.log(result);
             var i = 0;
             for (i = 0; i < result.length; i++) {
-                console.log(result[i]);
+
+                if (result[i]['args']['delivered'] == true) {
+                    console.log('stuff is delivered yo');
+                }
+
+                // console.log(result[i]);
                 $('#delivery-details').append(
                     "<tr>" +
-                        "<td>" + new Date(result[i]['args']['time']*1000) + "</td>" +
-                        "<td>" + result[i]['args']['location'] + "</td>" +
-                        "<td>0x00000000</td>" +
-                        "<td>" + result[i]['args']['receiver'] + "</td>" +
+                    "<td>" + new Date(result[i]['args']['time']*1000) + "</td>" +
+                    "<td>" + result[i]['args']['location'] + "</td>" +
+                    "<td>" + result[i]['args']['owner'] + "</td>" +
+                    "<td>" + result[i]['args']['receiver'] + "</td>" +
                     "</tr>");
             }
         } else
