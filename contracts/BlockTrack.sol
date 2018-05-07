@@ -10,7 +10,9 @@ import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 contract BlockTrack is ERC721Token, Ownable {
 
   // Constructor function to initialize the name and tag of the token.
-  function BlockTrack() ERC721Token ("BlockTrack", "BT") public { }
+  function BlockTrack() ERC721Token ("BlockTrack", "BT") public {
+
+  }
 
   /**** Storage ****/
 
@@ -34,8 +36,8 @@ contract BlockTrack is ERC721Token, Ownable {
 
   /**** Events ****/
 
-  event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress, uint64 time); // AKA Mint
-  event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered); //, uint64 location
+  // event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress, uint64 time); // AKA Mint
+  event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName); //, uint64 location
   event delivererRegistered(address deliverer, string name, string company);
   // event registerShippingCompany(address shippingcompany, string name);
 
@@ -88,6 +90,7 @@ contract BlockTrack is ERC721Token, Ownable {
     shippingCompany = NameToShippingCompany[token.shippingCompany];
     receivingAddress = token.receivingAddress;
     receivingPostalAddress = token.receivingPostalAddress;
+
   }
 
   /// @notice Returns a list of all tokens assigned to an address.
@@ -157,12 +160,14 @@ contract BlockTrack is ERC721Token, Ownable {
         isReceiver(_tokenId, _to)
       );
 
+    delivererName = NameToDeliverer[msg.sender];
+
     if (ParcelToReceiver[_tokenId] == _to) {
-      emit handOff(_from, _to, _tokenId, uint64(now), true);
+      emit handOff(msg.sender, _to, _tokenId, uint64(now), true, delivererName, 'Customer');
       // Removes 1 from the total amount of parcels to be received by receiver.
       ReceivingParcelsCount[_to] = ReceivingParcelsCount[_to].sub(1);
     } else {
-      emit handOff(_from, _to, _tokenId, uint64(now), false);
+      emit handOff(msg.sender, _to, _tokenId, uint64(now), false, delivererName, NameToDeliverer[_to]);
     }
   }
 
@@ -190,8 +195,9 @@ contract BlockTrack is ERC721Token, Ownable {
     * @param _receivingPostalAddress postal address of the receiving public key
     */
   function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany() {
-    
-    // TODO: Checken of _deliverer ook in de lijst van deliverers staat
+    super._mint(_deliverer, newTokenId);
+
+    require(bytes(NameToDeliverer[_deliverer]).length > 0);
 
     Token memory token = Token({
       mintedAt: uint64(now),
@@ -206,12 +212,9 @@ contract BlockTrack is ERC721Token, Ownable {
     // Generates new ID for the token.
     uint256 newTokenId = tokens.push(token) - 1;
 
+    emit handOff(address(0), _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_receivingAddress]);
+
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = _receivingAddress;
-
-    emit createParcel(_deliverer, newTokenId, NameToShippingCompany[msg.sender], _receivingAddress, uint64(now));
-    // emit handOff(address(0), _to, _tokenId, uint64(now));
-
-    super._mint(_deliverer, newTokenId);
   }
 }

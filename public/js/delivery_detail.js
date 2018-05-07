@@ -3,54 +3,43 @@ $(document).ready(function() {
 
     myContract.getToken.call(slug, function(error, result) {
         if (!error) {
+            afterGetToken();
+
             $('.page-content').append(
                 "<h1></h1>" +
+                "<p>"+ result[1] +"</p>" +
                 "<p>"+ result[2] +"</p>" +
-                "<p>"+ result[3] +"</p>" +
-                "<p>"+ result[4] +"</p>"
+                "<p>"+ result[3] +"</p>"
             );
-
         } else
             console.error(error);
         }
     );
 
-    myContract.createParcel({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
-        if (!error) {
-            var i = 0;
-            for (i = 0; i < result.length; i++) {
-                console.log(result[i]);
-                $('#delivery-details').append(
-                    "<tr>" +
-                    "<td>" + new Date(result[i]['args']['time']*1000) + "</td>" +
-                    "<td>" + result[i]['args']['location'] + "</td>" +
-                    "<td>0x00000000</td>" +
-                    "<td>" + result[i]['args']['receiver'] + "</td>" +
-                    "</tr>");
-            }
-        } else
-            console.error(error);
-    });
+    function afterGetToken() {
+        myContract.handOff({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
+            if (!error) {
+                var i = 0;
+                $('#delivery-details tbody').empty();
 
-    myContract.handOff({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
-        if (!error) {
-            var i = 0;
-            for (i = 0; i < result.length; i++) {
+                for (i = 0; i < result.length; i++) {
+                    if (result[i]['args']['delivered'] == true) {
+                        console.log('stuff is delivered yo');
+                    }
 
-                if (result[i]['args']['delivered'] == true) {
-                    console.log('stuff is delivered yo');
+                    var date = new Date(result[i]['args']['time'] * 1000);
+
+                    $('#delivery-details').append(
+                        "<tr>" +
+                        "<td>" + date.toLocaleTimeString("en-us", timeOptions) + "</td>" +
+                        "<td>" + result[i]['args']['location'] + "</td>" +
+                        "<td>" + result[i]['args']['owner'] + "</td>" +
+                        "<td>" + result[i]['args']['receiver'] + "</td>" +
+                        "</tr>");
                 }
-
-                // console.log(result[i]);
-                $('#delivery-details').append(
-                    "<tr>" +
-                    "<td>" + new Date(result[i]['args']['time']*1000) + "</td>" +
-                    "<td>" + result[i]['args']['location'] + "</td>" +
-                    "<td>" + result[i]['args']['owner'] + "</td>" +
-                    "<td>" + result[i]['args']['receiver'] + "</td>" +
-                    "</tr>");
+            } else {
+                console.error(error);
             }
-        } else
-            console.error(error);
-    });
+        });
+    }
 });

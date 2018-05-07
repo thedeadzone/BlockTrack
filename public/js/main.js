@@ -11,6 +11,11 @@ window.addEventListener('load', function() {
     startApp();
 });
 
+var timeOptions = {
+    year: "numeric", month: "short",
+    day: "numeric", hour: "2-digit", minute: "2-digit"
+};
+
 function startApp() {
     var coinbase = web3.eth.coinbase;
     var account = web3.eth.accounts[0];
@@ -145,6 +150,28 @@ function startApp() {
             "type": "function"
         },
         {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "name": "_to",
+                    "type": "address"
+                },
+                {
+                    "name": "_tokenId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
             "constant": true,
             "inputs": [
                 {
@@ -267,6 +294,32 @@ function startApp() {
             "type": "function"
         },
         {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_from",
+                    "type": "address"
+                },
+                {
+                    "name": "_to",
+                    "type": "address"
+                },
+                {
+                    "name": "_tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_data",
+                    "type": "bytes"
+                }
+            ],
+            "name": "safeTransferFrom",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
             "constant": true,
             "inputs": [
                 {
@@ -350,6 +403,11 @@ function startApp() {
                     "indexed": true,
                     "name": "receivingAddress",
                     "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "name": "time",
+                    "type": "uint64"
                 }
             ],
             "name": "createParcel",
@@ -372,6 +430,16 @@ function startApp() {
                     "indexed": true,
                     "name": "tokenId",
                     "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "name": "time",
+                    "type": "uint64"
+                },
+                {
+                    "indexed": false,
+                    "name": "delivered",
+                    "type": "bool"
                 }
             ],
             "name": "handOff",
@@ -396,7 +464,7 @@ function startApp() {
                     "type": "string"
                 }
             ],
-            "name": "registerDeliverer",
+            "name": "delivererRegistered",
             "type": "event"
         },
         {
@@ -483,32 +551,6 @@ function startApp() {
             "type": "event"
         },
         {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_to",
-                    "type": "address"
-                },
-                {
-                    "name": "shippingCompany",
-                    "type": "string"
-                },
-                {
-                    "name": "receivingAddress",
-                    "type": "address"
-                },
-                {
-                    "name": "receivingPostalAddress",
-                    "type": "string"
-                }
-            ],
-            "name": "mintTo",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
             "constant": true,
             "inputs": [
                 {
@@ -537,10 +579,6 @@ function startApp() {
             ],
             "name": "getToken",
             "outputs": [
-                {
-                    "name": "mintedBy",
-                    "type": "address"
-                },
                 {
                     "name": "mintedAt",
                     "type": "uint64"
@@ -592,7 +630,7 @@ function startApp() {
             "name": "parcelsOfReceiver",
             "outputs": [
                 {
-                    "name": "receiverTokens",
+                    "name": "receiverParcels",
                     "type": "uint256[]"
                 }
             ],
@@ -604,10 +642,6 @@ function startApp() {
             "constant": false,
             "inputs": [
                 {
-                    "name": "_from",
-                    "type": "address"
-                },
-                {
                     "name": "_to",
                     "type": "address"
                 },
@@ -616,7 +650,7 @@ function startApp() {
                     "type": "uint256"
                 }
             ],
-            "name": "safeTransferFrom",
+            "name": "transferTokenTo",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
@@ -626,29 +660,61 @@ function startApp() {
             "constant": false,
             "inputs": [
                 {
-                    "name": "_from",
+                    "name": "_shippingCompany",
                     "type": "address"
                 },
                 {
-                    "name": "_to",
-                    "type": "address"
-                },
-                {
-                    "name": "_tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "name": "_data",
-                    "type": "bytes"
+                    "name": "_name",
+                    "type": "string"
                 }
             ],
-            "name": "safeTransferFrom",
+            "name": "registerShippingCompany",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_deliverer",
+                    "type": "address"
+                },
+                {
+                    "name": "_name",
+                    "type": "string"
+                }
+            ],
+            "name": "registerDeliverer",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_deliverer",
+                    "type": "address"
+                },
+                {
+                    "name": "_receivingAddress",
+                    "type": "address"
+                },
+                {
+                    "name": "_receivingPostalAddress",
+                    "type": "string"
+                }
+            ],
+            "name": "RegisterParcel",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0xdc4ab1dea7de88e782c88e6d8348b524b4ed62e2');
+    ]).at('0xc5ca1c149bead045d4d0dfe8ed9116a415f76d64');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
