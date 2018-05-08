@@ -1,8 +1,4 @@
 $(document).ready(function() {
-    // myContract.tokensOfOwner.call(web3.eth.accounts[0], function(error, result) {
-    //
-    // }
-
     myContract.tokensOfOwner.call(web3.eth.accounts[0], function (error, result) {
         if (!error) {
             var i = 0;

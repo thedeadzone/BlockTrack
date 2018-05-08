@@ -33,19 +33,4 @@ class DeliveryController extends AbstractController
             'slug' => $slug,
         ]);
     }
-
-    /**
-     * @Route("/delivery/{slug}/transfer");
-     *
-     * Transfer page of a parcel to receiver
-     *
-     * @param $slug
-     * @return Response
-     */
-    public function transferAction($slug)
-    {
-        return $this->render('delivery/transfer.html.twig', [
-            'slug' => $slug,
-        ]);
-    }
 }

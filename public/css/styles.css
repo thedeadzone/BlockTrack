@@ -36,3 +36,15 @@ div.card.text-center div.card-footer p {
     margin: 0;
     text-align: center;
 }
+
+#preview {
+    max-width:100%;
+}
+
+#transfer-id {
+    font-size:10px;
+}
+
+.hidden {
+    display: none;
+}
