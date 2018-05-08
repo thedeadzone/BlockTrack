@@ -33,4 +33,19 @@ class AdminController extends AbstractController
             'slug' => $slug,
         ]);
     }
+
+
+    /**
+     * @Route("/admin/create");
+     *
+     * Page where you can create all required tokens
+     *
+     * @return Response
+     */
+    public function createAction()
+    {
+        return $this->render('admin/create.html.twig', [
+
+        ]);
+    }
 }

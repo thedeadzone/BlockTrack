@@ -24,11 +24,11 @@ $(document).ready(function() {
                                         '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] +'</p>' +
                                     '</div>'+
                                     '<div class="card-body">'+
-                                        '<h5 class="card-title token-1-'+i+'">'+ result[i]["args"]["receiverName"] + '</h5>'+
-                                        '<p class="card-text token-2-'+i+' text-muted">'+ result[i]["args"]["delivererName"] +'</p>'+
+                                        '<h5 class="card-title token-1-'+i+'" tabindex="0" data-trigger="focus">'+ result[i]["args"]["receiverName"] + '</h5>'+
+                                        '<p class="card-text token-2-'+i+' text-muted" tabindex="0" data-trigger="focus">'+ result[i]["args"]["delivererName"] +'</p>'+
                                     '</div>'+
                                     '<div class="card-footer">'+
-                                        '<p class="text-muted token-3-'+i+'">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>'+
+                                        '<p class="text-muted token-3-'+i+'" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>'+
                                     '</div>'+
                                 '</div>');
                             $('.token-1-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/"+result[i]['args']['receiver']+"'>"+result[i]['args']['receiver']+"</a>", html: true, placement: "bottom"});
