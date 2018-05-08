@@ -3,14 +3,16 @@ $(document).ready(function() {
     var token = '';
 
     myContract.getToken(slug, function(error, result) {
-            if (!error) {
+        if (!error) {
+            if (result.length != 0) {
+
                 token = result;
 
                 myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
                         var i = 0;
                         var badge = 'transparent';
-                        for (i = result.length -1; i >= 0; i--) {
+                        for (i = result.length - 1; i >= 0; i--) {
                             if (result[i]['args']['delivered'] == true) {
                                 badge = 'success';
                             }
@@ -20,35 +22,47 @@ $(document).ready(function() {
 
                             $('.page-content-2').append(
                                 '<div class="card text-center">' +
-                                    '<div class="card-header">'+
-                                        '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] +'</p>' +
-                                    '</div>'+
-                                    '<div class="card-body">'+
-                                        '<h5 class="card-title token-1-'+i+'" tabindex="0" data-trigger="focus">'+ result[i]["args"]["receiverName"] + '</h5>'+
-                                        '<p class="card-text token-2-'+i+' text-muted" tabindex="0" data-trigger="focus">'+ result[i]["args"]["delivererName"] +'</p>'+
-                                    '</div>'+
-                                    '<div class="card-footer">'+
-                                        '<p class="text-muted token-3-'+i+'" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>'+
-                                    '</div>'+
+                                '<div class="card-header">' +
+                                '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] + '</p>' +
+                                '</div>' +
+                                '<div class="card-body">' +
+                                '<h5 class="card-title token-1-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + '</h5>' +
+                                '<p class="card-text token-2-' + i + ' text-muted" tabindex="0" data-trigger="focus">' + result[i]["args"]["delivererName"] + '</p>' +
+                                '</div>' +
+                                '<div class="card-footer">' +
+                                '<p class="text-muted token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                '</div>' +
                                 '</div>');
-                            $('.token-1-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/"+result[i]['args']['receiver']+"'>"+result[i]['args']['receiver']+"</a>", html: true, placement: "bottom"});
-                            $('.token-2-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/"+result[i]['args']['owner']+"'>"+result[i]['args']['owner']+"</a>", html: true, placement: "bottom"});
-                            $('.token-3-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/"+result[i]['transactionHash']+"'>"+result[i]['transactionHash']+"</a>", html: true, placement: "bottom"});
+                            $('.token-1-' + i).popover({
+                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['receiver'] + "'>" + result[i]['args']['receiver'] + "</a>",
+                                html: true,
+                                placement: "bottom"
+                            });
+                            $('.token-2-' + i).popover({
+                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
+                                html: true,
+                                placement: "bottom"
+                            });
+                            $('.token-3-' + i).popover({
+                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result[i]['transactionHash'] + "'>" + result[i]['transactionHash'] + "</a>",
+                                html: true,
+                                placement: "bottom"
+                            });
                         }
 
                         $('.page-content-1').append(
                             '<div class="card border" data-token-id="' + slug + '">' +
-                                '<div class="card-body">'+
-                                    '<h5 class="card-title">Package ' + slug + '</h5>' +
-                                    '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
-                                    '<p class="card-text text-muted">' + token[3] + '</p>' +
-                                '</div>' +
-                                '<div class="card-footer bg-transparent">'+
-                                    '<div class="progress">'+
-                                        '<div class="progress-bar" role="progressbar" style="width: 50%">Transport</div>'+
-                                        '<div class="progress-bar bg-' + badge + '" role="progressbar" style="width: 50%">Delivered</div>'+
-                                    '</div>'+
-                                '</div>'+
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">Package ' + slug + '</h5>' +
+                            '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
+                            '<p class="card-text text-muted">' + token[3] + '</p>' +
+                            '</div>' +
+                            '<div class="card-footer bg-transparent">' +
+                            '<div class="progress">' +
+                            '<div class="progress-bar" role="progressbar" style="width: 50%">Transport</div>' +
+                            '<div class="progress-bar bg-' + badge + '" role="progressbar" style="width: 50%">Delivered</div>' +
+                            '</div>' +
+                            '</div>' +
                             '</div>' +
                             '<hr>');
                     } else
@@ -58,7 +72,5 @@ $(document).ready(function() {
                 console.error(error);
             }
         }
-    );
-
-
+    });
 });

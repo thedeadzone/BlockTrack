@@ -12,6 +12,8 @@ contract BlockTrack is ERC721Token, Ownable {
   // Constructor function to initialize the name and tag of the token.
   function BlockTrack() ERC721Token ("BlockTrack", "BT") public {
 
+    // Sets initial parcel so ID 0 is taken.
+    _internalMint(msg.sender, msg.sender, '0');
   }
 
   /**** Storage ****/
@@ -37,7 +39,7 @@ contract BlockTrack is ERC721Token, Ownable {
   /**** Events ****/
 
   // event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress, uint64 time); // AKA Mint
-  event handOff(address owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName); //, uint64 location
+  event handOff(address indexed owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName); //, uint64 location
   event delivererRegistered(address deliverer, string name, string company);
   // event registerShippingCompany(address shippingcompany, string name);
 
@@ -188,17 +190,7 @@ contract BlockTrack is ERC721Token, Ownable {
     emit delivererRegistered(_deliverer, _name, NameToShippingCompany[msg.sender]);
   }
 
-   /**
-    * @dev Mints a token to an address.
-    * @param _deliverer address of the future owner of the token
-    * @param _receivingAddress address of the parcel receiver
-    * @param _receivingPostalAddress postal address of the receiving public key
-    */
-  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany() {
-    super._mint(_deliverer, newTokenId);
-
-    require(bytes(NameToDeliverer[_deliverer]).length > 0);
-
+  function _internalMint(address _deliverer, address _receivingAddress, string _receivingPostalAddress) internal {
     Token memory token = Token({
       mintedAt: uint64(now),
       shippingCompany: msg.sender,
@@ -212,9 +204,22 @@ contract BlockTrack is ERC721Token, Ownable {
     // Generates new ID for the token.
     uint256 newTokenId = tokens.push(token) - 1;
 
-    emit handOff(address(0), _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer]);
+    emit handOff(msg.sender, _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer]);
 
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = _receivingAddress;
+
+    super._mint(_deliverer, newTokenId);
+  }
+
+   /**
+    * @dev Mints a token to an address.
+    * @param _deliverer address of the future owner of the token
+    * @param _receivingAddress address of the parcel receiver
+    * @param _receivingPostalAddress postal address of the receiving public key
+    */
+  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany() {
+    require(bytes(NameToDeliverer[_deliverer]).length > 0);
+    _internalMint(_deliverer, _receivingAddress, _receivingPostalAddress);
   }
 }

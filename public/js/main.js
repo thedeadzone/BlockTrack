@@ -385,12 +385,12 @@ function startApp() {
             "anonymous": false,
             "inputs": [
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "owner",
                     "type": "address"
                 },
                 {
-                    "indexed": true,
+                    "indexed": false,
                     "name": "receiver",
                     "type": "address"
                 },
@@ -692,7 +692,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x2ddeaea5888cfc8549cd116f1f716b187e259ec2');
+    ]).at('0x1f86fc645c90ed99f919039806a1ef31519f0f7a');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)

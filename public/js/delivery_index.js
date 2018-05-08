@@ -1,108 +1,39 @@
 $(document).ready(function() {
-    // myContract.tokensOfOwner.call(web3.eth.accounts[0], function (error, result) {
-    //     if (!error) {
-    //         var i = 0;
-    //         for (i = 0; i < result.length; i++) {
-    //             var tokenId = result[i];
-    //             myContract.getToken.call(tokenId, function (error, result) {
-    //                 if (!error) {
-    //                     var done = false;
-    //                     var div = '';
-    //                     var badge = '';
-    //                     var date = '';
-    //                     var message = '';
-    //                     var token = result;
-    //
-    //                     myContract.handOff({tokenId: tokenId}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
-    //                         if (!error) {
-    //                             for (i = 0; i < result.length; i++) {
-    //                                 if (result[i]['args']['delivered'] == true) {
-    //                                     done = true;
-    //                                 }
-    //                                 if (i == result.length - 1) {
-    //                                     date = new Date(result[i]['args']['time']['c'][0] * 1000);
-    //                                 }
-    //                             }
-    //
-    //                             if (done) {
-    //                                 div = $('.customer-done');
-    //                                 badge = 'success';
-    //                                 message = 'Delivered'
-    //                             } else {
-    //                                 div = $('.customer-todo');
-    //                                 badge = 'primary';
-    //                                 message = 'In Transport';
-    //                             }
-    //
-    //                             var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
-    //
-    //                             div.append(
-    //                                 '<div class="card border" data-token-id="' + tokenId + '">' +
-    //                                     '<div class="card-body">'+
-    //                                         '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-'+badge+' pull-right">'+message+'</span></h5>' +
-    //                                         '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-    //                                     '</div>' +
-    //                                     '<div class="card-footer bg-transparent">'+
-    //                                         '<div class="row">'+
-    //                                             '<div class="col-6">'+
-    //                                                 '<a href="' + url + '" class="card-link">Details</a>'+
-    //                                             '</div>'+
-    //                                             '<div class="col-6">'+
-    //                                                 '<p class="card-text pull-right text-muted">' + token[1] + '</p>'+
-    //                                             '</div>'+
-    //                                         '</div>'+
-    //                                     '</div>'+
-    //                                 '</div>');
-    //                         } else {
-    //                             console.error(error);
-    //                         }
-    //                     });
-    //                 } else {
-    //                     console.error(error);
-    //                 }
-    //             });
-    //         }
-    //     } else {
-    //         console.error(error);
-    //     }
-    // });
-
-    myContract.handOff({owner: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
+    myContract.handOff({owner: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
         if (!error) {
-            var i = 0;
-            var div = '';
-            var badge = '';
-            var date = '';
-            var message = '';
-            var tokenId = result[i]['args']['tokenId']['c'];
-            var handOff = result;
+            if (result.length != 0) {
 
-            for (i = 0; i < result.length; i++) {
-                var count = i;
-                myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
-                    if (!error) {
-                        var done = false;
+                var i = 0;
+                var badge = '';
+                var date = '';
+                var message = '';
+                var tokenId = result[i]['args']['tokenId']['c'];
+                var handOff = result;
 
-                        if (handOff[count]['args']['delivered'] == true) {
-                            done = true;
-                        }
+                for (i = 0; i < result.length; i++) {
+                    var count = i;
+                    myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
+                        if (!error) {
+                            var done = false;
 
-                        date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
+                            if (handOff[count]['args']['delivered'] == true) {
+                                done = true;
+                            }
 
-                        if (done) {
-                            div = $('.customer-done');
-                            badge = 'success';
-                            message = 'Delivered'
-                        } else {
-                            div = $('.customer-todo');
-                            badge = 'primary';
-                            message = 'In Transport';
-                        }
+                            date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
 
-                        var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+                            if (done) {
+                                badge = 'success';
+                                message = 'Delivered'
+                            } else {
+                                badge = 'primary';
+                                message = 'In Transport';
+                            }
 
-                        div.append(
-                            '<div class="card border" data-token-id="' + tokenId + '">' +
+                            var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+
+                            $('.customer-done').append(
+                                '<div class="card border" data-token-id="' + tokenId + '">' +
                                 '<div class="card-body">'+
                                 '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-'+badge+' pull-right">'+message+'</span></h5>' +
                                 '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
@@ -117,17 +48,78 @@ $(document).ready(function() {
                                 '</div>'+
                                 '</div>'+
                                 '</div>'+
-                            '</div>');
-                    } else {
-                        console.error(error);
-                    }
-                });
+                                '</div>');
+                        } else {
+                            console.error(error);
+                        }
+                    });
+                }
+
             }
         } else {
             console.error(error);
         }
     });
-    //delivery-index-history
 
-    //TODO: Checken van handoff event welke pakketjes in zijn bezit zijn geweest.
+    myContract.handOff({receiver: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
+        if (!error) {
+            if (result.length != 0) {
+                var i = 0;
+                var badge = '';
+                var date = '';
+                var message = '';
+                var tokenId = result[i]['args']['tokenId']['c'];
+                var handOff = result;
+
+                for (i = 0; i < result.length; i++) {
+                    var count = i;
+                    myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
+                        if (!error) {
+                            if (result.length != 0) {
+                                var done = false;
+
+                                if (handOff[count]['args']['delivered'] == true) {
+                                    done = true;
+                                }
+
+                                date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
+
+                                if (done) {
+                                    badge = 'success';
+                                    message = 'Delivered'
+                                } else {
+                                    badge = 'primary';
+                                    message = 'In Transport';
+                                }
+
+                                var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+
+                                $('.customer-todo').append(
+                                    '<div class="card border" data-token-id="' + tokenId + '">' +
+                                    '<div class="card-body">' +
+                                    '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                    '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                    '</div>' +
+                                    '<div class="card-footer bg-transparent">' +
+                                    '<div class="row">' +
+                                    '<div class="col-6">' +
+                                    '<a href="' + url + '" class="card-link">Details</a>' +
+                                    '</div>' +
+                                    '<div class="col-6">' +
+                                    '<p class="card-text pull-right text-muted">' + result[1] + '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>');
+                            } else {
+                                console.error(error);
+                            }
+                        }
+                    });
+                }
+            }
+        } else {
+            console.error(error);
+        }
+    });
 });
