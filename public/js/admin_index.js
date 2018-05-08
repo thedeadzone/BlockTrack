@@ -1,17 +1,14 @@
 $(document).ready(function() {
-    // myContract.tokensOfOwner.call(web3.eth.accounts[0], function(error, result) {
-    //
-    // }
-
-    myContract.tokensOfOwner.call(web3.eth.accounts[0], function (error, result) {
+    myContract.totalSupply(function (error, result) {
         if (!error) {
             var i = 0;
             var b = 0;
+            var tokenId = 0;
 
-            for (i = 0; i < result.length; i++) {
-                var tokenId = result[i];
-                myContract.getToken.call(tokenId, function (error, result) {
+            for (i = 0; i < result['c'][0]; i++) {
+                myContract.getToken.call(i, function (error, result) {
                     b++;
+                    tokenId = i;
                     if (!error) {
                         var done = false;
                         var div = '';
@@ -27,6 +24,7 @@ $(document).ready(function() {
                                         done = true;
                                     }
                                     if (i == result.length - 1) {
+                                        console.log(result[i]['args']['time']['c'][0]);
                                         date = new Date(result[i]['args']['time']['c'][0] * 1000);
                                     }
                                 }
@@ -41,24 +39,24 @@ $(document).ready(function() {
                                     message = 'In Transport';
                                 }
 
-                                var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+                                var url = $('.url-app_admin_detail').data('url-detail').replace(/\d+/, i);
 
                                 div.append(
                                     '<div class="card border" data-token-id="' + tokenId + '">' +
-                                        '<div class="card-body">'+
-                                            '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-'+badge+' pull-right">'+message+'</span></h5>' +
-                                            '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-                                        '</div>' +
-                                        '<div class="card-footer bg-transparent">'+
-                                            '<div class="row">'+
-                                                '<div class="col-6">'+
-                                                    '<a href="' + url + '" class="card-link">Details</a>'+
-                                                '</div>'+
-                                                '<div class="col-6">'+
-                                                    '<p class="card-text pull-right text-muted">' + token[1] + '</p>'+
-                                                '</div>'+
-                                            '</div>'+
-                                        '</div>'+
+                                    '<div class="card-body">'+
+                                    '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-'+badge+' pull-right">'+message+'</span></h5>' +
+                                    '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                    '</div>' +
+                                    '<div class="card-footer bg-transparent">'+
+                                    '<div class="row">'+
+                                    '<div class="col-6">'+
+                                    '<a href="' + url + '" class="card-link">Details</a>'+
+                                    '</div>'+
+                                    '<div class="col-6">'+
+                                    '<p class="card-text pull-right text-muted">' + token[1] + '</p>'+
+                                    '</div>'+
+                                    '</div>'+
+                                    '</div>'+
                                     '</div>');
                             } else {
                                 console.error(error);
@@ -73,8 +71,4 @@ $(document).ready(function() {
             console.error(error);
         }
     });
-
-    //delivery-index-history
-
-    //TODO: Checken van handoff event welke pakketjes in zijn bezit zijn geweest.
 });

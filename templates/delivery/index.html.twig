@@ -1,19 +1,44 @@
 {% extends 'base.html.twig' %}
 
 {% block  body %}
-    <table class="table table-bordered table-striped" id="delivery-index">
-        <thead>
-        <tr>
-            <th>#</th>
+    <div class="url-detail" data-url-detail="{{ path('app_delivery_detail', {'slug': 0}) }}"></div>
+    <div class="customer-todo">
+    </div>
+    <hr>
+    <div class="customer-done">
+    </div>
+
+    {#<table class="table table-bordered table-striped" id="delivery-index">#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>#</th>#}
             <th>Delivery Company</th>
             <th>Receiver</th>
             <th>Address</th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="4">No parcels found.</td>
-            </tr>
-        </tbody>
-    </table>
+    <p>Deze moet meer informatie krijgen voor specifiek bezogers</p>
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
+            {#<tr>#}
+                {#<td colspan="4">No parcels found.</td>#}
+            {#</tr>#}
+        {#</tbody>#}
+    {#</table>#}
+
+
+    {#<table class="table table-bordered table-striped" id="delivery-index-history">#}
+        {#<thead>#}
+        {#<tr>#}
+            {#<th>#</th>#}
+            {#<th>Delivery Company</th>#}
+            {#<th>Receiver</th>#}
+            {#<th>Address</th>#}
+        {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
+        {#<tr>#}
+            {#<td colspan="4">No parcels found.</td>#}
+        {#</tr>#}
+        {#</tbody>#}
+    {#</table>#}
 {% endblock %}

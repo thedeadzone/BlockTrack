@@ -391,38 +391,6 @@ function startApp() {
                 },
                 {
                     "indexed": true,
-                    "name": "tokenId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": true,
-                    "name": "shippingCompany",
-                    "type": "string"
-                },
-                {
-                    "indexed": true,
-                    "name": "receivingAddress",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "name": "time",
-                    "type": "uint64"
-                }
-            ],
-            "name": "createParcel",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "name": "owner",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
                     "name": "receiver",
                     "type": "address"
                 },
@@ -440,6 +408,16 @@ function startApp() {
                     "indexed": false,
                     "name": "delivered",
                     "type": "bool"
+                },
+                {
+                    "indexed": false,
+                    "name": "delivererName",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "name": "receiverName",
+                    "type": "string"
                 }
             ],
             "name": "handOff",
@@ -714,7 +692,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0xc5ca1c149bead045d4d0dfe8ed9116a415f76d64');
+    ]).at('0x2ddeaea5888cfc8549cd116f1f716b187e259ec2');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)

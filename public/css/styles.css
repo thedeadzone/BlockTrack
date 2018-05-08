@@ -1,3 +1,38 @@
 .row {
     margin: auto;
 }
+
+.pull-right {
+    float:right;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-center-transfer {
+    text-align: center;
+    width:100%;
+    float: right;
+}
+
+.last-update-text {
+    font-size: 14px;
+}
+
+div.card.text-center {
+    margin-bottom:15px;
+}
+
+div.card.text-center div.card-footer p, div.card.text-center div.card-header p {
+    margin-bottom:0;
+}
+
+div.card.text-center div.card-footer p {
+    font-size:14px;
+}
+
+.text-parcel-footer {
+    margin: 0;
+    text-align: center;
+}

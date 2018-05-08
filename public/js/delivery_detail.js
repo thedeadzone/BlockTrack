@@ -1,45 +1,69 @@
 $(document).ready(function() {
     var slug = $('#slug').data('slug');
+    var token = '';
+    var badge = '';
+    var url = $('.url-transfer').data('url-transfer').replace(/\d+/, slug);
 
-    myContract.getToken.call(slug, function(error, result) {
-        if (!error) {
-            afterGetToken();
-
-            $('.page-content').append(
-                "<h1></h1>" +
-                "<p>"+ result[1] +"</p>" +
-                "<p>"+ result[2] +"</p>" +
-                "<p>"+ result[3] +"</p>"
-            );
-        } else
-            console.error(error);
-        }
-    );
-
-    function afterGetToken() {
-        myContract.handOff({tokenId: slug}, { fromBlock: 0, toBlock: 'latest' }).get(function(error, result) {
+    myContract.getToken(slug, function(error, result) {
             if (!error) {
-                var i = 0;
-                $('#delivery-details tbody').empty();
+                token = result;
 
-                for (i = 0; i < result.length; i++) {
-                    if (result[i]['args']['delivered'] == true) {
-                        console.log('stuff is delivered yo');
-                    }
+                myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
+                    if (!error) {
+                        var i = 0;
 
-                    var date = new Date(result[i]['args']['time'] * 1000);
+                        if (result.length >= 1) {
+                            $('#customer-details tbody').empty();
+                        }
+                        if (result[i]['args']['delivered'] == true) {
+                            badge = 'success';
+                        } else {
+                            badge = 'transparent';
+                        }
 
-                    $('#delivery-details').append(
-                        "<tr>" +
-                        "<td>" + date.toLocaleTimeString("en-us", timeOptions) + "</td>" +
-                        "<td>" + result[i]['args']['location'] + "</td>" +
-                        "<td>" + result[i]['args']['owner'] + "</td>" +
-                        "<td>" + result[i]['args']['receiver'] + "</td>" +
-                        "</tr>");
-                }
+                        $('.page-content').append(
+                            '<div class="card border" data-token-id="' + slug + '">' +
+                                '<div class="card-body">'+
+                                    '<h5 class="card-title">Package ' + slug + '</h5>' +
+                                    '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
+                                    '<p class="card-text text-muted">' + token[3] + '</p>' +
+                                '</div>' +
+                                '<div class="card-footer bg-transparent">'+
+                                // '<p class="text-muted text-parcel-footer">' + token[1] + '</p>'+
+                                    '<a class="button button-lg align-center-transfer" href="'+ url+ '">Transfer</a>' +
+                                '</div>'+
+                            '</div>' +
+                            '<hr>');
+
+                        for (i = result.length -1; i >= 0; i--) {
+                            var date = new Date(result[i]['args']['time'] * 1000);
+                            var owner = result[i]['args']['owner'];
+
+                            $('.page-content').append(
+                                '<div class="card text-center">' +
+                                '<div class="card-header">'+
+                                '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] +'</p>' +
+                                '</div>'+
+                                '<div class="card-body">'+
+                                '<h5 class="card-title token-1-'+i+'">'+ result[i]["args"]["receiverName"] + '</h5>'+
+                                '<p class="card-text token-2-'+i+' text-muted">'+ result[i]["args"]["delivererName"] +'</p>'+
+                                '</div>'+
+                                '<div class="card-footer">'+
+                                '<p class="text-muted token-3-'+i+'">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>'+
+                                '</div>'+
+                                '</div>');
+                            $('.token-1-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/"+result[i]['args']['receiver']+"'>"+result[i]['args']['receiver']+"</a>", html: true, placement: "bottom"});
+                            $('.token-2-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/"+result[i]['args']['owner']+"'>"+result[i]['args']['owner']+"</a>", html: true, placement: "bottom"});
+                            $('.token-3-' + i).popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/"+result[i]['transactionHash']+"'>"+result[i]['transactionHash']+"</a>", html: true, placement: "bottom"});
+                        }
+                    } else
+                        console.error(error);
+                });
             } else {
                 console.error(error);
             }
-        });
-    }
+        }
+    );
+
+
 });

@@ -160,7 +160,7 @@ contract BlockTrack is ERC721Token, Ownable {
         isReceiver(_tokenId, _to)
       );
 
-    delivererName = NameToDeliverer[msg.sender];
+    string delivererName = NameToDeliverer[msg.sender];
 
     if (ParcelToReceiver[_tokenId] == _to) {
       emit handOff(msg.sender, _to, _tokenId, uint64(now), true, delivererName, 'Customer');
@@ -212,7 +212,7 @@ contract BlockTrack is ERC721Token, Ownable {
     // Generates new ID for the token.
     uint256 newTokenId = tokens.push(token) - 1;
 
-    emit handOff(address(0), _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_receivingAddress]);
+    emit handOff(address(0), _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer]);
 
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = _receivingAddress;

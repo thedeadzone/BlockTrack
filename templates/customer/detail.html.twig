@@ -1,32 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block  body %}
-    <div class="row">
-        <div class="col-md-12">
-            <h2 id="slug" data-slug="{{ slug }}">{{ slug }}</h2>
-        </div>
-        <div class="col-md-12">
+    <div class="row" id="slug" data-slug="{{ slug }}">
+        <div class="col-12">
             <div class="page-content">
 
             </div>
-        </div>
-        <div class="col-md-12">
-            <h2>Change of ownership</h2>
-            <table class="table table-bordered table-striped" id="customer-details">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Owner</th>
-                        <th>Receiver</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="4">No parcels found.</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 {% endblock %}
