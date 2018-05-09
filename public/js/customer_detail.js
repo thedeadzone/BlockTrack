@@ -2,7 +2,6 @@ $(document).ready(function() {
     var slug = $('#slug').data('slug');
     var token = '';
     var html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
-
     var house = '';
 
     myContract.getToken(slug, function(error, result) {
