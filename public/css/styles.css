@@ -16,17 +16,22 @@ body {
     background-color: #1982C4;
 }
 
-.blue-color-2 {
-    background-color: #19aaf4;
+.blue-color-1 .hr-text:before {
+    background: linear-gradient(to right, transparent, white, transparent);
 }
 
-.blue-color-2  .hr-text:after {
-    color: white;
-    background-color: #19aaf4;
-}
+/*.blue-color-2 {*/
+    /*background-color: #19aaf4;*/
+/*}*/
+
+/*.blue-color-2  .hr-text:after {*/
+    /*color: #1982C4;*/
+    /*background-color: white;*/
+/*}*/
 
 .transfer-colors {
-    background: linear-gradient(0deg, #19aaf4, #1982C4) no-repeat; /* 1990d1 */
+    /*background: linear-gradient(0deg, #19aaf4, #1982C4) no-repeat; !* 1990d1 *!*/
+    background:white;
     min-height:50px;
     margin-top: -45px;
 }
@@ -58,7 +63,7 @@ body {
     display: block;
     width: 0;
     height: 100%;
-    border:1px dashed #fff;
+    border:1px dashed #19aaf4;
     position: absolute;
     top:0;
     left:30px
@@ -68,8 +73,8 @@ body {
     margin: 0 0 60px 60px;
     position: relative;
     padding: 10px 20px;
-    background:rgba(255, 255, 255, 0.3);
-    color:#fff;
+    background:#19aaf4;
+    color:white;
     border-radius: 10px;
     line-height: 20px;
 }
@@ -80,7 +85,7 @@ body {
     display: block;
     width: 0;
     height: 100%;
-    border:1px solid #fff;
+    border:1px solid #19aaf4;
     position: absolute;
     top:0;
     left:-30px
@@ -93,13 +98,18 @@ body {
     height: 10px;
     border-radius: 50%;
     background: #19aaf4;
-    border:2px solid #fff;
+    border:2px solid #19aaf4;
     position: absolute;
     left:-7.5px
 }
 
-.box ul li > span:before{top:-10px}
-.box ul li > span:after{top:95%}
+.box ul li > span:before{
+    top:-10px
+}
+
+.box ul li > span:after{
+    top:95%
+}
 
 .box .title{
     text-transform: uppercase;
@@ -119,7 +129,7 @@ body {
 .box .time span{
     position: absolute;
     left: -100px;
-    color:#fff;
+    color:#1982C4;
     font-size:80%;
     font-weight: bold;
 }
@@ -241,7 +251,7 @@ div.card.text-center div.card-footer p {
 
 .hr-text:before {
     content: '';
-    background: linear-gradient(to right, transparent, white, transparent);
+    background: linear-gradient(to right, transparent, #1982C4, transparent);
     position: absolute;
     left: 0;
     top: 50%;

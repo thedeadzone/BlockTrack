@@ -1,16 +1,52 @@
-{% extends 'base.html.twig' %}
+{#{% extends 'base.html.twig' %}#}
+
+{#{% block  body %}#}
+    {#<div class="row url-transfer url-finish-transfer" id="slug" data-slug="{{ slug }}" data-url="{{ path('app_delivery_home') }}">#}
+        {#<div class="col-12">#}
+            {#<hr class="hr-text" data-content="Status">#}
+            {#<div class="page-content-1">#}
+
+            {#</div>#}
+            {#<hr class="hr-text" data-content="History">#}
+
+            {#<div class="page-content-2">#}
+
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+
+{#{% endblock %}#}
+
+
+
+{% extends 'base-adjusted.html.twig' %}
 
 {% block  body %}
-    <div class="row url-transfer url-finish-transfer" id="slug" data-slug="{{ slug }}" data-url="{{ path('app_delivery_home') }}">
-        <div class="col-12">
-            <hr class="hr-text" data-content="Status">
-            <div class="page-content-1">
 
+
+    <div class="container-fluid blue-color-1">
+        <div class="row row url-transfer url-finish-transfer" id="slug" data-slug="{{ slug }}" data-url="{{ path('app_delivery_home') }}">
+            <div class="col-12">
+                <div class="page-content-1">
+                    <hr class="hr-text" data-content="Status">
+
+                </div>
             </div>
-            <hr class="hr-text" data-content="History">
+        </div>
+    </div>
+    <div class="transfer-colors"></div>
 
-            <div class="page-content-2">
-
+    <div class="container-fluid blue-color-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-content-2">
+                    <hr class="hr-text" data-content="History">
+                    <div class="box">
+                        <ul id="first-list">
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

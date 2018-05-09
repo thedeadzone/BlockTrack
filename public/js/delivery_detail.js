@@ -25,24 +25,14 @@ $(document).ready(function() {
                                 var date = new Date(result[i]['args']['time'] * 1000);
                                 var owner = result[i]['args']['owner'];
 
-                                $('.page-content-2').append(
-                                    '<div class="card text-center">' +
-                                    '<div class="card-header">' +
-                                    '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] + '</p>' +
-                                    '</div>' +
-                                    '<div class="card-body">' +
-                                    '<h5 class="card-title token-1-' + i + '">' + result[i]["args"]["receiverName"] + '</h5>' +
-                                    '<p class="card-text token-2-' + i + ' text-muted">' + result[i]["args"]["delivererName"] + '</p>' +
-                                    '</div>' +
-                                    '<div class="card-footer">' +
-                                    '<p class="text-muted token-3-' + i + '">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-                                    '</div>' +
-                                    '</div>');
-                                $('.token-1-' + i).popover({
-                                    content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['receiver'] + "'>" + result[i]['args']['receiver'] + "</a>",
-                                    html: true,
-                                    placement: "bottom"
-                                });
+                                $('.page-content-2 #first-list').append(
+                                    '<li>'+
+                                    '<span></span>' +
+                                    '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + '</div>'+
+                                    '<div class="info">' + result[i]["args"]["location"] + '</div>'+
+                                    '<div class="info token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
+                                    '</li>');
+
                                 $('.token-2-' + i).popover({
                                     content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
                                     html: true,
@@ -65,8 +55,7 @@ $(document).ready(function() {
                                 '<div class="card-footer bg-transparent">' +
                                 '<a id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="button button-lg align-center-transfer">Transfer</a>' +
                                 '</div>' +
-                                '</div>' +
-                                '<hr>');
+                                '</div>');
 
                             $('#activate-scanner').on('click', function () {
                                 activateScanner();
