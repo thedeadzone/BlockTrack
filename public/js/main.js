@@ -11,17 +11,17 @@ window.addEventListener('load', function() {
     startApp();
 });
 
-var timeOptions = {
+let timeOptions = {
     year: "numeric", month: "short",
     day: "numeric", hour: "2-digit", minute: "2-digit"
 };
 
 function startApp() {
-    var coinbase = web3.eth.coinbase;
-    var account = web3.eth.accounts[0];
+    let coinbase = web3.eth.coinbase;
+    let account = web3.eth.accounts[0];
     web3.eth.defaultAccount = web3.eth.accounts[0];
-    var network = getNetwork();
-    var accountInterval = setInterval(function() {
+    let network = getNetwork();
+    let accountInterval = setInterval(function () {
         if (web3.eth.accounts[0] !== account) {
             account = web3.eth.accounts[0];
             location.reload();
@@ -729,7 +729,7 @@ function startApp() {
 }
 
 function getNetwork() {
-    var netId =  web3.version.network;
+    let netId = web3.version.network;
     switch (netId) {
         case "1":
             console.log('This is mainnet');

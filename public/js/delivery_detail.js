@@ -7,22 +7,21 @@ function startOthers() {
 
     myContract.getToken(slug, function (error, result) {
         if (!error) {
-            if (result.length != 0) {
+            if (result.length !== 0) {
                 token = result;
 
                 myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
-                        if (result.length != 0) {
-                            var i = 0;
+                        if (result.length !== 0) {
+                            let i = 0;
                             for (i = result.length - 1; i >= 0; i--) {
                                 house = '';
-                                if (result[i]['args']['delivered'] == true) {
+                                if (result[i]['args']['delivered'] === true) {
                                     house = '<i class="fas fa-home"></i>';
                                     html = '<div class="progress-bar bg-success" role="progressbar" style="width: 100%">Delivered</div>';
                                 }
 
-                                var date = new Date(result[i]['args']['time'] * 1000);
-                                var owner = result[i]['args']['owner'];
+                                let date = new Date(result[i]['args']['time'] * 1000);
 
                                 $('.page-content-2 #first-list').append(
                                     '<li>' +
@@ -45,8 +44,8 @@ function startOthers() {
                             }
 
                             myContract.ownerOf.call(slug, function (error, result) {
-                                if (!error && result.length != 0) {
-                                    if (result == web3.eth.accounts[0]) {
+                                if (!error && result.length !== 0) {
+                                    if (result === web3.eth.accounts[0]) {
                                         $('.page-content-1').append(
                                             '<div class="card border" data-token-id="' + slug + '">' +
                                             '<div class="card-body">' +
@@ -158,7 +157,6 @@ function startOthers() {
 
                             console.log(result);
                             console.log("https://rinkeby.etherscan.io/tx/" + result);
-                            // TODO: Hier komt transaction hash + link er naar op rinkeby.etherscan
                         } else {
                             // console.error(error);
                         }
