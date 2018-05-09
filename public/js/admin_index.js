@@ -48,7 +48,7 @@ $(document).ready(function() {
                                             div.append(
                                                 '<div class="card border" data-token-id="' + tokenId + '">' +
                                                 '<div class="card-body">' +
-                                                '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                                '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
                                                 '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                 '</div>' +
                                                 '<div class="card-footer bg-transparent">' +

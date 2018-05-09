@@ -58,7 +58,7 @@ $(document).ready(function() {
                             $('.page-content-1').append(
                                 '<div class="card border" data-token-id="' + slug + '">' +
                                 '<div class="card-body">' +
-                                '<h5 class="card-title">Package ' + slug + '</h5>' +
+                                '<h5 class="card-title">Parcel ' + slug + '</h5>' +
                                 '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
                                 '<p class="card-text text-muted">' + token[3] + '</p>' +
                                 '</div>' +

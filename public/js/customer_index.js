@@ -3,52 +3,31 @@ $(document).ready(function() {
         if (!error) {
             if (result.length != 0) {
                 var i = 0;
-                var b = 0;
 
                 for (i = 0; i < result.length; i++) {
                     var tokenId = result[i];
                     myContract.getToken.call(tokenId, function (error, result) {
-                        b++;
                         if (!error) {
                             if (result.length != 0) {
-                                var done = false;
                                 var div = '';
-                                var badge = '';
                                 var date = '';
-                                var message = '';
                                 var token = result;
 
-                                myContract.handOff({tokenId: tokenId}, {
-                                    fromBlock: 0,
-                                    toBlock: 'latest'
-                                }).get(function (error, result) {
+                                myContract.handOff({tokenId: tokenId}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                                     if (!error) {
                                         if (result.length != 0) {
                                             for (i = 0; i < result.length; i++) {
-                                                if (result[i]['args']['delivered'] == true) {
-                                                    done = true;
-                                                }
                                                 if (i == result.length - 1) {
                                                     date = new Date(result[i]['args']['time']['c'][0] * 1000);
                                                 }
                                             }
 
-                                            if (done) {
-                                                div = $('.customer-done');
-                                                badge = 'success';
-                                                message = 'Delivered'
-                                            } else {
-                                                div = $('.customer-todo');
-                                                badge = 'primary';
-                                                message = 'In Transport';
-                                            }
-
                                             var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
-                                            div.append(
+                                            $('.customer-todo').append(
                                                 '<div class="card border" data-token-id="' + tokenId + '">' +
                                                 '<div class="card-body">' +
-                                                '<h5 class="card-title">Package ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                                '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-primary pull-right">In Transport</span></h5>' +
                                                 '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                 '</div>' +
                                                 '<div class="card-footer bg-transparent">' +
@@ -79,6 +58,62 @@ $(document).ready(function() {
                 }
             } else {
                 console.log('No data');
+            }
+        } else {
+            console.error(error);
+        }
+    });
+
+    myContract.handOff({receiver: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
+        if (!error) {
+            if (result.length != 0) {
+                var i = 0;
+                var date = '';
+                var tokenId = result[i]['args']['tokenId']['c'];
+                var handOff = result;
+
+                for (i = 0; i < result.length; i++) {
+                    var count = i;
+                    myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
+                        if (!error) {
+                            if (result.length != 0) {
+
+                                date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
+
+                                var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+
+                                $('.customer-done').append(
+                                    '<div class="card border" data-token-id="' + tokenId + '">' +
+                                    '<div class="card-body">' +
+                                    '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-success pull-right">Delivered</span></h5>' +
+                                    '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                    '</div>' +
+                                    '<div class="card-footer bg-transparent">' +
+                                    '<div class="row">' +
+                                    '<div class="col-6">' +
+                                    '<a href="' + url + '" class="card-link">Details</a>' +
+                                    '</div>' +
+                                    '<div class="col-6">' +
+                                    '<p class="card-text pull-right text-muted">' + result[1] + '</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>');
+                            } else {
+                                console.error(error);
+                            }
+                        }
+                    });
+                }
+            } else {
+                $('.customer-done').append(
+                    '<div class="card border" data-token-id="' + tokenId + '">' +
+                    '<div class="card-body">' +
+                    '<h5 class="card-title">No parcels delivered.</span></h5>' +
+                    '<p class="card-subtitle text-muted last-update-text">Nothing here (for now)</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>');
             }
         } else {
             console.error(error);
