@@ -20,6 +20,10 @@ body {
     background: linear-gradient(to right, transparent, white, transparent);
 }
 
+/*
+* OPTIONAL STYLING FOR FULL BLUE FADE PAGE DETAILS PAGE
+*/
+
 /*.blue-color-2 {*/
     /*background-color: #19aaf4;*/
 /*}*/
@@ -33,8 +37,25 @@ body {
     /*background: linear-gradient(0deg, #19aaf4, #1982C4) no-repeat; !* 1990d1 *!*/
     background:white;
     min-height:50px;
-    margin-top: -45px;
+    margin-top: -50px;
 }
+
+
+/*
+* OPTIONAL STYLING VOOR DELIVERY INDEX PAGINA
+*/
+
+.customer-todo .card .card-body,  .customer-done .card .card-body {
+    background-color: #19aaf4;
+}
+.customer-todo .card .card-body .card-title, .customer-todo .card .card-body .card-subtitle, .customer-done .card .card-body .card-title, .customer-done .card .card-body .card-subtitle{
+    color:white!important;
+}
+
+
+/**
+* Styling for the history vertical UL
+**/
 
 .box{
     overflow: hidden;
@@ -49,10 +70,6 @@ body {
     transition: all 0.5s linear;
     top:0
 }
-
-/**
-* Styling for the history vertical UL
-**/
 
 .box ul:last-of-type{
     top:10px

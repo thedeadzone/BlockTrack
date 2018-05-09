@@ -29,7 +29,7 @@ $(document).ready(function() {
                                         '<div class="info">' + result[i]["args"]["location"] + '</div>'+
                                         '<div class="info token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
                                     '</li>');
-                                
+
                                 $('.token-2-' + i).popover({
                                     content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
                                     html: true,
