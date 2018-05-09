@@ -10,15 +10,12 @@ $(document).ready(function() {
             if (result.length != 0) {
                 token = result;
 
-                myContract.handOff({tokenId: slug}, {
-                    fromBlock: 0,
-                    toBlock: 'latest'
-                }).get(function (error, result) {
+                myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
                         if (result.length != 0) {
                             var i = 0;
-
                             for (i = result.length - 1; i >= 0; i--) {
+                                house = '';
                                 if (result[i]['args']['delivered'] == true) {
                                     house = '<i class="fas fa-home"></i>';
                                     html = '<div class="progress-bar bg-success" role="progressbar" style="width: 100%">Delivered</div>';
