@@ -2,7 +2,6 @@ $(document).ready(function() {
     myContract.parcelsOfReceiver.call(web3.eth.accounts[0], function (error, result) {
         if (!error) {
             if (result.length != 0) {
-
                 var i = 0;
                 var b = 0;
 
@@ -64,10 +63,14 @@ $(document).ready(function() {
                                                 '</div>' +
                                                 '</div>');
                                         } else {
-                                            console.error(error);
+                                            console.log('No data');
                                         }
+                                    } else {
+                                        console.error(error);
                                     }
                                 });
+                            } else {
+                                console.log('No data');
                             }
                         } else {
                             console.error(error);
@@ -75,8 +78,10 @@ $(document).ready(function() {
                     });
                 }
             } else {
-                console.error(error);
+                console.log('No data');
             }
+        } else {
+            console.error(error);
         }
     });
 });

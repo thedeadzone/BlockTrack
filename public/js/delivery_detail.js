@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     myContract.getToken(slug, function(error, result) {
         if (!error) {
-            if (result) {
+            if (result.length != 0) {
                 token = result;
 
                 myContract.handOff({tokenId: slug}, {
@@ -13,69 +13,75 @@ $(document).ready(function() {
                     toBlock: 'latest'
                 }).get(function (error, result) {
                     if (!error) {
-                        var i = 0;
-                        var badge = 'transparent';
+                        if (result.length != 0) {
+                            var i = 0;
+                            var badge = 'transparent';
 
-                        for (i = result.length - 1; i >= 0; i--) {
-                            if (result[i]['args']['delivered'] == true) {
-                                badge = 'success';
+                            for (i = result.length - 1; i >= 0; i--) {
+                                if (result[i]['args']['delivered'] == true) {
+                                    badge = 'success';
+                                }
+
+                                var date = new Date(result[i]['args']['time'] * 1000);
+                                var owner = result[i]['args']['owner'];
+
+                                $('.page-content-2').append(
+                                    '<div class="card text-center">' +
+                                    '<div class="card-header">' +
+                                    '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] + '</p>' +
+                                    '</div>' +
+                                    '<div class="card-body">' +
+                                    '<h5 class="card-title token-1-' + i + '">' + result[i]["args"]["receiverName"] + '</h5>' +
+                                    '<p class="card-text token-2-' + i + ' text-muted">' + result[i]["args"]["delivererName"] + '</p>' +
+                                    '</div>' +
+                                    '<div class="card-footer">' +
+                                    '<p class="text-muted token-3-' + i + '">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                    '</div>' +
+                                    '</div>');
+                                $('.token-1-' + i).popover({
+                                    content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['receiver'] + "'>" + result[i]['args']['receiver'] + "</a>",
+                                    html: true,
+                                    placement: "bottom"
+                                });
+                                $('.token-2-' + i).popover({
+                                    content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
+                                    html: true,
+                                    placement: "bottom"
+                                });
+                                $('.token-3-' + i).popover({
+                                    content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result[i]['transactionHash'] + "'>" + result[i]['transactionHash'] + "</a>",
+                                    html: true,
+                                    placement: "bottom"
+                                });
                             }
 
-                            var date = new Date(result[i]['args']['time'] * 1000);
-                            var owner = result[i]['args']['owner'];
-
-                            $('.page-content-2').append(
-                                '<div class="card text-center">' +
-                                '<div class="card-header">' +
-                                '<p>' + 'Previous' + ' > ' + result[i]["args"]["location"] + '</p>' +
-                                '</div>' +
+                            $('.page-content-1').append(
+                                '<div class="card border" data-token-id="' + slug + '">' +
                                 '<div class="card-body">' +
-                                '<h5 class="card-title token-1-' + i + '">' + result[i]["args"]["receiverName"] + '</h5>' +
-                                '<p class="card-text token-2-' + i + ' text-muted">' + result[i]["args"]["delivererName"] + '</p>' +
+                                '<h5 class="card-title">Package ' + slug + '</h5>' +
+                                '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
+                                '<p class="card-text text-muted">' + token[3] + '</p>' +
                                 '</div>' +
-                                '<div class="card-footer">' +
-                                '<p class="text-muted token-3-' + i + '">' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                '<div class="card-footer bg-transparent">' +
+                                '<a id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="button button-lg align-center-transfer">Transfer</a>' +
                                 '</div>' +
-                                '</div>');
-                            $('.token-1-' + i).popover({
-                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['receiver'] + "'>" + result[i]['args']['receiver'] + "</a>",
-                                html: true,
-                                placement: "bottom"
+                                '</div>' +
+                                '<hr>');
+
+                            $('#activate-scanner').on('click', function () {
+                                activateScanner();
                             });
-                            $('.token-2-' + i).popover({
-                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
-                                html: true,
-                                placement: "bottom"
-                            });
-                            $('.token-3-' + i).popover({
-                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result[i]['transactionHash'] + "'>" + result[i]['transactionHash'] + "</a>",
-                                html: true,
-                                placement: "bottom"
-                            });
+                        } else {
+                            console.log('No data');
                         }
-
-                        $('.page-content-1').append(
-                            '<div class="card border" data-token-id="' + slug + '">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title">Package ' + slug + '</h5>' +
-                            '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
-                            '<p class="card-text text-muted">' + token[3] + '</p>' +
-                            '</div>' +
-                            '<div class="card-footer bg-transparent">' +
-                            '<a id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="button button-lg align-center-transfer">Transfer</a>' +
-                            '</div>' +
-                            '</div>' +
-                            '<hr>');
-
-                        $('#activate-scanner').on('click', function () {
-                            activateScanner();
-                        });
                     } else
                         console.error(error);
                 });
             } else {
-                console.error(error);
+                console.log('No data');
             }
+        } else {
+            console.error(error);
         }
     });
 

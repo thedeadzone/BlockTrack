@@ -390,7 +390,7 @@ function startApp() {
                     "type": "address"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "name": "receiver",
                     "type": "address"
                 },
@@ -692,7 +692,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x1f86fc645c90ed99f919039806a1ef31519f0f7a');
+    ]).at('0x7049f8bdaf0443de98ba83d7a5db1f948399f33d');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
