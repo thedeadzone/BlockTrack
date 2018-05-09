@@ -1,4 +1,4 @@
-$(document).ready(function() {
+function startOthers() {
     var finished = [];
     var targetId = '';
     var url = $('.url-detail').data('url-detail');
@@ -182,4 +182,4 @@ $(document).ready(function() {
             console.error(e);
         });
     }
-});
+}

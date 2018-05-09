@@ -30,8 +30,6 @@ function startApp() {
 
     //TODO: Check for right network or display stuff otherwise
 
-
-
     // Hardcoded address to the contract being used
     myContract = web3.eth.contract([
         {
@@ -697,7 +695,7 @@ function startApp() {
             "type": "function"
         }
     ]).at('0xad0bcede038bcec9c1e7a7ebf4b221a4828ee98b');
-
+    startOthers();
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
     //             console.log(JSON.stringify(result));

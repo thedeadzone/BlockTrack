@@ -1,4 +1,4 @@
-$(document).ready(function() {
+function startOthers() {
     myContract.parcelsOfReceiver.call(web3.eth.accounts[0], function (error, result) {
         if (!error) {
             if (result.length != 0) {
@@ -123,4 +123,4 @@ $(document).ready(function() {
             console.error(error);
         }
     });
-});
+}

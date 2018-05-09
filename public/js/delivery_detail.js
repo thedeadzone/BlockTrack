@@ -1,11 +1,11 @@
-$(document).ready(function() {
+function startOthers() {
     var slug = $('#slug').data('slug');
     var token = '';
     var targetId = '';
     var html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
     var house = '';
 
-    myContract.getToken(slug, function(error, result) {
+    myContract.getToken(slug, function (error, result) {
         if (!error) {
             if (result.length != 0) {
                 token = result;
@@ -25,11 +25,11 @@ $(document).ready(function() {
                                 var owner = result[i]['args']['owner'];
 
                                 $('.page-content-2 #first-list').append(
-                                    '<li>'+
+                                    '<li>' +
                                     '<span></span>' +
-                                    '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' ' + house +'</div>'+
-                                    '<div class="info">' + result[i]["args"]["location"] + '</div>'+
-                                    '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
+                                    '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' ' + house + '</div>' +
+                                    '<div class="info">' + result[i]["args"]["location"] + '</div>' +
+                                    '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>' +
                                     '</li>');
 
                                 $('.token-2-' + i).popover({
@@ -68,7 +68,7 @@ $(document).ready(function() {
                                             '</div>' +
                                             '<div class="card-footer bg-transparent">' +
                                             '<div class="progress">' +
-                                                html +
+                                            html +
                                             '</div>' +
                                             '</div>' +
                                             '</div>');
@@ -94,7 +94,7 @@ $(document).ready(function() {
     });
 
     function activateScanner() {
-        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+        let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
         scanner.addListener('scan', function (content) {
             scanner.stop();
             targetId = content;
@@ -105,8 +105,8 @@ $(document).ready(function() {
 
             $('#scannerModal .modal-body').append(
                 '<div class="transfer-content">' +
-                    '<p class="align-center">Are you sure this is the right address?</p>' +
-                    '<p class="align-center" id="transfer-id">'+ content +'</p>' +
+                '<p class="align-center">Are you sure this is the right address?</p>' +
+                '<p class="align-center" id="transfer-id">' + content + '</p>' +
                 '</div>');
 
             ActivateTriggers();
@@ -127,13 +127,13 @@ $(document).ready(function() {
             console.error(e);
         });
 
-        function ActivateTriggers(){
-            $('#transfer-confirm').on('click', function() {
+        function ActivateTriggers() {
+            $('#transfer-confirm').on('click', function () {
                 myContract.transferTokenTo(targetId, slug, {
-                        from:web3.eth.accounts[0],
-                        gas:200000,
+                        from: web3.eth.accounts[0],
+                        gas: 200000,
                         gasPrice: 2000000000
-                    }, function(error, result) {
+                    }, function (error, result) {
                         if (!error) {
                             var url = $('.url-finish-transfer').data('url');
 
@@ -143,14 +143,18 @@ $(document).ready(function() {
                             $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
                             $('#scannerModal .modal-body').append(
                                 '<div class="alert alert-primary">' +
-                                    'Parcel succesfully <u id="transfer-hash">transferred!</u>' +
+                                'Parcel succesfully <u id="transfer-hash">transferred!</u>' +
                                 '</div>');
 
-                            $('#transfer-close').on('click', function() {
+                            $('#transfer-close').on('click', function () {
                                 window.location.replace(url);
                             });
 
-                            $('#transfer-hash').popover({content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/"+result+"'>"+result+"</a>", html: true, placement: "bottom"});
+                            $('#transfer-hash').popover({
+                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
+                                html: true,
+                                placement: "bottom"
+                            });
 
                             console.log(result);
                             console.log("https://rinkeby.etherscan.io/tx/" + result);
@@ -162,7 +166,7 @@ $(document).ready(function() {
                 );
             });
 
-            $('#transfer-deny').on('click', function() {
+            $('#transfer-deny').on('click', function () {
                 scanner.start();
                 $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
                 $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
@@ -171,6 +175,7 @@ $(document).ready(function() {
                 $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
             });
         }
+
         // TODO: checken of address klopt voor je functie uitvoert klopt
     }
-});
+}
