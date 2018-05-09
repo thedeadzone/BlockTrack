@@ -16,7 +16,7 @@ $(document).ready(function() {
                                 if (result[i]['args']['delivered'] == true) {
                                     html = '<div class="progress-bar bg-success" role="progressbar" style="width: 100%">Delivered</div>';
                                 } else {
-                                    html = '<div class="progress-bar" role="progressbar" style="width: 100%">Transport</div>';
+                                    html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
                                 }
 
                                 var date = new Date(result[i]['args']['time'] * 1000);
@@ -27,7 +27,7 @@ $(document).ready(function() {
                                         '<span></span>' +
                                         '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + '</div>'+
                                         '<div class="info">' + result[i]["args"]["location"] + '</div>'+
-                                        '<div class="info token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
+                                        '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
                                     '</li>');
 
                                 $('.token-2-' + i).popover({

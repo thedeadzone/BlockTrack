@@ -1,6 +1,116 @@
 /**
+* General Styling
+**/
+
+.header {
+    min-height:40px;
+}
+
+.row {
+    margin: auto;
+}
+
+.pull-right {
+    float:right;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-center-transfer {
+    text-align: center;
+    width:100%;
+    float: right;
+}
+
+.last-update-text {
+    font-size: 14px;
+}
+
+div.card {
+    margin-bottom:15px;
+}
+
+div.card.text-center div.card-footer p, div.card.text-center div.card-header p {
+    margin-bottom:0;
+}
+
+div.card.text-center div.card-footer p {
+    font-size:14px;
+}
+
+.text-parcel-footer {
+    margin: 0;
+    text-align: center;
+}
+
+#preview {
+    max-width:100%;
+}
+
+#transfer-id {
+    font-size:10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.hr-text {
+    line-height: 1em;
+    position: relative;
+    outline: 0;
+    border: 0;
+    text-align: center;
+    height: 1.5em;
+    font-size:25px;
+}
+
+.hr-text:before {
+    content: '';
+    background: linear-gradient(to right, transparent, #1982C4, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+ }
+
+.hr-text:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: #1982C4;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    background-color: #fcfcfa;
+}
+
+.card-footer .progress {
+    height: 2em;
+}
+
+div.no-data-card.card.border .card-body {
+    background-color: white !important;
+}
+
+div.no-data-card.card.border .card-body .card-title {
+    color: #19aaf4 !important;
+}
+
+div.no-data-card.card.border .card-body .card-subtitle  {
+    color: #19aaf4 !important;
+}
+
+/**
 * Styling for split page coloring
 **/
+
+html {
+    background-color: #fbfbfb;
+}
 
 body {
     background-color:transparent;
@@ -25,24 +135,24 @@ body {
 */
 
 /*.blue-color-2 {*/
-    /*background-color: #19aaf4;*/
+/*background-color: #19aaf4;*/
 /*}*/
 
 /*.blue-color-2  .hr-text:after {*/
-    /*color: #1982C4;*/
-    /*background-color: white;*/
+/*color: #1982C4;*/
+/*background-color: white;*/
 /*}*/
 
 .transfer-colors {
     /*background: linear-gradient(0deg, #19aaf4, #1982C4) no-repeat; !* 1990d1 *!*/
-    background:white;
+    background-color:#fbfbfb;
     min-height:50px;
     margin-top: -50px;
 }
 
 
 /*
-* OPTIONAL STYLING VOOR DELIVERY INDEX PAGINA
+* OPTIONAL STYLING FOR INDEX PAGE
 */
 
 .customer-todo .card .card-body,  .customer-done .card .card-body {
@@ -141,6 +251,7 @@ body {
     text-transform: capitalize;
     font-style: italic;
     text-align: right;
+    font-size: 14px;
 }
 
 .box .time span{
@@ -194,99 +305,4 @@ svg{
     50%{
         top:106%
     }
-}
-
-
-/**
-* General Styling
-**/
-
-.header {
-    min-height:40px;
-}
-
-.row {
-    margin: auto;
-}
-
-.pull-right {
-    float:right;
-}
-
-.align-center {
-    text-align: center;
-}
-
-.align-center-transfer {
-    text-align: center;
-    width:100%;
-    float: right;
-}
-
-.last-update-text {
-    font-size: 14px;
-}
-
-div.card {
-    margin-bottom:15px;
-}
-
-div.card.text-center div.card-footer p, div.card.text-center div.card-header p {
-    margin-bottom:0;
-}
-
-div.card.text-center div.card-footer p {
-    font-size:14px;
-}
-
-.text-parcel-footer {
-    margin: 0;
-    text-align: center;
-}
-
-#preview {
-    max-width:100%;
-}
-
-#transfer-id {
-    font-size:10px;
-}
-
-.hidden {
-    display: none;
-}
-
-.hr-text {
-    line-height: 1em;
-    position: relative;
-    outline: 0;
-    border: 0;
-    text-align: center;
-    height: 1.5em;
-    font-size:25px;
-}
-
-.hr-text:before {
-    content: '';
-    background: linear-gradient(to right, transparent, #1982C4, transparent);
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    height: 1px;
- }
-
-.hr-text:after {
-    content: attr(data-content);
-    position: relative;
-    display: inline-block;
-    color: #1982C4;
-
-    padding: 0 .5em;
-    line-height: 1.5em;
-    background-color: #fcfcfa;
-}
-
-.card-footer .progress {
-    height: 2em;
 }

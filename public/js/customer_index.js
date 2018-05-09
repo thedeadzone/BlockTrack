@@ -21,25 +21,24 @@ $(document).ready(function() {
                                                     date = new Date(result[i]['args']['time']['c'][0] * 1000);
                                                 }
                                             }
-
                                             var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
                                             $('.customer-todo').append(
                                                 '<div class="card border" data-token-id="' + tokenId + '">' +
-                                                '<div class="card-body">' +
-                                                '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-primary pull-right">In Transport</span></h5>' +
-                                                '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-                                                '</div>' +
-                                                '<div class="card-footer bg-transparent">' +
-                                                '<div class="row">' +
-                                                '<div class="col-6">' +
-                                                '<a href="' + url + '" class="card-link">Details</a>' +
-                                                '</div>' +
-                                                '<div class="col-6">' +
-                                                '<p class="card-text pull-right text-muted">' + token[1] + '</p>' +
-                                                '</div>' +
-                                                '</div>' +
-                                                '</div>' +
+                                                    '<div class="card-body">' +
+                                                        '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-primary pull-right">In Transport</span></h5>' +
+                                                        '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                                    '</div>' +
+                                                    '<div class="card-footer bg-transparent">' +
+                                                        '<div class="row">' +
+                                                            '<div class="col-6">' +
+                                                                '<a href="' + url + '" class="card-link">Details</a>' +
+                                                            '</div>' +
+                                                            '<div class="col-6">' +
+                                                                '<p class="card-text pull-right text-muted">' + token[1] + '</p>' +
+                                                            '</div>' +
+                                                        '</div>' +
+                                                    '</div>' +
                                                 '</div>');
                                         } else {
                                             console.log('No data');
@@ -57,7 +56,13 @@ $(document).ready(function() {
                     });
                 }
             } else {
-                console.log('No data');
+            $('.customer-todo').append(
+                '<div class="card border no-data-card">' +
+                    '<div class="card-body">' +
+                        '<h5 class="card-title">No parcels expected.</h5>' +
+                        '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                    '</div>' +
+                '</div>');
             }
         } else {
             console.error(error);
@@ -84,20 +89,20 @@ $(document).ready(function() {
 
                                 $('.customer-done').append(
                                     '<div class="card border" data-token-id="' + tokenId + '">' +
-                                    '<div class="card-body">' +
-                                    '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-success pull-right">Delivered</span></h5>' +
-                                    '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-                                    '</div>' +
-                                    '<div class="card-footer bg-transparent">' +
-                                    '<div class="row">' +
-                                    '<div class="col-6">' +
-                                    '<a href="' + url + '" class="card-link">Details</a>' +
-                                    '</div>' +
-                                    '<div class="col-6">' +
-                                    '<p class="card-text pull-right text-muted">' + result[1] + '</p>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>' +
+                                        '<div class="card-body">' +
+                                            '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-success pull-right">Delivered</span></h5>' +
+                                            '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                        '</div>' +
+                                        '<div class="card-footer bg-transparent">' +
+                                            '<div class="row">' +
+                                                '<div class="col-6">' +
+                                                    '<a href="' + url + '" class="card-link">Details</a>' +
+                                                '</div>' +
+                                                '<div class="col-6">' +
+                                                    '<p class="card-text pull-right text-muted">' + result[1] + '</p>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
                                     '</div>');
                             } else {
                                 console.error(error);
@@ -107,12 +112,11 @@ $(document).ready(function() {
                 }
             } else {
                 $('.customer-done').append(
-                    '<div class="card border" data-token-id="' + tokenId + '">' +
-                    '<div class="card-body">' +
-                    '<h5 class="card-title">No parcels delivered.</span></h5>' +
-                    '<p class="card-subtitle text-muted last-update-text">Nothing here (for now)</p>' +
-                    '</div>' +
-                    '</div>' +
+                    '<div class="card border no-data-card">' +
+                        '<div class="card-body">' +
+                            '<h5 class="card-title">No parcels delivered.</h5>' +
+                            '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                        '</div>' +
                     '</div>');
             }
         } else {

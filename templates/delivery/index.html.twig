@@ -1,11 +1,43 @@
 {% extends 'base.html.twig' %}
 
 {% block  body %}
-    <div class="url-detail" data-url-detail="{{ path('app_delivery_detail', {'slug': 0}) }}"></div>
+    <div class="row">
+        <div class="col-12">
+            <button type="button" id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer">Scan QR Code</button>
+        </div>
+    </div>
+
+    <div class="url-detail" data-url-detail="{{ path('app_delivery_detail', {'slug': 0}) }}">
+    </div>
+
     <hr class="hr-text" data-content="Todo">
+
     <div class="customer-todo">
     </div>
+
     <hr class="hr-text" data-content="Done">
+
     <div class="customer-done">
+    </div>
+
+    <div class="modal fade" id="scannerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Scan QR Code</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <video id="preview"></video>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="transfer-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="transfer-deny" type="button" class="btn btn-danger hidden">Deny</button>
+                    <button id="transfer-confirm" type="button" class="btn btn-success hidden">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

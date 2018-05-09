@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var slug = $('#slug').data('slug');
     var token = '';
-    var targetId = '';
+        var targetId = '';
 
     myContract.getToken(slug, function(error, result) {
         if (!error) {
@@ -30,7 +30,7 @@ $(document).ready(function() {
                                     '<span></span>' +
                                     '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + '</div>'+
                                     '<div class="info">' + result[i]["args"]["location"] + '</div>'+
-                                    '<div class="info token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
+                                    '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
                                     '</li>');
 
                                 $('.token-2-' + i).popover({
@@ -94,7 +94,13 @@ $(document).ready(function() {
         });
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
-                scanner.start(cameras[0]);
+                if (cameras[1]) {
+                    scanner.mirror = false;
+                    scanner.start(cameras[1]);
+                } else {
+                    scanner.mirror = false;
+                    scanner.start(cameras[0]);
+                }
             } else {
                 console.error('No cameras found.');
             }
