@@ -13,7 +13,7 @@ module.exports = {
         rinkeby: {
             provider: new HDWalletProvider(secret.MNEMONIC, 'https://rinkeby.infura.io/ALZ6zu5v1wM4s4xnMU7a'),
             network_id: 4,
-            gas: 4600000
+            gas: 5000000
         }
     }
 };

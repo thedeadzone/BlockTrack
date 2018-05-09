@@ -30,12 +30,7 @@ function startApp() {
 
     //TODO: Check for right network or display stuff otherwise
 
-    // web3.eth.getBalance(coinbase, function(error, result){
-    // if(!error)
-    //     console.log(web3.fromWei(result.toNumber()), 'ether');
-    // else
-    //     console.error(error);
-    // });
+
 
     // Hardcoded address to the contract being used
     myContract = web3.eth.contract([
@@ -418,6 +413,11 @@ function startApp() {
                     "indexed": false,
                     "name": "receiverName",
                     "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "name": "location",
+                    "type": "string"
                 }
             ],
             "name": "handOff",
@@ -662,6 +662,10 @@ function startApp() {
                 {
                     "name": "_name",
                     "type": "string"
+                },
+                {
+                    "name": "_location",
+                    "type": "string"
                 }
             ],
             "name": "registerDeliverer",
@@ -692,7 +696,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x7049f8bdaf0443de98ba83d7a5db1f948399f33d');
+    ]).at('0xad0bcede038bcec9c1e7a7ebf4b221a4828ee98b');
 
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
@@ -717,8 +721,13 @@ function startApp() {
     //             console.error(error);
     //     }
     // );
-
-
+    //
+    // web3.eth.getBalance(coinbase, function(error, result){
+    // if(!error)
+    //     console.log(web3.fromWei(result.toNumber()), 'ether');
+    // else
+    //     console.error(error);
+    // });
 }
 
 function getNetwork() {

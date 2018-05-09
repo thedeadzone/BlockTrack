@@ -30,6 +30,9 @@ contract BlockTrack is ERC721Token, Ownable {
   // Mapping a deliverer (adddress) to it's name or identifier (string).
   mapping (address => string) internal NameToDeliverer;
 
+  // Mapping a deliverer (adddress) to it's location (string).
+  mapping (address => string) internal LocationToDeliverer;
+
   // Mapping of parcels (uint256) to be received by a receiver (address).
   mapping (address => uint256) internal ReceivingParcelsCount;
 
@@ -38,8 +41,7 @@ contract BlockTrack is ERC721Token, Ownable {
 
   /**** Events ****/
 
-  // event createParcel(address owner, uint256 indexed tokenId, string indexed shippingCompany, address indexed receivingAddress, uint64 time); // AKA Mint
-  event handOff(address indexed owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName); //, uint64 location
+  event handOff(address indexed owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName, string location);
   event delivererRegistered(address deliverer, string name, string company);
   // event registerShippingCompany(address shippingcompany, string name);
 
@@ -162,14 +164,14 @@ contract BlockTrack is ERC721Token, Ownable {
         isReceiver(_tokenId, _to)
       );
 
-    string delivererName = NameToDeliverer[msg.sender];
+    Token memory token = tokens[_tokenId];
 
     if (ParcelToReceiver[_tokenId] == _to) {
-      emit handOff(msg.sender, _to, _tokenId, uint64(now), true, delivererName, 'Customer');
+      emit handOff(msg.sender, _to, _tokenId, uint64(now), true, NameToDeliverer[msg.sender], 'Customer', token.receivingPostalAddress);
       // Removes 1 from the total amount of parcels to be received by receiver.
       ReceivingParcelsCount[_to] = ReceivingParcelsCount[_to].sub(1);
     } else {
-      emit handOff(msg.sender, _to, _tokenId, uint64(now), false, delivererName, NameToDeliverer[_to]);
+      emit handOff(msg.sender, _to, _tokenId, uint64(now), false, NameToDeliverer[msg.sender], NameToDeliverer[_to], LocationToDeliverer[_to]);
     }
   }
 
@@ -183,8 +185,9 @@ contract BlockTrack is ERC721Token, Ownable {
   /// @notice registers a new deliverer to it's mapping.
   /// @param _deliverer address of the deliverer.
   /// @param _name name or identifier of the deliverer.
-  function registerDeliverer(address _deliverer, string _name) public onlyShippingCompany() {
+  function registerDeliverer(address _deliverer, string _name, string _location) public onlyShippingCompany() {
     NameToDeliverer[_deliverer] = _name;
+    LocationToDeliverer[_deliverer] = _location;
     CompanyToDeliverer[_deliverer] = msg.sender;
 
     emit delivererRegistered(_deliverer, _name, NameToShippingCompany[msg.sender]);
@@ -204,7 +207,7 @@ contract BlockTrack is ERC721Token, Ownable {
     // Generates new ID for the token.
     uint256 newTokenId = tokens.push(token) - 1;
 
-    emit handOff(msg.sender, _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer]);
+    emit handOff(msg.sender, _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer], LocationToDeliverer[_deliverer]);
 
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = _receivingAddress;
