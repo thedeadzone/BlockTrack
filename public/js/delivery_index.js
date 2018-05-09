@@ -19,7 +19,7 @@ $(document).ready(function() {
 
                 for (i = 0; i < result.length; i++) {
                     var count = i;
-                    finished[i] = result[count]['args']['tokenId']['c'][0];
+                    finished.push(result[count]['args']['tokenId']['c'][0]);
 
                     myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
                         if (!error) {
@@ -135,6 +135,14 @@ $(document).ready(function() {
                                 }
                             }
                         });
+                    } else {
+                        $('.customer-todo').append(
+                            '<div class="card border no-data-card">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">All parcels delivered.</h5>' +
+                            '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                            '</div>' +
+                            '</div>');
                     }
                 }
             } else {
