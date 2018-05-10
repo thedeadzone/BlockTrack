@@ -181,7 +181,7 @@ body {
     /*border-color: #1982C4 !important;*/
 }
 
-.card.border .card-footer {
+.todo .card.border .card-footer, .done .card.border .card-footer {
     border-color: #19aaf4 !important;
     /*border-color: #1982C4 !important;*/
 }

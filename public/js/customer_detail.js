@@ -23,7 +23,6 @@ function startOthers() {
                                 }
 
                                 let date = new Date(result[i]['args']['time'] * 1000);
-                                // let owner = result[i]['args']['owner'];
 
                                 $('.page-content-2 #first-list').append(
                                     '<li>'+

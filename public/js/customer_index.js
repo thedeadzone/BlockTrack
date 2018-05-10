@@ -22,7 +22,7 @@ function startOthers() {
                                             }
                                             let url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
-                                            $('.customer-todo').append(
+                                            $('.todo').append(
                                                 '<div class="card border" data-token-id="' + tokenId + '">' +
                                                     '<div class="card-body">' +
                                                         '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-primary pull-right">In Transport</span></h5>' +
@@ -55,7 +55,7 @@ function startOthers() {
                     });
                 }
             } else {
-            $('.customer-todo').append(
+            $('.todo').append(
                 '<div class="card border no-data-card">' +
                     '<div class="card-body">' +
                         '<h5 class="card-title">No parcels expected.</h5>' +
@@ -86,7 +86,7 @@ function startOthers() {
 
                                 let url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
-                                $('.customer-done').append(
+                                $('.done').append(
                                     '<div class="card border" data-token-id="' + tokenId + '">' +
                                         '<div class="card-body">' +
                                             '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-success pull-right">Delivered</span></h5>' +
@@ -110,7 +110,7 @@ function startOthers() {
                     });
                 }
             } else {
-                $('.customer-done').append(
+                $('.done').append(
                     '<div class="card border no-data-card">' +
                         '<div class="card-body">' +
                             '<h5 class="card-title">No parcels delivered.</h5>' +

@@ -38,7 +38,7 @@ function startOthers() {
                                     message = 'In Transport';
                                 }
 
-                                $('.customer-done').append(
+                                $('.done').append(
                                     '<div class="card border" data-token-id="' + tokenId + '">' +
                                     '<div class="card-body">'+
                                     '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-'+badge+' pull-right">'+message+'</span></h5>' +
@@ -64,7 +64,7 @@ function startOthers() {
                     });
                 }
             } else {
-                $('.customer-done').append(
+                $('.done').append(
                     '<div class="card border no-data-card">' +
                         '<div class="card-body">' +
                             '<h5 class="card-title">No parcels delivered</h5>' +
@@ -113,7 +113,7 @@ function startOthers() {
 
                                     url = url.replace(/\d+/, tokenId);
 
-                                    $('.customer-todo').append(
+                                    $('.todo').append(
                                         '<div class="card border" data-token-id="' + tokenId + '">' +
                                             '<div class="card-body">' +
                                                 '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
@@ -138,7 +138,7 @@ function startOthers() {
                     }
                 }
                 if (!block) {
-                    $('.customer-todo').append(
+                    $('.todo').append(
                         '<div class="card border no-data-card">' +
                         '<div class="card-body">' +
                         '<h5 class="card-title">All parcels delivered.</h5>' +
@@ -147,7 +147,7 @@ function startOthers() {
                         '</div>');
                 }
             } else {
-                $('.customer-todo').append(
+                $('.todo').append(
                     '<div class="card border no-data-card">' +
                     '<div class="card-body">' +
                     '<h5 class="card-title">All parcels delivered.</h5>' +
