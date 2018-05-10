@@ -1,27 +1,27 @@
 function startOthers() {
-    myContract.parcelsOfReceiver.call(web3.eth.accounts[0], function (error, result) {
+    myContract.parcelsOfReceiver(web3.eth.accounts[0], function (error, result) {
         if (!error) {
-            if (result.length != 0) {
-                var i = 0;
+            if (result.length !== 0) {
+                let i = 0;
 
                 for (i = 0; i < result.length; i++) {
-                    var tokenId = result[i];
+                    let tokenId = result[i];
                     myContract.getToken.call(tokenId, function (error, result) {
                         if (!error) {
-                            if (result.length != 0) {
-                                var div = '';
-                                var date = '';
-                                var token = result;
+                            if (result.length !== 0) {
+                                let div = '';
+                                let date = '';
+                                let token = result;
 
                                 myContract.handOff({tokenId: tokenId}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                                     if (!error) {
-                                        if (result.length != 0) {
+                                        if (result.length !== 0) {
                                             for (i = 0; i < result.length; i++) {
-                                                if (i == result.length - 1) {
+                                                if (i === result.length - 1) {
                                                     date = new Date(result[i]['args']['time']['c'][0] * 1000);
                                                 }
                                             }
-                                            var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+                                            let url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
                                             $('.customer-todo').append(
                                                 '<div class="card border" data-token-id="' + tokenId + '">' +
@@ -71,21 +71,21 @@ function startOthers() {
 
     myContract.handOff({receiver: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
         if (!error) {
-            if (result.length != 0) {
-                var i = 0;
-                var date = '';
-                var tokenId = result[i]['args']['tokenId']['c'];
-                var handOff = result;
+            if (result.length !== 0) {
+                let i = 0;
+                let date = '';
+                let tokenId = result[i]['args']['tokenId']['c'];
+                let handOff = result;
 
                 for (i = 0; i < result.length; i++) {
-                    var count = i;
+                    let count = i;
                     myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
                         if (!error) {
-                            if (result.length != 0) {
+                            if (result.length !== 0) {
 
                                 date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
 
-                                var url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
+                                let url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
                                 $('.customer-done').append(
                                     '<div class="card border" data-token-id="' + tokenId + '">' +

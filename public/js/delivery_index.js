@@ -1,7 +1,6 @@
 function startOthers() {
-    var finished = [];
-    var targetId = '';
-    var url = $('.url-detail').data('url-detail');
+    let finished = [];
+    let url = $('.url-detail').data('url-detail');
 
     $('#activate-scanner').on('click', function () {
         activateScanner();
@@ -9,28 +8,27 @@ function startOthers() {
 
     myContract.handOff({owner: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
         if (!error) {
-            if (result.length != 0) {
-                var i = 0;
-                var badge = '';
-                var date = '';
-                var message = '';
-                var tokenId = result[i]['args']['tokenId']['c'];
-                var handOff = result;
+            if (result.length !== 0) {
+                let i = 0;
+                let badge = '';
+                let date = '';
+                let message = '';
+                let tokenId = result[i]['args']['tokenId']['c'];
+                let handOff = result;
 
                 for (i = 0; i < result.length; i++) {
-                    var count = i;
+                    let count = i;
                     finished.push(result[count]['args']['tokenId']['c'][0]);
 
                     myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
                         if (!error) {
-                            if (result.length != 0) {
-                                var done = false;
+                            if (result.length !== 0) {
+                                let done = false;
+                                date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
 
-                                if (handOff[count]['args']['delivered'] == true) {
+                                if (handOff[count]['args']['delivered'] === true) {
                                     done = true;
                                 }
-
-                                date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
 
                                 if (done) {
                                     badge = 'success';
@@ -81,23 +79,25 @@ function startOthers() {
 
     myContract.handOff({receiver: web3.eth.accounts[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
         if (!error) {
-            if (result.length != 0) {
-                var i = 0;
-                var badge = '';
-                var date = '';
-                var message = '';
-                var tokenId = result[i]['args']['tokenId']['c'];
-                var handOff = result;
+            if (result.length !== 0) {
+                let i = 0;
+                let badge = '';
+                let date = '';
+                let message = '';
+                let handOff = result;
+                let block = false;
 
                 for (i = 0; i < result.length; i++) {
-                    var count = i;
+                    let tokenId = result[i]['args']['tokenId']['c'];
+                    let count = i;
                     if (!finished.includes(result[count]['args']['tokenId']['c'][0])) {
+                        block = true;
                         myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
                             if (!error) {
-                                if (result.length != 0) {
-                                    var done = false;
+                                if (result.length !== 0) {
+                                    let done = false;
 
-                                    if (handOff[count]['args']['delivered'] == true) {
+                                    if (handOff[count]['args']['delivered'] === true) {
                                         done = true;
                                     }
 
@@ -135,23 +135,24 @@ function startOthers() {
                                 }
                             }
                         });
-                    } else {
-                        $('.customer-todo').append(
-                            '<div class="card border no-data-card">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title">All parcels delivered.</h5>' +
-                            '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
-                            '</div>' +
-                            '</div>');
                     }
+                }
+                if (!block) {
+                    $('.customer-todo').append(
+                        '<div class="card border no-data-card">' +
+                        '<div class="card-body">' +
+                        '<h5 class="card-title">All parcels delivered.</h5>' +
+                        '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                        '</div>' +
+                        '</div>');
                 }
             } else {
                 $('.customer-todo').append(
                     '<div class="card border no-data-card">' +
-                        '<div class="card-body">' +
-                            '<h5 class="card-title">All parcels delivered.</h5>' +
-                            '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
-                        '</div>' +
+                    '<div class="card-body">' +
+                    '<h5 class="card-title">All parcels delivered.</h5>' +
+                    '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                    '</div>' +
                     '</div>');
             }
         } else {

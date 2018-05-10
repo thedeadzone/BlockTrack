@@ -104,6 +104,21 @@ div.no-data-card.card.border .card-body .card-subtitle  {
     color: #19aaf4 !important;
 }
 
+.card-footer.bg-transparent img {
+    margin-bottom:15px;
+}
+
+#alerts {
+    position: absolute;
+    width: 80%;
+    z-index: 1
+}
+
+
+
+
+
+
 /**
 * Styling for split page coloring
 **/
@@ -163,7 +178,12 @@ body {
 /*}*/
 
 .card.border {
+    /*border-color: #1982C4 !important;*/
+}
+
+.card.border .card-footer {
     border-color: #19aaf4 !important;
+    /*border-color: #1982C4 !important;*/
 }
 
 /**
@@ -196,11 +216,11 @@ body {
     border:1px dashed #19aaf4;
     position: absolute;
     top:0;
-    left:30px
+    left:20px
 }
 
 .box ul li{
-    margin: 0 0 60px 60px;
+    margin: 0 0 45px 50px;
     position: relative;
     padding: 10px 20px;
     background:#19aaf4;

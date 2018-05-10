@@ -1,27 +1,29 @@
 function startOthers() {
-    var slug = $('#slug').data('slug');
-    var token = '';
-    var html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
-    var house = '';
+    let slug = $('#slug').data('slug');
+    let token = '';
+    let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
+    let house = '';
+    let qr = '<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl=\'+ web3.eth.accounts[0] +\'&choe=UTF-8&chs=500x500">';
 
     myContract.getToken(slug, function(error, result) {
         if (!error) {
-            if (result.length != 0) {
+            if (result.length !== 0) {
                 token = result;
 
                 myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
-                        if (result.length != 0) {
-                            var i = 0;
+                        if (result.length !== 0) {
+                            let i = 0;
                             for (i = result.length - 1; i >= 0; i--) {
                                 house = '';
-                                if (result[i]['args']['delivered'] == true) {
+                                if (result[i]['args']['delivered'] === true) {
                                     house = '<i class="fas fa-home"></i>';
                                     html = '<div class="progress-bar bg-success" role="progressbar" style="width: 100%">Delivered</div>';
+                                    qr = '';
                                 }
 
-                                var date = new Date(result[i]['args']['time'] * 1000);
-                                var owner = result[i]['args']['owner'];
+                                let date = new Date(result[i]['args']['time'] * 1000);
+                                // let owner = result[i]['args']['owner'];
 
                                 $('.page-content-2 #first-list').append(
                                     '<li>'+
@@ -51,6 +53,7 @@ function startOthers() {
                                         '<p class="card-text text-muted">' + token[3] + '</p>' +
                                     '</div>' +
                                     '<div class="card-footer bg-transparent">' +
+                                        qr +
                                         '<div class="progress">' +
                                             html +
                                         '</div>' +

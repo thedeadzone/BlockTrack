@@ -1,9 +1,9 @@
 function startOthers() {
-    var slug = $('#slug').data('slug');
-    var token = '';
-    var targetId = '';
-    var html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
-    var house = '';
+    let slug = $('#slug').data('slug');
+    let token = '';
+    let targetId = '';
+    let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
+    let house = '';
 
     myContract.getToken(slug, function (error, result) {
         if (!error) {
@@ -57,6 +57,10 @@ function startOthers() {
                                             '<a id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="button button-lg align-center-transfer">Transfer</a>' +
                                             '</div>' +
                                             '</div>');
+
+                                            $('#activate-scanner').on('click', function () {
+                                                activateScanner();
+                                            });
                                     } else {
                                         $('.page-content-1').append(
                                             '<div class="card border" data-token-id="' + slug + '">' +
@@ -73,10 +77,6 @@ function startOthers() {
                                             '</div>');
                                     }
                                 }
-                            });
-
-                            $('#activate-scanner').on('click', function () {
-                                activateScanner();
                             });
                         } else {
                             console.log('No data');
@@ -95,20 +95,29 @@ function startOthers() {
     function activateScanner() {
         let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
         scanner.addListener('scan', function (content) {
-            scanner.stop();
-            targetId = content;
-            $('#scannerModal .modal-body video').toggleClass('hidden');
-            $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
-            $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
-            $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
+            if (web3.isAddress(content)) {
+                scanner.stop();
+                targetId = content;
+                $('#scannerModal .modal-body video').toggleClass('hidden');
+                $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
+                $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
+                $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
 
-            $('#scannerModal .modal-body').append(
-                '<div class="transfer-content">' +
-                '<p class="align-center">Are you sure this is the right address?</p>' +
-                '<p class="align-center" id="transfer-id">' + content + '</p>' +
-                '</div>');
+                $('#scannerModal .modal-body').append(
+                    '<div class="transfer-content">' +
+                    '<p class="align-center">Are you sure this is the right address?</p>' +
+                    '<p class="align-center" id="transfer-id">' + content + '</p>' +
+                    '</div>');
 
-            ActivateTriggers();
+                ActivateTriggers();
+            } else {
+                let alert =
+                    $('<div class="alert alert-danger alert-dismissable">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                        'This is not an correct address: '+ content +'.</div>');
+                alert.appendTo("#alerts");
+                alert.slideDown("slow");
+            }
         });
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
