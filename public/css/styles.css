@@ -155,13 +155,16 @@ body {
 * OPTIONAL STYLING FOR INDEX PAGE
 */
 
-.customer-todo .card .card-body,  .customer-done .card .card-body {
-    background-color: #19aaf4;
-}
-.customer-todo .card .card-body .card-title, .customer-todo .card .card-body .card-subtitle, .customer-done .card .card-body .card-title, .customer-done .card .card-body .card-subtitle{
-    color:white!important;
-}
+/*.customer-todo .card .card-body,  .customer-done .card .card-body {*/
+    /*background-color: #19aaf4;*/
+/*}*/
+/*.customer-todo .card .card-body .card-title, .customer-todo .card .card-body .card-subtitle, .customer-done .card .card-body .card-title, .customer-done .card .card-body .card-subtitle{*/
+    /*color:white!important;*/
+/*}*/
 
+.card.border {
+    border-color: #19aaf4 !important;
+}
 
 /**
 * Styling for the history vertical UL
