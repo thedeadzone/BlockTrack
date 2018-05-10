@@ -13,12 +13,12 @@ function startOthers() {
                 let badge = '';
                 let date = '';
                 let message = '';
-                let tokenId = result[i]['args']['tokenId']['c'];
                 let handOff = result;
 
                 for (i = 0; i < result.length; i++) {
                     let count = i;
-                    finished.push(result[count]['args']['tokenId']['c'][0]);
+                    let tokenId = handOff[count]['args']['tokenId']['c'];
+                    finished.push(handOff[count]['args']['tokenId']['c'][0]);
 
                     myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
                         if (!error) {
@@ -163,10 +163,37 @@ function startOthers() {
     function activateScanner() {
         let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
         scanner.addListener('scan', function (content) {
-            console.log(content);
-            scanner.stop();
-            window.location = url.replace(/\d+/, content);
+            if (isInt(content)) {
+                myContract.getToken.call(content, function (error, result) {
+                    if (!error && result.length !== 0) {
+                        console.log(content);
+                        scanner.stop();
+                        window.location = url.replace(/\d+/, content);
+                    } else {
+                        let alert =
+                            $('<div class="alert alert-danger alert-dismissable">' +
+                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                'This is not a correct id: '+ content +'.</div>');
+                        alert.appendTo("#alerts");
+                        alert.slideDown();
+                        setTimeout(function () {
+                            alert.slideToggle();
+                        }, 5000);
+                    }
+                });
+            } else {
+                let alert =
+                    $('<div class="alert alert-danger alert-dismissable">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                        'This is not an id: '+ content +'.</div>');
+                alert.appendTo("#alerts");
+                alert.slideDown();
+                setTimeout(function () {
+                    alert.slideToggle();
+                }, 5000);
+            }
         });
+
         Instascan.Camera.getCameras().then(function (cameras) {
             if (cameras.length > 0) {
                 if (cameras[1]) {

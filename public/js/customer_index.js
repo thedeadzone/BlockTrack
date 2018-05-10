@@ -9,7 +9,6 @@ function startOthers() {
                     myContract.getToken.call(tokenId, function (error, result) {
                         if (!error) {
                             if (result.length !== 0) {
-                                let div = '';
                                 let date = '';
                                 let token = result;
 

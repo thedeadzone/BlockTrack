@@ -109,11 +109,11 @@ div.no-data-card.card.border .card-body .card-subtitle  {
 }
 
 #alerts {
-    position: absolute;
-    width: 80%;
-    z-index: 1
+    position: fixed;
+    bottom:0;
+    margin: 15px;
+    z-index: 9999
 }
-
 
 
 
@@ -220,7 +220,7 @@ body {
 }
 
 .box ul li{
-    margin: 0 0 45px 50px;
+    margin:0 10px 45px 50px;
     position: relative;
     padding: 10px 20px;
     background:#19aaf4;

@@ -114,9 +114,12 @@ function startOthers() {
                 let alert =
                     $('<div class="alert alert-danger alert-dismissable">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                        'This is not an correct address: '+ content +'.</div>');
+                        'This is not a correct address: '+ content +'.</div>');
                 alert.appendTo("#alerts");
-                alert.slideDown("slow");
+                alert.slideDown();
+                setTimeout(function () {
+                    alert.slideToggle();
+                }, 5000);
             }
         });
         Instascan.Camera.getCameras().then(function (cameras) {

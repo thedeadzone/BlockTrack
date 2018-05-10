@@ -126,7 +126,7 @@ contract BlockTrack is ERC721Token, Ownable {
   }
 
   /// @notice Returns a list of all tokens being received by an address.
-  /// @param _receiver The owner whose parcels we are looking for.
+  /// @param _receiver The parcels of the owner we are looking for.
   function parcelsOfReceiver(address _receiver) external view returns(uint256[] receiverParcels) {
     uint256 tokenCount = balanceOfReceiver(_receiver);
 
@@ -203,14 +203,13 @@ contract BlockTrack is ERC721Token, Ownable {
 
     // Adds 1 to the total amount of parcels to be received by receiver.
     ReceivingParcelsCount[_receivingAddress] = ReceivingParcelsCount[_receivingAddress].add(1);
+    // Maps Parcel to it's receiver.
+    ParcelToReceiver[newTokenId] = _receivingAddress;
     
     // Generates new ID for the token.
     uint256 newTokenId = tokens.push(token) - 1;
 
     emit handOff(msg.sender, _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer], LocationToDeliverer[_deliverer]);
-
-    // Maps Parcel to it's receiver.
-    ParcelToReceiver[newTokenId] = _receivingAddress;
 
     super._mint(_deliverer, newTokenId);
   }

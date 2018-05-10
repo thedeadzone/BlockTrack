@@ -12,7 +12,8 @@
 <body>
     {#<div class="header">#}
     {#</div>#}
-{% block body %}{% endblock %}
+    <div id="alerts"></div>
+    {% block body %}{% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
