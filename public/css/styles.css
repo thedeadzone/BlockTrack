@@ -24,6 +24,10 @@
     float: right;
 }
 
+.margin-bottom {
+    margin-bottom:15px;
+}
+
 .last-update-text {
     font-size: 14px;
 }
@@ -100,9 +104,9 @@ div.no-data-card.card.border .card-body .card-title {
     color: #19aaf4 !important;
 }
 
-div.no-data-card.card.border .card-body .card-subtitle  {
-    color: #19aaf4 !important;
-}
+/*div.no-data-card.card.border .card-body .card-subtitle  {*/
+    /*color: #19aaf4 !important;*/
+/*}*/
 
 .card-footer.bg-transparent img {
     margin-bottom:15px;
