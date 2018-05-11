@@ -154,7 +154,7 @@ function startOthers() {
                             $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
                             $('#scannerModal .modal-body').append(
                                 '<div class="alert alert-primary">' +
-                                'Parcel succesfully <u id="transfer-hash">transferred!</u>' +
+                                'Parcel <u id="transfer-hash">transferred!</u> Results will be reflected in ~30 seconds.' +
                                 '</div>');
 
                             $('#transfer-close').on('click', function () {

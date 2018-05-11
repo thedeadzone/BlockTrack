@@ -33,7 +33,7 @@ contract BlockTrack is ERC721Token, Ownable {
   // Mapping a deliverer (adddress) to it's location (string).
   mapping (address => string) internal LocationToDeliverer;
 
-  // Mapping of parcels (uint256) to be received by a receiver (address).
+  // Mapping of parcels (uint256) receiving total to a receiver (address).
   mapping (address => uint256) internal ReceivingParcelsCount;
 
   // Mapping a deliverer (address) to an existing ShippingCompany (address)
@@ -167,9 +167,7 @@ contract BlockTrack is ERC721Token, Ownable {
     Token memory token = tokens[_tokenId];
 
     if (ParcelToReceiver[_tokenId] == _to) {
-      emit handOff(msg.sender, _to, _tokenId, uint64(now), true, NameToDeliverer[msg.sender], 'Customer', token.receivingPostalAddress);
-      // Removes 1 from the total amount of parcels to be received by receiver.
-      ReceivingParcelsCount[_to] = ReceivingParcelsCount[_to].sub(1);
+      emit handOff(msg.sender, _to, _tokenId, uint64(now), true, NameToDeliverer[msg.sender], 'Receiver', token.receivingPostalAddress);
     } else {
       emit handOff(msg.sender, _to, _tokenId, uint64(now), false, NameToDeliverer[msg.sender], NameToDeliverer[_to], LocationToDeliverer[_to]);
     }
@@ -201,13 +199,13 @@ contract BlockTrack is ERC721Token, Ownable {
       receivingPostalAddress: _receivingPostalAddress
     });
 
+    // Generates new ID for the token.
+    uint256 newTokenId = tokens.push(token) - 1;
+
     // Adds 1 to the total amount of parcels to be received by receiver.
     ReceivingParcelsCount[_receivingAddress] = ReceivingParcelsCount[_receivingAddress].add(1);
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = _receivingAddress;
-    
-    // Generates new ID for the token.
-    uint256 newTokenId = tokens.push(token) - 1;
 
     emit handOff(msg.sender, _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer], LocationToDeliverer[_deliverer]);
 

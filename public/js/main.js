@@ -694,7 +694,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0xad0bcede038bcec9c1e7a7ebf4b221a4828ee98b');
+    ]).at('0x6fc5164eaada5e5cc8c73eb66dd7bd5d059dea7c');
     startOthers();
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
@@ -705,14 +705,6 @@ function startApp() {
     // );
     //
     // myContract.name.call(function(error, result) {
-    //         if (!error)
-    //             console.log(result);
-    //         else
-    //             console.error(error);
-    //     }
-    // );
-    //
-    // myContract.getToken.call(0, function(error, result) {
     //         if (!error)
     //             console.log(result);
     //         else
