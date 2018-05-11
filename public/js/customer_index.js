@@ -1,4 +1,6 @@
 function startOthers() {
+    $('#qrcodeModal').find('.modal-body').append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
+
     myContract.parcelsOfReceiver(web3.eth.accounts[0], function (error, result) {
         if (!error) {
             if (result.length !== 0) {

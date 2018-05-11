@@ -3,7 +3,6 @@ function startOthers() {
     let token = '';
     let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
     let house = '';
-    let qr = '<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl=\'+ web3.eth.accounts[0] +\'&choe=UTF-8&chs=500x500">';
 
     myContract.getToken(slug, function(error, result) {
         if (!error) {
@@ -19,7 +18,6 @@ function startOthers() {
                                 if (result[i]['args']['delivered'] === true) {
                                     house = '<i class="fas fa-home"></i>';
                                     html = '<div class="progress-bar bg-success" role="progressbar" style="width: 100%">Delivered</div>';
-                                    qr = '';
                                 }
 
                                 let date = new Date(result[i]['args']['time'] * 1000);
@@ -52,7 +50,6 @@ function startOthers() {
                                         '<p class="card-text text-muted">' + token[3] + '</p>' +
                                     '</div>' +
                                     '<div class="card-footer bg-transparent">' +
-                                        qr +
                                         '<div class="progress">' +
                                             html +
                                         '</div>' +
