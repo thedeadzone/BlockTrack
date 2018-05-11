@@ -85,58 +85,18 @@ function startOthers() {
                     let date = '';
                     let message = '';
                     let handOff = result;
+                    let ids = [];
 
-                    for (i = 0; i < result.length; i++) {
-
+                    for (i = handOff.length -1; i >= 0; i--) {
                         let count = i;
                         let tokenId = handOff[count]['args']['tokenId']['c'];
 
                         if (jQuery.inArray(handOff[count]['args']['tokenId']['c'][0], finished) == -1) {
-                            myContract.getToken.call(tokenId, function (error, result) {
-                                if (!error) {
-                                    if (result.length !== 0) {
-                                        let done = false;
-                                        date = new Date(handOff[count]['args']['time']['c'][0] * 1000);
-
-                                        if (handOff[count]['args']['delivered'] === true) {
-                                            done = true;
-                                        }
-
-                                        if (done) {
-                                            badge = 'success';
-                                            message = 'Delivered'
-                                        } else {
-                                            badge = 'primary';
-                                            message = 'In Transport';
-                                        }
-
-                                        url = url.replace(/\d+/, tokenId);
-
-
-                                        $('.done').append(
-                                            '<div class="card border" data-token-id="' + tokenId + '">' +
-                                            '<div class="card-body">' +
-                                            '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
-                                            '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-                                            '</div>' +
-                                            '<div class="card-footer bg-transparent">' +
-                                            '<div class="row">' +
-                                            '<div class="col-6">' +
-                                            '<a href="' + url + '" class="card-link">Details</a>' +
-                                            '</div>' +
-                                            '<div class="col-6">' +
-                                            '<p class="card-text align-center text-muted">' + result[1] + '</p>' +
-                                            '</div>' +
-                                            '</div>' +
-                                            '</div>' +
-                                            '</div>');
-                                    }
-                                } else {
-                                    console.error(error);
-                                }
-                            });
+                            if ($.inArray(tokenId[0], ids[0]) == -1) {
+                                ids.push([tokenId[0], handOff[count]['args']['time']['c'][0]]);
+                            }
                         } else {
-                            if (handOff.length-1 == count) {
+                            if (handOff.length - 1 == count) {
                                 $('.done').append(
                                     '<div class="card border no-data-card">' +
                                     '<div class="card-body">' +
@@ -146,6 +106,52 @@ function startOthers() {
                                     '</div>');
                             }
                         }
+                    }
+
+                    for (i = 0; i < ids.length; i++) {
+                        let count = i;
+                        myContract.getToken.call(ids[i][0], function (error, result) {
+                            if (!error) {
+                                if (result.length !== 0) {
+                                    let done = false;
+                                    date = new Date(ids[count][1] * 1000);
+
+                                    if (handOff[count]['args']['delivered'] === true) {
+                                        done = true;
+                                    }
+
+                                    if (done) {
+                                        badge = 'success';
+                                        message = 'Delivered'
+                                    } else {
+                                        badge = 'primary';
+                                        message = 'In Transport';
+                                    }
+
+                                    url = url.replace(/\d+/, ids[count][0]);
+
+                                    $('.done').append(
+                                        '<div class="card border" data-token-id="' + ids[count][0] + '">' +
+                                        '<div class="card-body">' +
+                                        '<h5 class="card-title">Parcel ' + ids[count][0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                        '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                        '</div>' +
+                                        '<div class="card-footer bg-transparent">' +
+                                        '<div class="row">' +
+                                        '<div class="col-6">' +
+                                        '<a href="' + url + '" class="card-link">Details</a>' +
+                                        '</div>' +
+                                        '<div class="col-6">' +
+                                        '<p class="card-text align-center text-muted">' + result[1] + '</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>');
+                                }
+                            } else {
+                                console.error(error);
+                            }
+                        });
                     }
                 } else {
                     $('.done').append(
