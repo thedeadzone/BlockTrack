@@ -530,6 +530,29 @@ function startApp() {
             "constant": true,
             "inputs": [
                 {
+                    "name": "_tokenId",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_receiver",
+                    "type": "address"
+                }
+            ],
+            "name": "allowedToReceive",
+            "outputs": [
+                {
+                    "name": "allowed",
+                    "type": "bool"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
                     "name": "_receiver",
                     "type": "address"
                 }
@@ -694,7 +717,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x6fc5164eaada5e5cc8c73eb66dd7bd5d059dea7c');
+    ]).at('0x06bda1d3271bb6a0093077d1d251ca61bfdacbf0');
     startOthers();
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)

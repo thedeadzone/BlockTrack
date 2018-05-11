@@ -4,8 +4,20 @@
     <div class="url-detail" data-url-detail="{{ path('app_customer_detail', {'slug': 0}) }}"></div>
     <hr class="hr-text" data-content="Parcels">
     <div class="todo">
+        <div class="card border no-data-card">
+            <div class="card-body">
+                <h5 class="card-title">No parcels expected.</h5>
+                <p class="card-subtitle text-muted last-update-text">(for now)</p>
+            </div>
+        </div>
     </div>
     <hr class="hr-text" data-content="Delivered">
     <div class="done">
+        <div class="card border no-data-card">
+            <div class="card-body">
+                <h5 class="card-title">No parcels delivered.</h5>
+                <p class="card-subtitle text-muted last-update-text">(for now)</p>
+            </div>
+        </div>
     </div>
 {% endblock %}

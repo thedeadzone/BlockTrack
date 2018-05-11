@@ -95,26 +95,44 @@ function startOthers() {
     function activateScanner() {
         let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
         scanner.addListener('scan', function (content) {
-            if (web3.isAddress(content)) {
-                scanner.stop();
-                targetId = content;
-                $('#scannerModal .modal-body video').toggleClass('hidden');
-                $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
-                $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
-                $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
+            if (web3.isAddress(web3.toChecksumAddress(content))) {
+                myContract.allowedToReceive(slug, content, function (error, result) {
+                    console.log(result);
+                    if (!error) {
+                        if (result) {
+                            scanner.stop();
+                            targetId = content;
+                            $('#scannerModal .modal-body video').toggleClass('hidden');
+                            $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
+                            $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
+                            $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
 
-                $('#scannerModal .modal-body').append(
-                    '<div class="transfer-content">' +
-                    '<p class="align-center">Are you sure this is the right address?</p>' +
-                    '<p class="align-center" id="transfer-id">' + content + '</p>' +
-                    '</div>');
+                            $('#scannerModal .modal-body').append(
+                                '<div class="transfer-content">' +
+                                '<p class="align-center">Are you sure this is the right address?</p>' +
+                                '<p class="align-center" id="transfer-id">' + content + '</p>' +
+                                '</div>');
 
-                ActivateTriggers();
+                            ActivateTriggers();
+                        } else {
+                            let alert =
+                                $('<div class="alert alert-danger alert-dismissable">' +
+                                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                    '<p class="alert-top">This address is not allowed to receive the parcel: </p><p class="long-address"><small>'+ content +'</small></p></div>');
+                            alert.appendTo("#alerts");
+                            alert.slideDown();
+                            setTimeout(function () {
+                                alert.slideToggle();
+                            }, 5000);
+                        }
+                    }
+                });
+
             } else {
                 let alert =
                     $('<div class="alert alert-danger alert-dismissable">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                        'This is not a correct address: '+ content +'.</div>');
+                        '<p class="alert-top">This is not a correct address: </p><p class="long-address"><small>'+ content +'</small></p></div>');
                 alert.appendTo("#alerts");
                 alert.slideDown();
                 setTimeout(function () {
@@ -175,6 +193,8 @@ function startOthers() {
                     }
                 );
             });
+
+
 
             $('#transfer-deny').on('click', function () {
                 scanner.start();

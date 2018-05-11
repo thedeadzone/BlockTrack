@@ -72,9 +72,21 @@ contract BlockTrack is ERC721Token, Ownable {
   /**
   * @dev Checks if the receiving address in the receiver of the token.
   */
-  function isReceiver(uint256 _tokenId, address _receiver) internal view returns (bool) {
+  function isReceiver(uint256 _tokenId, address _receiver) internal view returns (bool receiver) {
     Token memory token = tokens[_tokenId];
     return token.receivingAddress  == _receiver;
+  }
+
+  /**
+  * @dev Checks if the receiving address is allowed to receive the token.
+  */
+  function allowedToReceive(uint256 _tokenId, address _receiver) public view returns (bool allowed) {
+    require(
+        bytes(NameToDeliverer[_receiver]).length > 0 ||
+        isReceiver(_tokenId, _receiver)
+      );
+
+    return true;
   }
 
   /// @notice Returns the number of parcels owned by a specific address.
