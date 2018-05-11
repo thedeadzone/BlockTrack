@@ -10,7 +10,7 @@ function startOthers() {
                             if (result.length !== 0) {
                                 let date = '';
                                 let token = result;
-                                let delievered = '';
+                                let delivered = '';
                                 myContract.handOff({tokenId: tokenId}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                                     if (!error) {
                                         if (result.length !== 0) {

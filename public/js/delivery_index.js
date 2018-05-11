@@ -75,8 +75,6 @@ function startOthers() {
     });
 
     function runOther() {
-        previous = [];
-
         myContract.handOff({owner: web3.eth.accounts[0]}, {
             fromBlock: 0,
             toBlock: 'latest'
@@ -88,16 +86,13 @@ function startOthers() {
                     let message = '';
                     let handOff = result;
 
-                    var promises = [];
-
                     for (i = 0; i < result.length; i++) {
 
                         let count = i;
                         let tokenId = handOff[count]['args']['tokenId']['c'];
-                        previous.push(tokenId[0]);
 
-                        if (jQuery.inArray(handOff[count]['args']['tokenId']['c'][0], finished) == -1 && jQuery.inArray(tokenId[0], previous) == -1) {
-                            myContract.getToken.call(result[count]['args']['tokenId']['c'][0], function (error, result) {
+                        if (jQuery.inArray(handOff[count]['args']['tokenId']['c'][0], finished) == -1) {
+                            myContract.getToken.call(tokenId, function (error, result) {
                                 if (!error) {
                                     if (result.length !== 0) {
                                         let done = false;
@@ -141,7 +136,7 @@ function startOthers() {
                                 }
                             });
                         } else {
-                            if (handOff.length-1 == count && previous != []) {
+                            if (handOff.length-1 == count) {
                                 $('.done').append(
                                     '<div class="card border no-data-card">' +
                                     '<div class="card-body">' +
