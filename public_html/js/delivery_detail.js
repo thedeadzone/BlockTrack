@@ -198,9 +198,8 @@ function startOthers() {
 
                         $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
                         $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
-                        $('#scannerModal .modal-body .transfer-content').empty();
                         $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
-                        $('#scannerModal .modal-body').append(
+                        $('#scannerModal .modal-body').empty().append(
                             '<div class="alert alert-primary">' +
                             'Parcel <u id="transfer-hash">transferred!</u> Results will be reflected in ~30 seconds.' +
                             '</div>');
@@ -228,7 +227,7 @@ function startOthers() {
         $('#transfer-deny').on('click', function () {
             $('#scannerModal .modal-footer #transfer-deny').addClass('hidden');
             $('#scannerModal .modal-footer #transfer-confirm').addClass('hidden');
-            $('#scannerModal .modal-body .transfer-content').empty();
+            $('#scannerModal .modal-body #confirmation').empty();
             if (!isCipher && !canScanQRCode) {
                 $('#scannerModal .modal-body video').removeClass('hidden');
             } else {
