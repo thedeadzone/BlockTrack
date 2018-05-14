@@ -190,30 +190,12 @@ function startOthers() {
                                 window.location = url.replace(/\d+/, data);
                             } else {
                                 $("#scannerModal").modal('hide');
-
-                                let alert =
-                                    $('<div class="alert alert-danger alert-dismissable">' +
-                                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                        'This is not a correct id: '+ data +'.</div>');
-                                alert.appendTo("#alerts");
-                                alert.slideDown();
-                                setTimeout(function () {
-                                    alert.slideToggle();
-                                }, 5000);
+                                createAddressAlert('This is not a correct id: ', data);
                             }
                         });
                     } else {
                         $("#scannerModal").modal('hide');
-
-                        let alert =
-                            $('<div class="alert alert-danger alert-dismissable">' +
-                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                'This is not an id: '+ data +'.</div>');
-                        alert.appendTo("#alerts");
-                        alert.slideDown();
-                        setTimeout(function () {
-                            alert.slideToggle();
-                        }, 5000);
+                        createAddressAlert('This is not an id: ', data);
                     }
                 })
                 .catch(err => {
@@ -229,27 +211,11 @@ function startOthers() {
                             scanner.stop();
                             window.location = url.replace(/\d+/, content);
                         } else {
-                            let alert =
-                                $('<div class="alert alert-danger alert-dismissable">' +
-                                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                    'This is not a correct id: '+ content +'.</div>');
-                            alert.appendTo("#alerts");
-                            alert.slideDown();
-                            setTimeout(function () {
-                                alert.slideToggle();
-                            }, 5000);
+                            createAddressAlert('This is not a correct id: ', content);
                         }
                     });
                 } else {
-                    let alert =
-                        $('<div class="alert alert-danger alert-dismissable">' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            'This is not an id: '+ content +'.</div>');
-                    alert.appendTo("#alerts");
-                    alert.slideDown();
-                    setTimeout(function () {
-                        alert.slideToggle();
-                    }, 5000);
+                    createAddressAlert('This is not an id: ', content);
                 }
             });
 

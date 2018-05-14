@@ -126,29 +126,13 @@ function startOthers() {
                                     ActivateTriggers();
                                 } else {
                                     $("#scannerModal").modal('hide');
-                                    let alert =
-                                        $('<div class="alert alert-danger alert-dismissable">' +
-                                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                            '<p class="alert-top">This address is not allowed to receive the parcel: </p><p class="long-address"><small>' + data + '</small></p></div>');
-                                    alert.appendTo("#alerts");
-                                    alert.slideDown();
-                                    setTimeout(function () {
-                                        alert.slideToggle();
-                                    }, 5000);
+                                    createAddressAlert('This address is not allowed to receive the parcel: ', data);
                                 }
                             }
                         });
                     } else {
                         $("#scannerModal").modal('hide');
-                        let alert =
-                            $('<div class="alert alert-danger alert-dismissable">' +
-                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                '<p class="alert-top">This is not a correct address: </p><p class="long-address"><small>' + data + '</small></p></div>');
-                        alert.appendTo("#alerts");
-                        alert.slideDown();
-                        setTimeout(function () {
-                            alert.slideToggle();
-                        }, 5000);
+                        createAddressAlert('This is not a correct address: ', data);
                     }
                 })
                 .catch(err => {
@@ -175,28 +159,12 @@ function startOthers() {
 
                                 ActivateTriggers();
                             } else {
-                                let alert =
-                                    $('<div class="alert alert-danger alert-dismissable">' +
-                                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                        '<p class="alert-top">This address is not allowed to receive the parcel: </p><p class="long-address"><small>' + content + '</small></p></div>');
-                                alert.appendTo("#alerts");
-                                alert.slideDown();
-                                setTimeout(function () {
-                                    alert.slideToggle();
-                                }, 5000);
+                                createAddressAlert('This address is not allowed to receive the parcel: ', content);
                             }
                         }
                     });
                 } else {
-                    let alert =
-                        $('<div class="alert alert-danger alert-dismissable">' +
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                            '<p class="alert-top">This is not a correct address: </p><p class="long-address"><small>' + content + '</small></p></div>');
-                    alert.appendTo("#alerts");
-                    alert.slideDown();
-                    setTimeout(function () {
-                        alert.slideToggle();
-                    }, 5000);
+                    createAddressAlert('This is not a correct address: ', content);
                 }
             });
             Instascan.Camera.getCameras().then(function (cameras) {

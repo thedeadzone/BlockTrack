@@ -771,3 +771,15 @@ function getNetwork() {
 function isInt(value) {
     return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
 }
+
+function createAddressAlert(message, content) {
+    let alert =
+        $('<div class="alert alert-danger alert-dismissable">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+            '<p class="alert-top">'+ message +'</p><p class="long-address"><small>' + content + '</small></p></div>');
+    alert.appendTo("#alerts");
+    alert.slideDown();
+    setTimeout(function () {
+        alert.slideToggle();
+    }, 5000);
+}
