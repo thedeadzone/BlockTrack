@@ -5,6 +5,17 @@ function startOthers() {
     let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
     let house = '';
 
+    const isCipher = !!window.__CIPHER__;
+    const canScanQRCode = !!(
+        window.web3 &&
+        window.web3.currentProvider &&
+        window.web3.currentProvider.scanQRCode
+    );
+
+    if (isCipher && canScanQRCode) {
+        $('#scannerModal .modal-body video').addClass('hidden');
+    }
+
     myContract.getToken(slug, function (error, result) {
         if (!error) {
             if (result.length !== 0) {
@@ -93,119 +104,169 @@ function startOthers() {
     });
 
     function activateScanner() {
-        let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
-        scanner.addListener('scan', function (content) {
-            if (web3.isAddress(web3.toChecksumAddress(content))) {
-                myContract.allowedToReceive(slug, content, function (error, result) {
-                    console.log(result);
-                    if (!error) {
-                        if (result) {
-                            scanner.stop();
-                            targetId = content;
-                            $('#scannerModal .modal-body video').toggleClass('hidden');
-                            $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
-                            $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
-                            $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
+        if (isCipher && canScanQRCode) {
+            window.web3.currentProvider
+                .scanQRCode(/^.+$/)
+                .then(data => {
+                    if (web3.isAddress(web3.toChecksumAddress(data))) {
+                        myContract.allowedToReceive(slug, data, function (error, result) {
+                            if (!error) {
+                                if (result) {
+                                    targetId = data;
+                                    $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
+                                    $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
+                                    $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
 
-                            $('#scannerModal .modal-body').append(
-                                '<div class="transfer-content">' +
-                                '<p class="align-center">Are you sure this is the right address?</p>' +
-                                '<p class="align-center" id="transfer-id">' + content + '</p>' +
-                                '</div>');
+                                    $('#scannerModal .modal-body #confirmation').empty().append(
+                                        '<div class="transfer-content">' +
+                                        '<p class="align-center">Are you sure this is the right address?</p>' +
+                                        '<p class="align-center" id="transfer-id">' + data + '</p>' +
+                                        '</div>');
 
-                            ActivateTriggers();
-                        } else {
-                            let alert =
-                                $('<div class="alert alert-danger alert-dismissable">' +
-                                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                    '<p class="alert-top">This address is not allowed to receive the parcel: </p><p class="long-address"><small>'+ content +'</small></p></div>');
-                            alert.appendTo("#alerts");
-                            alert.slideDown();
-                            setTimeout(function () {
-                                alert.slideToggle();
-                            }, 5000);
-                        }
+                                    ActivateTriggers();
+                                } else {
+                                    $("#scannerModal").modal('hide');
+                                    let alert =
+                                        $('<div class="alert alert-danger alert-dismissable">' +
+                                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                            '<p class="alert-top">This address is not allowed to receive the parcel: </p><p class="long-address"><small>' + data + '</small></p></div>');
+                                    alert.appendTo("#alerts");
+                                    alert.slideDown();
+                                    setTimeout(function () {
+                                        alert.slideToggle();
+                                    }, 5000);
+                                }
+                            }
+                        });
+                    } else {
+                        $("#scannerModal").modal('hide');
+                        let alert =
+                            $('<div class="alert alert-danger alert-dismissable">' +
+                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                '<p class="alert-top">This is not a correct address: </p><p class="long-address"><small>' + data + '</small></p></div>');
+                        alert.appendTo("#alerts");
+                        alert.slideDown();
+                        setTimeout(function () {
+                            alert.slideToggle();
+                        }, 5000);
                     }
+                })
+                .catch(err => {
+                    console.log('Error:', err)
                 });
-
-            } else {
-                let alert =
-                    $('<div class="alert alert-danger alert-dismissable">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                        '<p class="alert-top">This is not a correct address: </p><p class="long-address"><small>'+ content +'</small></p></div>');
-                alert.appendTo("#alerts");
-                alert.slideDown();
-                setTimeout(function () {
-                    alert.slideToggle();
-                }, 5000);
-            }
-        });
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-                if (cameras[1]) {
-                    scanner.mirror = false;
-                    scanner.start(cameras[1]);
-                } else {
-                    scanner.mirror = false;
-                    scanner.start(cameras[0]);
-                }
-            } else {
-                console.error('No cameras found.');
-            }
-        }).catch(function (e) {
-            console.error(e);
-        });
-
-        function ActivateTriggers() {
-            $('#transfer-confirm').on('click', function () {
-                myContract.transferTokenTo(targetId, slug, {
-                        from: web3.eth.accounts[0],
-                        gas: 200000,
-                        gasPrice: 2000000000
-                    }, function (error, result) {
+        } else {
+            let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
+            scanner.addListener('scan', function (content) {
+                if (web3.isAddress(web3.toChecksumAddress(content))) {
+                    myContract.allowedToReceive(slug, content, function (error, result) {
                         if (!error) {
-                            var url = $('.url-finish-transfer').data('url');
+                            if (result) {
+                                targetId = content;
+                                $('#scannerModal .modal-body video').addClass('hidden');
+                                $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
+                                $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
+                                $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
 
-                            $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
-                            $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
-                            $('#scannerModal .modal-body .transfer-content').empty();
-                            $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
-                            $('#scannerModal .modal-body').append(
-                                '<div class="alert alert-primary">' +
-                                'Parcel <u id="transfer-hash">transferred!</u> Results will be reflected in ~30 seconds.' +
-                                '</div>');
+                                $('#scannerModal .modal-body #confirmation').empty().append(
+                                    '<div class="transfer-content">' +
+                                    '<p class="align-center">Are you sure this is the right address?</p>' +
+                                    '<p class="align-center" id="transfer-id">' + content + '</p>' +
+                                    '</div>');
 
-                            $('#transfer-close').on('click', function () {
-                                window.location.replace(url);
-                            });
-
-                            $('#transfer-hash').popover({
-                                content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
-                                html: true,
-                                placement: "bottom"
-                            });
-
-                            console.log(result);
-                            console.log("https://rinkeby.etherscan.io/tx/" + result);
-                        } else {
-                            // console.error(error);
+                                ActivateTriggers();
+                            } else {
+                                let alert =
+                                    $('<div class="alert alert-danger alert-dismissable">' +
+                                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                        '<p class="alert-top">This address is not allowed to receive the parcel: </p><p class="long-address"><small>' + content + '</small></p></div>');
+                                alert.appendTo("#alerts");
+                                alert.slideDown();
+                                setTimeout(function () {
+                                    alert.slideToggle();
+                                }, 5000);
+                            }
                         }
-                    }
-                );
+                    });
+                } else {
+                    let alert =
+                        $('<div class="alert alert-danger alert-dismissable">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                            '<p class="alert-top">This is not a correct address: </p><p class="long-address"><small>' + content + '</small></p></div>');
+                    alert.appendTo("#alerts");
+                    alert.slideDown();
+                    setTimeout(function () {
+                        alert.slideToggle();
+                    }, 5000);
+                }
             });
-
-
-
-            $('#transfer-deny').on('click', function () {
-                scanner.start();
-                $('#scannerModal .modal-footer #transfer-deny').toggleClass('hidden');
-                $('#scannerModal .modal-footer #transfer-confirm').toggleClass('hidden');
-                $('#scannerModal .modal-body .transfer-content').empty();
-                $('#scannerModal .modal-body video').toggleClass('hidden');
-                $('#scannerModal .modal-footer #transfer-close').toggleClass('hidden');
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    if (cameras[1]) {
+                        scanner.mirror = false;
+                        scanner.start(cameras[1]);
+                    } else {
+                        scanner.mirror = false;
+                        scanner.start(cameras[0]);
+                    }
+                } else {
+                    console.error('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
             });
         }
+    }
 
-        // TODO: checken of address klopt voor je functie uitvoert klopt
+
+    function ActivateTriggers() {
+        $('#transfer-confirm').on('click', function () {
+            myContract.transferTokenTo(targetId, slug, {
+                    from: web3.eth.accounts[0],
+                    gas: 200000,
+                    gasPrice: 2000000000
+                }, function (error, result) {
+                    if (!error) {
+                        var url = $('.url-finish-transfer').data('url');
+
+                        $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
+                        $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
+                        $('#scannerModal .modal-body .transfer-content').empty();
+                        $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
+                        $('#scannerModal .modal-body').append(
+                            '<div class="alert alert-primary">' +
+                            'Parcel <u id="transfer-hash">transferred!</u> Results will be reflected in ~30 seconds.' +
+                            '</div>');
+
+                        $('#transfer-close').on('click', function () {
+                            window.location.replace(url);
+                        });
+
+                        $('#transfer-hash').popover({
+                            content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
+                            html: true,
+                            placement: "bottom"
+                        });
+
+                        console.log(result);
+                        console.log("https://rinkeby.etherscan.io/tx/" + result);
+                    } else {
+                        $("#scannerModal").modal('hide');
+                    }
+                }
+            );
+        });
+
+
+        $('#transfer-deny').on('click', function () {
+            $('#scannerModal .modal-footer #transfer-deny').addClass('hidden');
+            $('#scannerModal .modal-footer #transfer-confirm').addClass('hidden');
+            $('#scannerModal .modal-body .transfer-content').empty();
+            if (!isCipher && !canScanQRCode) {
+                $('#scannerModal .modal-body video').removeClass('hidden');
+            } else {
+                $("#scannerModal").modal('hide');
+            }
+            $('#scannerModal .modal-footer #transfer-close').removeClass('hidden');
+        });
     }
 }

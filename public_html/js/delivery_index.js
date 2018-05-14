@@ -2,9 +2,20 @@ function startOthers() {
     let finished = [0];
     let url = $('.url-detail').data('url-detail');
 
+    const isCipher = !!window.__CIPHER__;
+    const canScanQRCode = !!(
+        window.web3 &&
+        window.web3.currentProvider &&
+        window.web3.currentProvider.scanQRCode
+    );
+
     $('#activate-scanner').on('click', function () {
         activateScanner();
     });
+
+    if (isCipher && canScanQRCode) {
+        $('#scannerModal .modal-body video').addClass('hidden');
+    }
 
     $('#qrcodeModal').find('.modal-body').append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
 
@@ -169,53 +180,94 @@ function startOthers() {
     }
 
     function activateScanner() {
-        let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
-        scanner.addListener('scan', function (content) {
-            if (isInt(content)) {
-                myContract.getToken.call(content, function (error, result) {
-                    if (!error && result.length !== 0) {
-                        console.log(content);
-                        scanner.stop();
-                        window.location = url.replace(/\d+/, content);
+        if (isCipher && canScanQRCode) {
+            window.web3.currentProvider
+                .scanQRCode(/^.+$/)
+                .then(data => {
+                    if (isInt(data)) {
+                        myContract.getToken.call(data, function (error, result) {
+                            if (!error && result.length !== 0) {
+                                window.location = url.replace(/\d+/, data);
+                            } else {
+                                $("#scannerModal").modal('hide');
+
+                                let alert =
+                                    $('<div class="alert alert-danger alert-dismissable">' +
+                                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                        'This is not a correct id: '+ data +'.</div>');
+                                alert.appendTo("#alerts");
+                                alert.slideDown();
+                                setTimeout(function () {
+                                    alert.slideToggle();
+                                }, 5000);
+                            }
+                        });
                     } else {
+                        $("#scannerModal").modal('hide');
+
                         let alert =
                             $('<div class="alert alert-danger alert-dismissable">' +
                                 '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                                'This is not a correct id: '+ content +'.</div>');
+                                'This is not an id: '+ data +'.</div>');
                         alert.appendTo("#alerts");
                         alert.slideDown();
                         setTimeout(function () {
                             alert.slideToggle();
                         }, 5000);
                     }
-                });
-            } else {
-                let alert =
-                    $('<div class="alert alert-danger alert-dismissable">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-                        'This is not an id: '+ content +'.</div>');
-                alert.appendTo("#alerts");
-                alert.slideDown();
-                setTimeout(function () {
-                    alert.slideToggle();
-                }, 5000);
-            }
-        });
-
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-                if (cameras[1]) {
-                    scanner.mirror = false;
-                    scanner.start(cameras[1]);
+                })
+                .catch(err => {
+                    console.log('Error:', err)
+                })
+        } else {
+            let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
+            scanner.addListener('scan', function (content) {
+                if (isInt(content)) {
+                    myContract.getToken.call(content, function (error, result) {
+                        if (!error && result.length !== 0) {
+                            console.log(content);
+                            scanner.stop();
+                            window.location = url.replace(/\d+/, content);
+                        } else {
+                            let alert =
+                                $('<div class="alert alert-danger alert-dismissable">' +
+                                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                    'This is not a correct id: '+ content +'.</div>');
+                            alert.appendTo("#alerts");
+                            alert.slideDown();
+                            setTimeout(function () {
+                                alert.slideToggle();
+                            }, 5000);
+                        }
+                    });
                 } else {
-                    scanner.mirror = true;
-                    scanner.start(cameras[0]);
+                    let alert =
+                        $('<div class="alert alert-danger alert-dismissable">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                            'This is not an id: '+ content +'.</div>');
+                    alert.appendTo("#alerts");
+                    alert.slideDown();
+                    setTimeout(function () {
+                        alert.slideToggle();
+                    }, 5000);
                 }
-            } else {
-                console.error('No cameras found.');
-            }
-        }).catch(function (e) {
-            console.error(e);
-        });
+            });
+
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    if (cameras[1]) {
+                        scanner.mirror = false;
+                        scanner.start(cameras[1]);
+                    } else {
+                        scanner.mirror = true;
+                        scanner.start(cameras[0]);
+                    }
+                } else {
+                    console.error('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
+            });
+        }
     }
 }
