@@ -5,7 +5,8 @@ function startOthers() {
         if (!error) {
             if (result.length !== 0) {
                 let i = 0;
-                for (i = 0; i < result.length; i++) {
+                let parcelsLength = result.length;
+                for (i = parcelsLength -1; i >= 0; i--) {
                     let tokenId = result[i];
                     myContract.getToken.call(tokenId, function (error, result) {
                         if (!error) {

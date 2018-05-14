@@ -7,6 +7,8 @@ window.addEventListener('load', function() {
     } else {
         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
         // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        // web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/ALZ6zu5v1wM4s4xnMU7a"));
+
     }
     startApp();
 });
@@ -717,8 +719,9 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x06bda1d3271bb6a0093077d1d251ca61bfdacbf0');
+    ]).at('0x1035e7df4e2dba48999cd2ca9b3e92f331a7e308');
     startOthers();
+
     // myContract.totalSupply.call(function(error, result) {
     //         if (!error)
     //             console.log(JSON.stringify(result));

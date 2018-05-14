@@ -1,11 +1,12 @@
-$(document).ready(function() {
+function startOthers() {
     myContract.totalSupply(function (error, result) {
+        console.log(result);
         if (!error) {
             if (result.length != 0) {
                 var i = 0;
                 var tokenId = 0;
-
-                for (i = 0; i < result['c'][0]; i++) {
+                var length = result['c'][0];
+                for (i = 0; i < length; i++) {
                     myContract.getToken.call(i, function (error, result) {
                         tokenId = i;
                         if (!error) {
@@ -16,11 +17,8 @@ $(document).ready(function() {
                                 var date = '';
                                 var message = '';
                                 var token = result;
-
-                                myContract.handOff({tokenId: tokenId}, {
-                                    fromBlock: 0,
-                                    toBlock: 'latest'
-                                }).get(function (error, result) {
+                                myContract.handOff({tokenId: tokenId}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
+                                    console.log(result);
                                     if (!error) {
                                         if (result.length != 0) {
                                             for (i = 0; i < result.length; i++) {
@@ -28,17 +26,16 @@ $(document).ready(function() {
                                                     done = true;
                                                 }
                                                 if (i == result.length - 1) {
-                                                    console.log(result[i]['args']['time']['c'][0]);
                                                     date = new Date(result[i]['args']['time']['c'][0] * 1000);
                                                 }
                                             }
 
                                             if (done) {
-                                                div = $('.customer-done');
+                                                div = $('.done');
                                                 badge = 'success';
                                                 message = 'Delivered'
                                             } else {
-                                                div = $('.customer-todo');
+                                                div = $('.todo');
                                                 badge = 'primary';
                                                 message = 'In Transport';
                                             }
@@ -78,4 +75,4 @@ $(document).ready(function() {
             }
         }
     });
-});
+}

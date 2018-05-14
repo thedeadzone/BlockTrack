@@ -1,18 +1,81 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-adjusted.html.twig' %}
 
 {% block  body %}
-    <h1>Admin Panel</h1>
-    <div class="url-app_admin_detail" data-url-detail="{{ path('app_admin_detail', {'slug': 0}) }}"></div>
 
-    <div class="customer-todo">
+    <div class="container-fluid blue-color-1">
+        <div class="row">
+            <div class="col-12">
+                <hr class="hr-text" data-content="Actions">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan QR Code</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" id="register-parcel" data-toggle="modal" data-target="#registerParcel" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Register Parcel</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" id="register-shippingCompany" data-toggle="modal" data-target="#registerShippingcompany" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Register Shippingcompany</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" id="register-deliverer" data-toggle="modal" data-target="#registerDeliverer" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Register Deliverer</button>
+                            </div>
+                        </div>
+                        <p class="card-subtitle text-muted last-update-text"></p>
+                        <p class="card-text text-muted"></p>
+                    </div>
+                    {#<div class="card-footer bg-transparent">#}
 
+                    {#</div>#}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="transfer-colors"></div>
+
+    <div class="container-fluid blue-color-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="url-detail" data-url-detail="{{ path('app_admin_detail', {'slug': 0}) }}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <hr class="hr-text" data-content="Todo">
+                        <div class="todo">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <hr class="hr-text" data-content="Handoffs">
+                        <div class="done">
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
     </div>
 
-    <hr>
-
-    <div class="customer-done">
-
+    <div class="modal fade" id="scannerModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Scan QR Code</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <video id="preview"></video>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="transfer-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="transfer-deny" type="button" class="btn btn-danger hidden">Deny</button>
+                    <button id="transfer-confirm" type="button" class="btn btn-success hidden">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-
 {% endblock %}
