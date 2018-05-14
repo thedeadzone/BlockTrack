@@ -1,8 +1,9 @@
-
-.idea/blocktrack.p.iml
-.idea/copyright/profiles_settings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
-.idea/symfony2.xml
-.idea/blade.xml
+.idea/
+.idea
+var/
+var/log/dev.log
+vendor/
+homebrew/
+config/secret.js
+node_modules/
+build/

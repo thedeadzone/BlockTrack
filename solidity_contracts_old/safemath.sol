@@ -1,4 +1,3 @@
-
 pragma solidity ^0.4.23;
 
 /**
@@ -45,11 +44,4 @@ library SafeMath {
     assert(c >= a);
     return c;
   }
-}
-
-/**
- * Here comes text explaining whatever I'm doing in this contract
- */
-contract TrackAndTrace {
-  
 }

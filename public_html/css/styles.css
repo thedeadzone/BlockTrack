@@ -1,0 +1,347 @@
+/**
+* General Styling
+**/
+
+.header {
+    min-height:40px;
+}
+
+.row {
+    margin: auto;
+}
+
+.pull-right {
+    float:right;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-center-transfer {
+    text-align: center;
+    width:100%;
+    float: right;
+}
+
+.margin-bottom {
+    margin-bottom:15px;
+}
+
+.last-update-text {
+    font-size: 14px;
+}
+
+div.card {
+    margin-bottom:15px;
+}
+
+div.card.text-center div.card-footer p, div.card.text-center div.card-header p {
+    margin-bottom:0;
+}
+
+div.card.text-center div.card-footer p {
+    font-size:14px;
+}
+
+.text-parcel-footer {
+    margin: 0;
+    text-align: center;
+}
+
+#preview {
+    max-width:100%;
+}
+
+#transfer-id {
+    font-size:10px;
+}
+
+.hidden {
+    display: none;
+}
+
+.hr-text {
+    line-height: 1em;
+    position: relative;
+    outline: 0;
+    border: 0;
+    text-align: center;
+    height: 1.5em;
+    font-size:25px;
+}
+
+.hr-text:before {
+    content: '';
+    background: linear-gradient(to right, transparent, #1982C4, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+ }
+
+.hr-text:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: #1982C4;
+    padding: 0 .5em;
+    line-height: 1.5em;
+    background-color: #fcfcfa;
+}
+
+.card-footer .progress {
+    height: 2em;
+}
+
+div.no-data-card.card.border .card-body {
+    background-color: white !important;
+}
+
+div.no-data-card.card.border .card-body .card-title {
+    color: #19aaf4 !important;
+}
+
+/*div.no-data-card.card.border .card-body .card-subtitle  {*/
+    /*color: #19aaf4 !important;*/
+/*}*/
+
+.card-footer.bg-transparent img {
+    margin-bottom:15px;
+}
+
+#alerts {
+    position: fixed;
+    bottom:0;
+    margin: 15px;
+    z-index: 9999;
+    width:90%;
+}
+
+.long-address {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.alert-top {
+    margin-bottom: 0;
+    margin-top: 1em;
+}
+
+
+
+
+
+
+/**
+* Styling for split page coloring
+**/
+
+html {
+    background-color: #fbfbfb;
+}
+
+body {
+    background-color:transparent;
+}
+
+.blue-color-1 {
+    background-color: #1982C4;
+    min-height:100%;
+}
+
+.blue-color-1  .hr-text:after {
+    color: white;
+    background-color: #1982C4;
+}
+
+.blue-color-1 .hr-text:before {
+    background: linear-gradient(to right, transparent, white, transparent);
+}
+
+/*
+* OPTIONAL STYLING FOR FULL BLUE FADE PAGE DETAILS PAGE
+*/
+
+/*.blue-color-2 {*/
+/*background-color: #19aaf4;*/
+/*}*/
+
+/*.blue-color-2  .hr-text:after {*/
+/*color: #1982C4;*/
+/*background-color: white;*/
+/*}*/
+
+.transfer-colors {
+    /*background: linear-gradient(0deg, #19aaf4, #1982C4) no-repeat; !* 1990d1 *!*/
+    background-color:#fbfbfb;
+    min-height:50px;
+    margin-top: -50px;
+}
+
+
+/*
+* OPTIONAL STYLING FOR INDEX PAGE
+*/
+
+/*.customer-todo .card .card-body,  .customer-done .card .card-body {*/
+    /*background-color: #19aaf4;*/
+/*}*/
+/*.customer-todo .card .card-body .card-title, .customer-todo .card .card-body .card-subtitle, .customer-done .card .card-body .card-title, .customer-done .card .card-body .card-subtitle{*/
+    /*color:white!important;*/
+/*}*/
+
+.card.border {
+    /*border-color: #1982C4 !important;*/
+}
+
+.todo .card.border .card-footer, .done .card.border .card-footer {
+    border-color: #19aaf4 !important;
+    /*border-color: #1982C4 !important;*/
+}
+
+/**
+* Styling for the history vertical UL
+**/
+
+.box{
+    overflow: hidden;
+    padding: 10px 0 0 0;
+}
+
+.box ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    transition: all 0.5s linear;
+    top:0
+}
+
+.box ul:last-of-type{
+    top:10px
+}
+
+.box ul:before{
+    content: "";
+    display: block;
+    width: 0;
+    height: 100%;
+    border:1px dashed #19aaf4;
+    position: absolute;
+    top:0;
+    left:20px
+}
+
+.box ul li{
+    margin:0 10px 45px 50px;
+    position: relative;
+    padding: 10px 20px;
+    background:#19aaf4;
+    color:white;
+    border-radius: 10px;
+    line-height: 20px;
+}
+
+
+.box ul li > span{
+    content: "";
+    display: block;
+    width: 0;
+    height: 100%;
+    border:1px solid #19aaf4;
+    position: absolute;
+    top:0;
+    left:-30px
+}
+
+.box ul li > span:before,.box ul li > span:after{
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #19aaf4;
+    border:2px solid #19aaf4;
+    position: absolute;
+    left:-7.5px
+}
+
+.box ul li > span:before{
+    top:-10px
+}
+
+.box ul li > span:after{
+    top:95%
+}
+
+.box .title{
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5px
+}
+
+.box .info:first-letter{text-transform: capitalize;line-height: 1.7}
+
+.box .name{
+    margin-top: 10px;
+    text-transform: capitalize;
+    font-style: italic;
+    text-align: right;
+    font-size: 14px;
+}
+
+.box .time span{
+    position: absolute;
+    left: -100px;
+    color:#1982C4;
+    font-size:80%;
+    font-weight: bold;
+}
+
+.box .time span:first-child{top:-16px}
+.box .time span:last-child{top:94%}
+
+
+svg{
+    width: 20px;
+    height: 20px
+}
+
+@keyframes arrow{
+    0%,100%{
+        top:105%
+    }
+    50%{
+        top:106%
+    }
+}
+
+@-webkit-keyframes arrow{
+    0%,100%{
+        top:105%
+    }
+    50%{
+        top:106%
+    }
+}
+
+@-moz-keyframes arrow{
+    0%,100%{
+        top:105%
+    }
+    50%{
+        top:106%
+    }
+}
+
+@-o-keyframes arrow{
+    0%,100%{
+        top:105%
+    }
+    50%{
+        top:106%
+    }
+}
