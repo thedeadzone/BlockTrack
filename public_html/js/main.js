@@ -728,13 +728,13 @@ function startApp() {
                     "type": "string"
                 }
             ],
-            "name": "RegisterParcel",
+            "name": "registerParcel",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x0a31f405aa004c176b804f43e581730d8ecece89');
+    ]).at('0xb909e18d89cb4621b9c7cf6e99c832bebb7754b2');
     startOthers();
 
     // myContract.totalSupply.call(function(error, result) {

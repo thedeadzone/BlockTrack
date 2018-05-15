@@ -149,6 +149,21 @@ function startOthers() {
         }
     }
 
+    $('#registerParcel').on('click', function() {
+        $('#parcelModal #form-parcel').removeClass('hidden');
+        $('#parcelModal .modal-body .alert.alert-primary').addClass('hidden');
+    });
+
+    $('#registerShippingCompany').on('click', function() {
+        $('#shippingModal #form-shipping').removeClass('hidden');
+        $('#shippingModal .modal-body .alert.alert-primary').addClass('hidden');
+    });
+
+    $('#registerDeliverer').on('click', function() {
+        $('#delivererModal #form-deliverer').removeClass('hidden');
+        $('#delivererModal .modal-body .alert.alert-primary').addClass('hidden');
+    });
+
     $('.form-shippingcompany').on('submit', function(e) {
         e.preventDefault();
         myContract.registerShippingCompany($('#shippingcompany-address').val(), $('#shippingcompany-name').val(), {
@@ -157,23 +172,16 @@ function startOthers() {
                 gasPrice: 2000000000
             }, function (error, result) {
                 if (!error) {
-                    $('#shippingModal #form-shippingcompany').addClass('hidden');
-                    $('#shippingModal .modal-footer #transfer-deny').addClass('hidden');
-                    $('#shippingModal .modal-footer #transfer-confirm').addClass('hidden');
-                    $('#shippingModal .modal-footer #transfer-close').removeClass('hidden');
-                    $('#shippingModal .modal-body').empty().append(
-                        '<div class="alert alert-primary">' +
-                        'Transaction <u id="transfer-hash">executed!</u> Results will be reflected in ~30 seconds.' +
-                        '</div>');
+                    $('#shippingModal #form-shippingcompany').removeClass('hidden').addClass('hidden');
+                    $('#shippingModal .modal-body .alert.alert-primary').empty().append(
+                        'Transaction <u id="shipping-transfer-hash">executed!</u> Results will be reflected in ~30 seconds.'
+                    );
 
-                    $('#transfer-hash').popover({
+                    $('#shipping-transfer-hash').popover({
                         content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
                         html: true,
                         placement: "bottom"
                     });
-
-                    console.log(result);
-                    console.log("https://rinkeby.etherscan.io/tx/" + result);
                 } else {
                     $("#shippingModal").modal('hide');
                 }
@@ -190,22 +198,15 @@ function startOthers() {
             }, function (error, result) {
                 if (!error) {
                     $('#delivererModal .form-deliverer').addClass('hidden');
-                    $('#delivererModal .modal-footer #transfer-deny').addClass('hidden');
-                    $('#delivererModal .modal-footer #transfer-confirm').addClass('hidden');
-                    $('#delivererModal .modal-footer #transfer-close').removeClass('hidden');
-                    $('#delivererModal .modal-body').empty().append(
-                        '<div class="alert alert-primary">' +
-                        'Transaction <u id="transfer-hash">executed!</u> Results will be reflected in ~30 seconds.' +
-                        '</div>');
+                    $('#delivererModal .modal-body .alert.alert-primary').removeClass('hidden').empty().append(
+                        'Transaction <u id="deliverer-transfer-hash">executed!</u> Results will be reflected in ~30 seconds.'
+                        );
 
-                    $('#transfer-hash').popover({
+                    $('#deliverer-transfer-hash').popover({
                         content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
                         html: true,
                         placement: "bottom"
                     });
-
-                    console.log(result);
-                    console.log("https://rinkeby.etherscan.io/tx/" + result);
                 } else {
                     $("#delivererModal").modal('hide');
                 }
@@ -217,27 +218,20 @@ function startOthers() {
         e.preventDefault();
         myContract.registerParcel($('#parcel-address').val(), $('#parcel-name').val(), $('#parcel-location').val(), {
                 from: web3.eth.accounts[0],
-                gas: 200000,
+                gas: 2000000,
                 gasPrice: 2000000000
             }, function (error, result) {
                 if (!error) {
                     $('#parcelModal .form-parcel').addClass('hidden');
-                    $('#parcelModal .modal-footer #transfer-deny').addClass('hidden');
-                    $('#parcelModal .modal-footer #transfer-confirm').addClass('hidden');
-                    $('#parcelModal .modal-footer #transfer-close').removeClass('hidden');
-                    $('#parcelModal .modal-body').empty().append(
-                        '<div class="alert alert-primary">' +
-                        'Transaction <u id="transfer-hash">executed!</u> Results will be reflected in ~30 seconds.' +
-                        '</div>');
+                    $('#parcelModal .modal-body .alert.alert-primary').removeClass('hidden').empty().append(
+                        'Transaction <u id="parcel-transfer-hash">executed!</u> Results will be reflected in ~30 seconds.'
+                    );
 
-                    $('#transfer-hash').popover({
+                    $('#parcel-transfer-hash').popover({
                         content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
                         html: true,
                         placement: "bottom"
                     });
-
-                    console.log(result);
-                    console.log("https://rinkeby.etherscan.io/tx/" + result);
                 } else {
                     $("#parcelModal").modal('hide');
                 }
