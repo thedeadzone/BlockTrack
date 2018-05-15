@@ -5,6 +5,7 @@ function startOthers() {
     let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
     let house = '';
 
+    // Checks if mobile browser Cipher is used for camera/QR code use.
     const isCipher = !!window.__CIPHER__;
     const canScanQRCode = !!(
         window.web3 &&
@@ -12,8 +13,9 @@ function startOthers() {
         window.web3.currentProvider.scanQRCode
     );
 
+    // If cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
-        $('#scannerModal .modal-body video').addClass('hidden');
+        $("#scannerModal").remove();
     }
 
     myContract.getToken(slug, function (error, result) {
@@ -125,13 +127,11 @@ function startOthers() {
 
                                     ActivateTriggers();
                                 } else {
-                                    $("#scannerModal").modal('hide');
                                     createAddressAlert('This address is not allowed to receive the parcel: ', data);
                                 }
                             }
                         });
                     } else {
-                        $("#scannerModal").modal('hide');
                         createAddressAlert('This is not a correct address: ', data);
                     }
                 })

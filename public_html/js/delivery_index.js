@@ -2,6 +2,7 @@ function startOthers() {
     let finished = [0];
     let url = $('.url-detail').data('url-detail');
 
+    // Checks if mobile browser Cipher is used for camera/QR code use.
     const isCipher = !!window.__CIPHER__;
     const canScanQRCode = !!(
         window.web3 &&
@@ -9,13 +10,19 @@ function startOthers() {
         window.web3.currentProvider.scanQRCode
     );
 
+    // if cipher browser, remove the modal that's not used
+    if (isCipher && canScanQRCode) {
+        $("#scannerModal").remove();
+    }
+
+    // Added in via Javascript to prevent clicking the button before its correctly initiated.
+    $('.container-fluid.blue-color-1 .card-body').append('<button type="button" id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan QR Code</button>' +
+        '<button type="button" id="activate-scanner" data-toggle="modal" data-target="#qrcodeModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Show my QR Code</button>');
+
+    // Activates the scanner button with on click action
     $('#activate-scanner').on('click', function () {
         activateScanner();
     });
-
-    if (isCipher && canScanQRCode) {
-        $('#scannerModal .modal-body video').addClass('hidden');
-    }
 
     $('#qrcodeModal').find('.modal-body').append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
 
@@ -189,12 +196,10 @@ function startOthers() {
                             if (!error && result.length !== 0) {
                                 window.location = url.replace(/\d+/, data);
                             } else {
-                                $("#scannerModal").modal('hide');
                                 createAddressAlert('This is not a correct id: ', data);
                             }
                         });
                     } else {
-                        $("#scannerModal").modal('hide');
                         createAddressAlert('This is not an id: ', data);
                     }
                 })
