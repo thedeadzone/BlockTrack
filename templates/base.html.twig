@@ -22,17 +22,19 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
 
     {% if app.request.get('_route') == 'app_delivery_detail' %}
-    <script src="{{ asset('js/instascan.min.js') }}"></script>
-    <script src="{{ asset('js/delivery_detail.js') }}"></script>
+        <script src="{{ asset('js/instascan.min.js') }}"></script>
+        <script src="{{ asset('js/delivery_detail.js') }}"></script>
     {% elseif app.request.get('_route') == 'app_delivery_home'  %}
-    <script src="{{ asset('js/instascan.min.js') }}"></script>
-    <script src="{{ asset('js/delivery_index.js') }}"></script>
+        <script src="{{ asset('js/instascan.min.js') }}"></script>
+        <script src="{{ asset('js/delivery_index.js') }}"></script>
     {% elseif app.request.get('_route') == 'app_customer_home'  %}
-    <script src="{{ asset('js/customer_index.js') }}"></script>
+        <script src="{{ asset('js/customer_index.js') }}"></script>
     {% elseif app.request.get('_route') == 'app_customer_detail'  %}
-    <script src="{{ asset('js/customer_detail.js') }}"></script>
+        <script src="{{ asset('js/customer_detail.js') }}"></script>
     {% elseif app.request.get('_route') == 'app_admin_home'  %}
-    <script src="{{ asset('js/admin_index.js') }}"></script>
+        <script src="{{ asset('js/admin_index.js') }}"></script>
+    {% elseif app.request.get('_route') == 'app_admin_detail'  %}
+        <script src="{{ asset('js/admin_detail.js') }}"></script>
     {% endif %}
 {% endblock %}
 </body>

@@ -41,20 +41,20 @@ function startOthers() {
 
                                             div.append(
                                                 '<div class="card border" data-token-id="' + id + '">' +
-                                                '<div class="card-body">' +
-                                                '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
-                                                '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
-                                                '</div>' +
-                                                '<div class="card-footer bg-transparent">' +
-                                                '<div class="row">' +
-                                                '<div class="col-6">' +
-                                                '<a href="' + url + '" class="card-link">Details</a>' +
-                                                '</div>' +
-                                                '<div class="col-6">' +
-                                                '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
-                                                '</div>' +
-                                                '</div>' +
-                                                '</div>' +
+                                                    '<div class="card-body">' +
+                                                        '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                                        '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                                    '</div>' +
+                                                    '<div class="card-footer bg-transparent">' +
+                                                        '<div class="row">' +
+                                                            '<div class="col-6">' +
+                                                                '<a href="' + url + '" class="card-link">Details</a>' +
+                                                            '</div>' +
+                                                            '<div class="col-6">' +
+                                                                '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
+                                                            '</div>' +
+                                                        '</div>' +
+                                                    '</div>' +
                                                 '</div>');
                                         }
                                     } else {

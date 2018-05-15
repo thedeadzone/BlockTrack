@@ -16,77 +16,92 @@ function startOthers() {
     }
 
     // Added in via Javascript to prevent clicking the button before its correctly initiated.
-    $('.container-fluid.blue-color-1 .card-body').append('<button type="button" id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan QR Code</button>' +
-        '<button type="button" id="activate-scanner" data-toggle="modal" data-target="#qrcodeModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Show my QR Code</button>');
+    $('.container-fluid.blue-color-1 .card-body').append(
+        '<button type="button" id="activateScanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan QR Code</button>' +
+        '<button type="button" id="activate-qr" data-toggle="modal" data-target="#qrcodeModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Show my QR Code</button>' +
+        '<button type="button" id="refreshData" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Refresh</button>'
+    );
 
     // Activates the scanner button with on click action
-    $('#activate-scanner').on('click', function () {
+    $('#activateScanner').on('click', function () {
         activateScanner();
+    });
+
+    $('#refreshData').on('click', function() {
+        getData();
     });
 
     $('#qrcodeModal').find('.modal-body').append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
 
-    myContract.tokensOfOwner(web3.eth.accounts[0], function (error, result) {
-        if (!error) {
-            if (result.length !== 0) {
-                var date = '';
-                var length = result.length;
+    getData();
 
-                jQuery.each(result, function(i, val) {
-                    var tokenId = val['c'][0];
-                    myContract.getToken.call(val, function (error, result) {
-                        if (!error) {
-                            if (result.length !== 0) {
-                                var token = result;
-                                myContract.handOff({tokenId: result[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
-                                    if (!error) {
-                                        if (result.length !== 0) {
-                                            date = new Date(result[result.length-1]['args']['time']['c'][0] * 1000);
-                                            url = url.replace(/\d+/, token[0]);
-                                            finished.push(token[0]['c'][0]);
+    function getData() {
+        finished = [0];
+        $('.todo').empty();
+        $('.done').empty();
 
-                                            $('.todo').append(
-                                                '<div class="card border" data-token-id="' + token[0] + '">' +
+        myContract.tokensOfOwner(web3.eth.accounts[0], function (error, result) {
+            if (!error) {
+                if (result.length !== 0) {
+                    var date = '';
+                    var length = result.length;
+
+                    jQuery.each(result, function(i, val) {
+                        var tokenId = val['c'][0];
+                        myContract.getToken.call(val, function (error, result) {
+                            if (!error) {
+                                if (result.length !== 0) {
+                                    var token = result;
+                                    myContract.handOff({tokenId: result[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
+                                        if (!error) {
+                                            if (result.length !== 0) {
+                                                date = new Date(result[result.length-1]['args']['time']['c'][0] * 1000);
+                                                url = url.replace(/\d+/, token[0]);
+                                                finished.push(token[0]['c'][0]);
+
+                                                $('.todo').append(
+                                                    '<div class="card border" data-token-id="' + token[0] + '">' +
                                                     '<div class="card-body">' +
-                                                        '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-primary pull-right">In transport</span></h5>' +
-                                                        '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                                    '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-primary pull-right">In transport</span></h5>' +
+                                                    '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                     '</div>' +
                                                     '<div class="card-footer bg-transparent">' +
-                                                        '<div class="row">' +
-                                                            '<div class="col-6">' +
-                                                                '<a href="' + url + '" class="card-link">Details</a>' +
-                                                            '</div>' +
-                                                            '<div class="col-6">' +
-                                                                '<p class="card-text align-center text-muted">' + token[2] + '</p>' +
-                                                            '</div>' +
-                                                        '</div>' +
+                                                    '<div class="row">' +
+                                                    '<div class="col-6">' +
+                                                    '<a href="' + url + '" class="card-link">Details</a>' +
                                                     '</div>' +
-                                                '</div>');
+                                                    '<div class="col-6">' +
+                                                    '<p class="card-text align-center text-muted">' + token[2] + '</p>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</div>');
+                                            }
                                         }
-                                    }
-                                    if (i == length-1) {
-                                        runOther();
-                                    }
-                                });
+                                        if (i == length-1) {
+                                            runOther();
+                                        }
+                                    });
+                                }
                             }
-                        }
+                        });
                     });
-                });
-            } else {
-                runOther();
+                } else {
+                    runOther();
 
-                $('.todo').append(
-                    '<div class="card border no-data-card">' +
-                    '<div class="card-body">' +
-                    '<h5 class="card-title">No parcels to deliver</h5>' +
-                    '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
-                    '</div>' +
-                    '</div>');
+                    $('.todo').append(
+                        '<div class="card border no-data-card">' +
+                        '<div class="card-body">' +
+                        '<h5 class="card-title">No parcels to deliver</h5>' +
+                        '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                        '</div>' +
+                        '</div>');
+                }
+            } else {
+                console.error(error);
             }
-        } else {
-            console.error(error);
-        }
-    });
+        });
+    }
 
     function runOther() {
         myContract.handOff({owner: web3.eth.accounts[0]}, {
@@ -106,17 +121,16 @@ function startOthers() {
                         let tokenId = handOff[count]['args']['tokenId']['c'];
 
                         if (jQuery.inArray(handOff[count]['args']['tokenId']['c'][0], finished) == -1) {
-                            if ($.inArray(tokenId[0], data[0]) == -1) {
-                                data.push([tokenId[0], handOff[count]['args']['time']['c'][0], handOff[count]]);
-                            }
+                            finished.push(handOff[count]['args']['tokenId']['c'][0]);
+                            data.push([tokenId[0], handOff[count]['args']['time']['c'][0], handOff[count]]);
                         } else {
                             if (handOff.length - 1 == count) {
                                 $('.done').append(
                                     '<div class="card border no-data-card">' +
-                                    '<div class="card-body">' +
-                                    '<h5 class="card-title">No parcels delivered</h5>' +
-                                    '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
-                                    '</div>' +
+                                        '<div class="card-body">' +
+                                            '<h5 class="card-title">No parcels delivered</h5>' +
+                                            '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
+                                        '</div>' +
                                     '</div>');
                             }
                         }
