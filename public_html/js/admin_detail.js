@@ -25,10 +25,10 @@ function startOthers() {
 
                                 $('.page-content-2 #first-list').append(
                                     '<li>'+
-                                        '<span></span>' +
-                                        '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' '+ house +'</div>'+
-                                        '<div class="info">' + result[i]["args"]["location"] + '</div>'+
-                                        '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
+                                    '<span></span>' +
+                                    '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' '+ house +'</div>'+
+                                    '<div class="info">' + result[i]["args"]["location"] + '</div>'+
+                                    '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
                                     '</li>');
 
                                 $('.token-2-' + i).popover({
@@ -45,16 +45,16 @@ function startOthers() {
 
                             $('.page-content-1').append(
                                 '<div class="card border" data-token-id="' + slug + '">' +
-                                    '<div class="card-body">' +
-                                        '<h5 class="card-title">Parcel ' + slug + '</h5>' +
-                                        '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
-                                        '<p class="card-text text-muted">' + token[4] + '</p>' +
-                                    '</div>' +
-                                    '<div class="card-footer bg-transparent">' +
-                                        '<div class="progress">' +
-                                            html +
-                                        '</div>' +
-                                    '</div>' +
+                                '<div class="card-body">' +
+                                '<h5 class="card-title">Parcel ' + slug + '</h5>' +
+                                '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
+                                '<p class="card-text text-muted">' + token[4] + '</p>' +
+                                '</div>' +
+                                '<div class="card-footer bg-transparent">' +
+                                '<div class="progress">' +
+                                html +
+                                '</div>' +
+                                '</div>' +
                                 '</div>');
                         } else {
                             console.log('No data');

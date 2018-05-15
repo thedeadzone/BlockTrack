@@ -29,23 +29,8 @@ class AdminController extends AbstractController
      */
     public function detailAction($slug)
     {
-        return $this->render('admin/detail.html.twig', [
+        return $this->render('customer/detail.html.twig', [
             'slug' => $slug,
-        ]);
-    }
-
-
-    /**
-     * @Route("/admin/create");
-     *
-     * Page where you can create all required tokens
-     *
-     * @return Response
-     */
-    public function createAction()
-    {
-        return $this->render('admin/create.html.twig', [
-
         ]);
     }
 }

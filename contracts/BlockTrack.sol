@@ -99,13 +99,14 @@ contract BlockTrack is ERC721Token, Ownable {
   /**
   * @dev Returns values for specific token id (uint256) that's called.
   */
-  function getToken(uint256 _tokenId) external view returns (uint64 mintedAt, string shippingCompany, address receivingAddress, string receivingPostalAddress) {
+  function getToken(uint256 _tokenId) external view returns (uint256 tokenId, uint64 mintedAt, string shippingCompany, address receivingAddress, string receivingPostalAddress) {
     Token memory token = tokens[_tokenId];
 
     mintedAt = token.mintedAt;
     shippingCompany = NameToShippingCompany[token.shippingCompany];
     receivingAddress = token.receivingAddress;
     receivingPostalAddress = token.receivingPostalAddress;
+    tokenId = _tokenId;
 
   }
 

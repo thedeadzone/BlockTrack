@@ -14,7 +14,7 @@ function startOthers() {
                                 let date = '';
                                 let token = result;
                                 let delivered = '';
-                                myContract.handOff({tokenId: tokenId}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
+                                myContract.handOff({tokenId: token[0]}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                                     if (!error) {
                                         if (result.length !== 0) {
                                             for (i = 0; i < result.length; i++) {
@@ -39,7 +39,7 @@ function startOthers() {
                                                                     '<a href="' + url + '" class="card-link">Details</a>' +
                                                                 '</div>' +
                                                                 '<div class="col-6">' +
-                                                                    '<p class="card-text pull-right text-muted">' + token[1] + '</p>' +
+                                                                    '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
                                                                 '</div>' +
                                                             '</div>' +
                                                         '</div>' +
@@ -58,7 +58,7 @@ function startOthers() {
                                                                     '<a href="' + url + '" class="card-link">Details</a>' +
                                                                 '</div>' +
                                                                 '<div class="col-6">' +
-                                                                    '<p class="card-text pull-right text-muted">' + token[1] + '</p>' +
+                                                                    '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
                                                                 '</div>' +
                                                             '</div>' +
                                                         '</div>' +

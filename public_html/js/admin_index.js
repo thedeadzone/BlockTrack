@@ -1,14 +1,12 @@
 function startOthers() {
     myContract.totalSupply(function (error, result) {
-        console.log(result);
         if (!error) {
             if (result.length != 0) {
-                var i = 0;
-                var tokenId = 0;
+                var id = 0;
                 var length = result['c'][0];
                 for (i = 0; i < length; i++) {
-                    myContract.getToken.call(i, function (error, result) {
-                        tokenId = i;
+                    id = i;
+                    myContract.getToken.call(id, function (error, result) {
                         if (!error) {
                             if (result.length != 0) {
                                 var done = false;
@@ -17,10 +15,9 @@ function startOthers() {
                                 var date = '';
                                 var message = '';
                                 var token = result;
-                                myContract.handOff({tokenId: tokenId}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
-                                    console.log(result);
+                                myContract.handOff({tokenId: result[0]}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                                     if (!error) {
-                                        if (result.length != 0) {
+                                        if (result.length != 0 && token[0]['c'] != 0) {
                                             for (i = 0; i < result.length; i++) {
                                                 if (result[i]['args']['delivered'] == true) {
                                                     done = true;
@@ -40,12 +37,12 @@ function startOthers() {
                                                 message = 'In Transport';
                                             }
 
-                                            var url = $('.url-app_admin_detail').data('url-detail').replace(/\d+/, i);
+                                            var url = $('.url-detail').data('url-detail').replace(/\d+/, token[0]);
 
                                             div.append(
-                                                '<div class="card border" data-token-id="' + tokenId + '">' +
+                                                '<div class="card border" data-token-id="' + id + '">' +
                                                 '<div class="card-body">' +
-                                                '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                                '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
                                                 '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                 '</div>' +
                                                 '<div class="card-footer bg-transparent">' +
@@ -54,7 +51,7 @@ function startOthers() {
                                                 '<a href="' + url + '" class="card-link">Details</a>' +
                                                 '</div>' +
                                                 '<div class="col-6">' +
-                                                '<p class="card-text pull-right text-muted">' + token[1] + '</p>' +
+                                                '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
                                                 '</div>' +
                                                 '</div>' +
                                                 '</div>' +

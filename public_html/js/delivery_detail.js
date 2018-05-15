@@ -4,6 +4,7 @@ function startOthers() {
     let targetId = '';
     let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
     let house = '';
+    let url = $('.url-home').data('url');
 
     // Checks if mobile browser Cipher is used for camera/QR code use.
     const isCipher = !!window.__CIPHER__;
@@ -15,7 +16,7 @@ function startOthers() {
 
     // If cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
-        $("#scannerModal").remove();
+        $('#scannerModal .modal-body video').addClass('hidden');
     }
 
     myContract.getToken(slug, function (error, result) {
@@ -64,7 +65,7 @@ function startOthers() {
                                             '<div class="card-body">' +
                                             '<h5 class="card-title">Parcel ' + slug + '</h5>' +
                                             '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
-                                            '<p class="card-text text-muted">' + token[3] + '</p>' +
+                                            '<p class="card-text text-muted">' + token[4] + '</p>' +
                                             '</div>' +
                                             '<div class="card-footer bg-transparent">' +
                                             '<a id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="button button-lg align-center-transfer">Transfer</a>' +
@@ -80,7 +81,7 @@ function startOthers() {
                                             '<div class="card-body">' +
                                             '<h5 class="card-title">Parcel ' + slug + '</h5>' +
                                             '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
-                                            '<p class="card-text text-muted">' + token[3] + '</p>' +
+                                            '<p class="card-text text-muted">' + token[4] + '</p>' +
                                             '</div>' +
                                             '<div class="card-footer bg-transparent">' +
                                             '<div class="progress">' +
@@ -101,6 +102,7 @@ function startOthers() {
                 console.log('No data');
             }
         } else {
+            window.location.replace(url);
             console.error(error);
         }
     });
@@ -127,15 +129,18 @@ function startOthers() {
 
                                     ActivateTriggers();
                                 } else {
+                                    $('#scannerModal').modal('hide')
                                     createAddressAlert('This address is not allowed to receive the parcel: ', data);
                                 }
                             }
                         });
                     } else {
+                        $('#scannerModal').modal('hide')
                         createAddressAlert('This is not a correct address: ', data);
                     }
                 })
                 .catch(err => {
+                    $('#scannerModal').modal('hide')
                     console.log('Error:', err)
                 });
         } else {
@@ -159,6 +164,7 @@ function startOthers() {
 
                                 ActivateTriggers();
                             } else {
+                                $('#scannerModal').modal('hide')
                                 createAddressAlert('This address is not allowed to receive the parcel: ', content);
                             }
                         }
@@ -194,8 +200,6 @@ function startOthers() {
                     gasPrice: 2000000000
                 }, function (error, result) {
                     if (!error) {
-                        var url = $('.url-finish-transfer').data('url');
-
                         $('#scannerModal .modal-footer #transfer-deny').addClass('hidden');
                         $('#scannerModal .modal-footer #transfer-confirm').addClass('hidden');
                         $('#scannerModal .modal-footer #transfer-close').removeClass('hidden');

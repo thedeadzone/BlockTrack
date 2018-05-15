@@ -12,7 +12,7 @@ function startOthers() {
 
     // if cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
-        $("#scannerModal").remove();
+        $('#scannerModal .modal-body video').addClass('hidden');
     }
 
     // Added in via Javascript to prevent clicking the button before its correctly initiated.
@@ -29,31 +29,27 @@ function startOthers() {
     myContract.tokensOfOwner(web3.eth.accounts[0], function (error, result) {
         if (!error) {
             if (result.length !== 0) {
-                var i = 0;
                 var date = '';
-                var token = '';
-                var count = 0;
-                var tokenId = 0;
                 var length = result.length;
-                for (i = 0; i < result.length; i++) {
-                    tokenId = result[i]['c'][i];
-                    count = i;
-                    myContract.getToken.call(tokenId, function (error, result) {
+
+                jQuery.each(result, function(i, val) {
+                    var tokenId = val['c'][0];
+                    myContract.getToken.call(val, function (error, result) {
                         if (!error) {
                             if (result.length !== 0) {
-                                token = result;
-                                myContract.handOff({tokenId: tokenId}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
+                                var token = result;
+                                myContract.handOff({tokenId: result[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
                                     if (!error) {
                                         if (result.length !== 0) {
                                             date = new Date(result[result.length-1]['args']['time']['c'][0] * 1000);
-                                            url = url.replace(/\d+/, tokenId);
-                                            finished.push(tokenId);
+                                            url = url.replace(/\d+/, token[0]);
+                                            finished.push(token[0]['c'][0]);
 
                                             $('.todo').append(
-                                                '<div class="card border" data-token-id="' + tokenId + '">' +
+                                                '<div class="card border" data-token-id="' + token[0] + '">' +
                                                     '<div class="card-body">' +
-                                                            '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-primary pull-right">In transport</span></h5>' +
-                                                            '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                                        '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-primary pull-right">In transport</span></h5>' +
+                                                        '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                     '</div>' +
                                                     '<div class="card-footer bg-transparent">' +
                                                         '<div class="row">' +
@@ -61,21 +57,21 @@ function startOthers() {
                                                                 '<a href="' + url + '" class="card-link">Details</a>' +
                                                             '</div>' +
                                                             '<div class="col-6">' +
-                                                                '<p class="card-text align-center text-muted">' + token[1] + '</p>' +
+                                                                '<p class="card-text align-center text-muted">' + token[2] + '</p>' +
                                                             '</div>' +
                                                         '</div>' +
                                                     '</div>' +
                                                 '</div>');
                                         }
                                     }
-                                    if (i == length) {
+                                    if (i == length-1) {
                                         runOther();
                                     }
                                 });
                             }
                         }
                     });
-                }
+                });
             } else {
                 runOther();
 
@@ -103,15 +99,15 @@ function startOthers() {
                     let date = '';
                     let message = '';
                     let handOff = result;
-                    let ids = [];
+                    let data = [];
 
                     for (i = handOff.length -1; i >= 0; i--) {
                         let count = i;
                         let tokenId = handOff[count]['args']['tokenId']['c'];
 
                         if (jQuery.inArray(handOff[count]['args']['tokenId']['c'][0], finished) == -1) {
-                            if ($.inArray(tokenId[0], ids[0]) == -1) {
-                                ids.push([tokenId[0], handOff[count]['args']['time']['c'][0]]);
+                            if ($.inArray(tokenId[0], data[0]) == -1) {
+                                data.push([tokenId[0], handOff[count]['args']['time']['c'][0], handOff[count]]);
                             }
                         } else {
                             if (handOff.length - 1 == count) {
@@ -126,15 +122,14 @@ function startOthers() {
                         }
                     }
 
-                    for (i = 0; i < ids.length; i++) {
+                    for (i = 0; i < data.length; i++) {
                         let count = i;
-                        myContract.getToken.call(ids[i][0], function (error, result) {
+                        myContract.getToken.call(data[i][0], function (error, result) {
                             if (!error) {
                                 if (result.length !== 0) {
                                     let done = false;
-                                    date = new Date(ids[count][1] * 1000);
-
-                                    if (handOff[count]['args']['delivered'] === true) {
+                                    date = new Date(data[count][1] * 1000);
+                                    if (data[count][2]['args']['delivered'] === true) {
                                         done = true;
                                     }
 
@@ -146,12 +141,12 @@ function startOthers() {
                                         message = 'In Transport';
                                     }
 
-                                    url = url.replace(/\d+/, ids[count][0]);
+                                    url = url.replace(/\d+/, result[0]);
 
                                     $('.done').append(
-                                        '<div class="card border" data-token-id="' + ids[count][0] + '">' +
+                                        '<div class="card border" data-token-id="' + result[0] + '">' +
                                         '<div class="card-body">' +
-                                        '<h5 class="card-title">Parcel ' + ids[count][0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                        '<h5 class="card-title">Parcel ' + result[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
                                         '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                         '</div>' +
                                         '<div class="card-footer bg-transparent">' +
@@ -160,7 +155,7 @@ function startOthers() {
                                         '<a href="' + url + '" class="card-link">Details</a>' +
                                         '</div>' +
                                         '<div class="col-6">' +
-                                        '<p class="card-text align-center text-muted">' + result[1] + '</p>' +
+                                        '<p class="card-text align-center text-muted">' + result[2] + '</p>' +
                                         '</div>' +
                                         '</div>' +
                                         '</div>' +
@@ -197,13 +192,16 @@ function startOthers() {
                                 window.location = url.replace(/\d+/, data);
                             } else {
                                 createAddressAlert('This is not a correct id: ', data);
+                                $('#scannerModal').modal('hide')
                             }
                         });
                     } else {
+                        $('#scannerModal').modal('hide')
                         createAddressAlert('This is not an id: ', data);
                     }
                 })
                 .catch(err => {
+                    $('#scannerModal').modal('hide')
                     console.log('Error:', err)
                 })
         } else {

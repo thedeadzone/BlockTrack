@@ -581,6 +581,10 @@ function startApp() {
             "name": "getToken",
             "outputs": [
                 {
+                    "name": "tokenId",
+                    "type": "uint256"
+                },
+                {
                     "name": "mintedAt",
                     "type": "uint64"
                 },
@@ -719,7 +723,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x1035e7df4e2dba48999cd2ca9b3e92f331a7e308');
+    ]).at('0x0a31f405aa004c176b804f43e581730d8ecece89');
     startOthers();
 
     // myContract.totalSupply.call(function(error, result) {
