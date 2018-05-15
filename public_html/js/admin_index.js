@@ -1,75 +1,247 @@
 function startOthers() {
-    myContract.totalSupply(function (error, result) {
-        if (!error) {
-            if (result.length != 0) {
-                var id = 0;
-                var length = result['c'][0];
-                for (i = 0; i < length; i++) {
-                    id = i;
-                    myContract.getToken.call(id, function (error, result) {
-                        if (!error) {
-                            if (result.length != 0) {
-                                var done = false;
-                                var div = '';
-                                var badge = '';
-                                var date = '';
-                                var message = '';
-                                var token = result;
-                                myContract.handOff({tokenId: result[0]}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
-                                    if (!error) {
-                                        if (result.length != 0 && token[0]['c'] != 0) {
-                                            for (i = 0; i < result.length; i++) {
-                                                if (result[i]['args']['delivered'] == true) {
-                                                    done = true;
+    $('#activateScanner').on('click', function () {
+        activateScanner();
+    });
+
+    $('#refreshData').on('click', function() {
+        getData();
+    });
+
+    getData();
+
+    var url = $('.url-detail').data('url-detail');
+
+    function getData() {
+        $('.todo').empty();
+        $('.done').empty();
+
+        myContract.totalSupply(function (error, result) {
+            if (!error) {
+                if (result.length != 0) {
+                    var id = 0;
+                    var length = result['c'][0];
+                    for (i = 0; i < length; i++) {
+                        id = i;
+                        myContract.getToken.call(id, function (error, result) {
+                            if (!error) {
+                                if (result.length != 0) {
+                                    var done = false;
+                                    var div = '';
+                                    var badge = '';
+                                    var date = '';
+                                    var message = '';
+                                    var token = result;
+                                    myContract.handOff({tokenId: result[0]}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
+                                        if (!error) {
+                                            if (result.length != 0 && token[0]['c'] != 0) {
+                                                for (i = 0; i < result.length; i++) {
+                                                    if (result[i]['args']['delivered'] == true) {
+                                                        done = true;
+                                                    }
+                                                    if (i == result.length - 1) {
+                                                        date = new Date(result[i]['args']['time']['c'][0] * 1000);
+                                                    }
                                                 }
-                                                if (i == result.length - 1) {
-                                                    date = new Date(result[i]['args']['time']['c'][0] * 1000);
+
+                                                if (done) {
+                                                    div = $('.done');
+                                                    badge = 'success';
+                                                    message = 'Delivered'
+                                                } else {
+                                                    div = $('.todo');
+                                                    badge = 'primary';
+                                                    message = 'In Transport';
                                                 }
-                                            }
 
-                                            if (done) {
-                                                div = $('.done');
-                                                badge = 'success';
-                                                message = 'Delivered'
-                                            } else {
-                                                div = $('.todo');
-                                                badge = 'primary';
-                                                message = 'In Transport';
-                                            }
+                                                url = url.replace(/\d+/, token[0]);
 
-                                            var url = $('.url-detail').data('url-detail').replace(/\d+/, token[0]);
-
-                                            div.append(
-                                                '<div class="card border" data-token-id="' + id + '">' +
+                                                div.append(
+                                                    '<div class="card border" data-token-id="' + id + '">' +
                                                     '<div class="card-body">' +
-                                                        '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
-                                                        '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
+                                                    '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                                    '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                     '</div>' +
                                                     '<div class="card-footer bg-transparent">' +
-                                                        '<div class="row">' +
-                                                            '<div class="col-6">' +
-                                                                '<a href="' + url + '" class="card-link">Details</a>' +
-                                                            '</div>' +
-                                                            '<div class="col-6">' +
-                                                                '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
-                                                            '</div>' +
-                                                        '</div>' +
+                                                    '<div class="row">' +
+                                                    '<div class="col-6">' +
+                                                    '<a href="' + url + '" class="card-link">Details</a>' +
                                                     '</div>' +
-                                                '</div>');
+                                                    '<div class="col-6">' +
+                                                    '<p class="card-text pull-right text-muted">' + token[2] + '</p>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</div>');
+                                            }
+                                        } else {
+                                            console.error(error);
                                         }
-                                    } else {
-                                        console.error(error);
-                                    }
-                                });
-                            } else {
-                                console.error(error);
+                                    });
+                                } else {
+                                    console.error(error);
+                                }
                             }
+                        });
+                    }
+                } else {
+                    console.error(error);
+                }
+            }
+        });
+    }
+
+    function activateScanner() {
+        if (isCipher && canScanQRCode) {
+            window.web3.currentProvider
+                .scanQRCode(/^.+$/)
+                .then(data => {
+                    if (isInt(data)) {
+                        myContract.getToken.call(data, function (error, result) {
+                            if (!error && result.length !== 0) {
+                                window.location = url.replace(/\d+/, data);
+                            } else {
+                                createAddressAlert('This is not a correct id: ', data);
+                                $('#scannerModal').modal('hide')
+                            }
+                        });
+                    } else {
+                        $('#scannerModal').modal('hide')
+                        createAddressAlert('This is not an id: ', data);
+                    }
+                })
+                .catch(err => {
+                    $('#scannerModal').modal('hide')
+                    console.log('Error:', err)
+                })
+        } else {
+            let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
+            scanner.addListener('scan', function (content) {
+                if (isInt(content)) {
+                    myContract.getToken.call(content, function (error, result) {
+                        if (!error && result.length !== 0) {
+                            console.log(content);
+                            scanner.stop();
+                            window.location = url.replace(/\d+/, content);
+                        } else {
+                            createAddressAlert('This is not a correct id: ', content);
                         }
                     });
+                } else {
+                    createAddressAlert('This is not an id: ', content);
                 }
-            } else {
-                console.error(error);
-            }
+            });
+
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    if (cameras[1]) {
+                        scanner.mirror = false;
+                        scanner.start(cameras[1]);
+                    } else {
+                        scanner.mirror = true;
+                        scanner.start(cameras[0]);
+                    }
+                } else {
+                    console.error('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
+            });
         }
+    }
+
+    $('.form-shippingcompany').on('submit', function(e) {
+        e.preventDefault();
+        myContract.registerShippingCompany($('#shippingcompany-address').val(), $('#shippingcompany-name').val(), {
+                from: web3.eth.accounts[0],
+                gas: 200000,
+                gasPrice: 2000000000
+            }, function (error, result) {
+                if (!error) {
+                    $('#shippingModal #form-shippingcompany').addClass('hidden');
+                    $('#shippingModal .modal-footer #transfer-deny').addClass('hidden');
+                    $('#shippingModal .modal-footer #transfer-confirm').addClass('hidden');
+                    $('#shippingModal .modal-footer #transfer-close').removeClass('hidden');
+                    $('#shippingModal .modal-body').empty().append(
+                        '<div class="alert alert-primary">' +
+                        'Transaction <u id="transfer-hash">executed!</u> Results will be reflected in ~30 seconds.' +
+                        '</div>');
+
+                    $('#transfer-hash').popover({
+                        content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
+                        html: true,
+                        placement: "bottom"
+                    });
+
+                    console.log(result);
+                    console.log("https://rinkeby.etherscan.io/tx/" + result);
+                } else {
+                    $("#shippingModal").modal('hide');
+                }
+            }
+        );
+    });
+
+    $('.form-deliverer').on('submit', function(e) {
+        e.preventDefault();
+        myContract.registerDeliverer($('#deliverer-address').val(), $('#deliverer-name').val(), $('#deliverer-location').val(), {
+                from: web3.eth.accounts[0],
+                gas: 200000,
+                gasPrice: 2000000000
+            }, function (error, result) {
+                if (!error) {
+                    $('#delivererModal .form-deliverer').addClass('hidden');
+                    $('#delivererModal .modal-footer #transfer-deny').addClass('hidden');
+                    $('#delivererModal .modal-footer #transfer-confirm').addClass('hidden');
+                    $('#delivererModal .modal-footer #transfer-close').removeClass('hidden');
+                    $('#delivererModal .modal-body').empty().append(
+                        '<div class="alert alert-primary">' +
+                        'Transaction <u id="transfer-hash">executed!</u> Results will be reflected in ~30 seconds.' +
+                        '</div>');
+
+                    $('#transfer-hash').popover({
+                        content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
+                        html: true,
+                        placement: "bottom"
+                    });
+
+                    console.log(result);
+                    console.log("https://rinkeby.etherscan.io/tx/" + result);
+                } else {
+                    $("#delivererModal").modal('hide');
+                }
+            }
+        );
+    });
+
+    $('.form-parcel').on('submit', function(e) {
+        e.preventDefault();
+        myContract.registerParcel($('#parcel-address').val(), $('#parcel-name').val(), $('#parcel-location').val(), {
+                from: web3.eth.accounts[0],
+                gas: 200000,
+                gasPrice: 2000000000
+            }, function (error, result) {
+                if (!error) {
+                    $('#parcelModal .form-parcel').addClass('hidden');
+                    $('#parcelModal .modal-footer #transfer-deny').addClass('hidden');
+                    $('#parcelModal .modal-footer #transfer-confirm').addClass('hidden');
+                    $('#parcelModal .modal-footer #transfer-close').removeClass('hidden');
+                    $('#parcelModal .modal-body').empty().append(
+                        '<div class="alert alert-primary">' +
+                        'Transaction <u id="transfer-hash">executed!</u> Results will be reflected in ~30 seconds.' +
+                        '</div>');
+
+                    $('#transfer-hash').popover({
+                        content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
+                        html: true,
+                        placement: "bottom"
+                    });
+
+                    console.log(result);
+                    console.log("https://rinkeby.etherscan.io/tx/" + result);
+                } else {
+                    $("#parcelModal").modal('hide');
+                }
+            }
+        );
     });
 }

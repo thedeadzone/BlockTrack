@@ -2,14 +2,6 @@ function startOthers() {
     let finished = [0];
     let url = $('.url-detail').data('url-detail');
 
-    // Checks if mobile browser Cipher is used for camera/QR code use.
-    const isCipher = !!window.__CIPHER__;
-    const canScanQRCode = !!(
-        window.web3 &&
-        window.web3.currentProvider &&
-        window.web3.currentProvider.scanQRCode
-    );
-
     // if cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
         $('#scannerModal .modal-body video').addClass('hidden');

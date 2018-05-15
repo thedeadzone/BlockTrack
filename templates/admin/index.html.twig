@@ -10,16 +10,19 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" id="activate-scanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan QR Code</button>
+                                <button type="button" id="activateScanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan QR Code</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" id="register-parcel" data-toggle="modal" data-target="#parcelModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Register Parcel</button>
+                                <button type="button" id="registerParcel" data-toggle="modal" data-target="#parcelModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Register Parcel</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" id="register-shippingCompany" data-toggle="modal" data-target="#shippingModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Register Shippingcompany</button>
+                                <button type="button" id="registerShippingCompany" data-toggle="modal" data-target="#shippingModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Register Shippingcompany</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" id="register-deliverer" data-toggle="modal" data-target="#delivererModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Register Deliverer</button>
+                                <button type="button" id="registerDeliverer" data-toggle="modal" data-target="#delivererModal" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Register Deliverer</button>
+                            </div>
+                            <div class="col-12">
+                                <button type="button" id="refreshData" href="#" class="btn btn-secondary button-lg align-center-transfer margin-bottom">Refresh</button>
                             </div>
                         </div>
                         <p class="card-subtitle text-muted last-update-text"></p>
@@ -85,7 +88,21 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
+                    <form class="form-parcel">
+                        <div class="form-group">
+                            <label>Deliverer (public key)</label>
+                            <input type="text" required class="form-control" id="parcel-address" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label>Receiver (public key)</label>
+                            <input type="text" required class="form-control" id="parcel-name" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label>Postal address (text)</label>
+                            <input type="text" required class="form-control" id="parcel-location" placeholder="Postal">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="transfer-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,7 +121,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
+                    <form class="form-shippingcompany">
+                        <div class="form-group">
+                            <label>Address (public key)</label>
+                            <input type="text" required class="form-control" id="shippingcompany-address" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label>Name (text)</label>
+                            <input type="text" required class="form-control" id="shippingcompany-name" placeholder="Name">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="transfer-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -123,7 +150,21 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
+                    <form class="form-deliverer">
+                        <div class="form-group">
+                            <label>Address (public key)</label>
+                            <input type="text" required class="form-control" id="deliverer-address" placeholder="Address">
+                        </div>
+                        <div class="form-group">
+                            <label>Name (text)</label>
+                            <input type="text" required class="form-control" id="deliverer-name" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Location (text)</label>
+                            <input type="text" class="form-control" id="deliverer-location" placeholder="Location">
+                        </div>
+                        <button type="submit" required class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="transfer-close" class="btn btn-secondary" data-dismiss="modal">Close</button>

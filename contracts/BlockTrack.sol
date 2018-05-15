@@ -231,7 +231,7 @@ contract BlockTrack is ERC721Token, Ownable {
     * @param _receivingAddress address of the parcel receiver
     * @param _receivingPostalAddress postal address of the receiving public key
     */
-  function RegisterParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany() {
+  function registerParcel(address _deliverer, address _receivingAddress, string _receivingPostalAddress) public onlyShippingCompany() {
     require(bytes(NameToDeliverer[_deliverer]).length > 0);
     _internalMint(_deliverer, _receivingAddress, _receivingPostalAddress);
   }

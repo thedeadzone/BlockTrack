@@ -21,6 +21,15 @@ let timeOptions = {
 };
 
 function startApp() {
+    // Checks if mobile browser Cipher is used for camera/QR code use.
+    isCipher = !!window.__CIPHER__;
+    canScanQRCode = !!(
+        window.web3 &&
+        window.web3.currentProvider &&
+        window.web3.currentProvider.scanQRCode
+    );
+
+
     let coinbase = web3.eth.coinbase;
     let account = web3.eth.accounts[0];
     web3.eth.defaultAccount = web3.eth.accounts[0];
