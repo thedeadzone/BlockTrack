@@ -55,6 +55,7 @@ function startOthers() {
                                                     '<div class="card border" data-token-id="' + token[0] + '">' +
                                                     '<div class="card-body">' +
                                                     '<h5 class="card-title">Parcel ' + token[0] + ' <span class="badge badge-pill badge-primary pull-right">In transport</span></h5>' +
+                                                    '<p class="card-subtitle">' + token[4] + '</p>' +
                                                     '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                     '</div>' +
                                                     '<div class="card-footer bg-transparent">' +
@@ -153,6 +154,7 @@ function startOthers() {
                                         '<div class="card border" data-token-id="' + result[0] + '">' +
                                         '<div class="card-body">' +
                                         '<h5 class="card-title">Parcel ' + result[0] + ' <span class="badge badge-pill badge-' + badge + ' pull-right">' + message + '</span></h5>' +
+                                        '<p class="card-subtitle last-update-text">' + result[4] + '</p>' +
                                         '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                         '</div>' +
                                         '<div class="card-footer bg-transparent">' +
@@ -202,12 +204,12 @@ function startOthers() {
                             }
                         });
                     } else {
-                        $('#scannerModal').modal('hide')
+                        $('#scannerModal').modal('hide');
                         createAddressAlert('This is not an id: ', data);
                     }
                 })
                 .catch(err => {
-                    $('#scannerModal').modal('hide')
+                    $('#scannerModal').modal('hide');
                     console.log('Error:', err)
                 })
         } else {

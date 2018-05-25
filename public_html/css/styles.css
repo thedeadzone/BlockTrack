@@ -130,6 +130,11 @@ div.no-data-card.card.border .card-body .card-title {
     margin-top: 1em;
 }
 
+.card-subtitle {
+    margin-top:10px !important;
+}
+
+
 
 
 /**

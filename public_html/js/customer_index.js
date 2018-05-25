@@ -44,6 +44,7 @@ function startOthers() {
                                                         '<div class="card border" data-token-id="' + tokenId + '">' +
                                                         '<div class="card-body">' +
                                                         '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-primary pull-right">In Transport</span></h5>' +
+                                                        '<p class="card-subtitle last-update-text">' + token[4] + '</p>' +
                                                         '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                         '</div>' +
                                                         '<div class="card-footer bg-transparent">' +
@@ -63,6 +64,7 @@ function startOthers() {
                                                         '<div class="card border" data-token-id="' + tokenId + '">' +
                                                         '<div class="card-body">' +
                                                         '<h5 class="card-title">Parcel ' + tokenId + ' <span class="badge badge-pill badge-success pull-right">Delivered</span></h5>' +
+                                                        '<p class="card-subtitle last-update-text">' + token[4] + '</p>' +
                                                         '<p class="card-subtitle text-muted last-update-text">Last update: ' + date.toLocaleTimeString("en-us", timeOptions) + '</p>' +
                                                         '</div>' +
                                                         '<div class="card-footer bg-transparent">' +
