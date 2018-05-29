@@ -102,17 +102,17 @@ function startOthers() {
                                 window.location = url.replace(/\d+/, data);
                             } else {
                                 createAddressAlert('This is not a correct id: ', data);
-                                $('#scannerModal').modal('hide')
+                                $('#scannerModal').modal('hide');
                             }
                         });
                     } else {
-                        $('#scannerModal').modal('hide')
+                        $('#scannerModal').modal('hide');
                         createAddressAlert('This is not an id: ', data);
                     }
                 })
                 .catch(err => {
-                    $('#scannerModal').modal('hide')
-                    console.log('Error:', err)
+                    $('#scannerModal').modal('hide');
+                    console.log('Error:', err);
                 })
         } else {
             let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
