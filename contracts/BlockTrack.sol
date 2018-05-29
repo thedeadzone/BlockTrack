@@ -11,7 +11,6 @@ contract BlockTrack is ERC721Token, Ownable {
 
   // Constructor function to initialize the name and tag of the token.
   function BlockTrack() ERC721Token ("BlockTrack", "BT") public {
-
     // Sets initial parcel so ID 0 is taken.
     _internalMint(msg.sender, msg.sender, '0');
   }
@@ -50,11 +49,11 @@ contract BlockTrack is ERC721Token, Ownable {
     uint64 mintedAt; // Time of token creation
     address shippingCompany; // Company that processes the shipment as first
     address receivingAddress; // Public key of receiving party
-    string receivingPostalAddress; // Stored as Json for easy handeling
+    string receivingPostalAddress; // Long string with entire address
   }
 
   /**
-  * @dev Throws if called by anyone thats not a shippingcompany.
+  * @dev Throws if called by anyone that's not a shippingcompany.
   */
   modifier onlyShippingCompany() {
     require(bytes(NameToShippingCompany[msg.sender]).length > 0);
@@ -62,7 +61,7 @@ contract BlockTrack is ERC721Token, Ownable {
   }
 
   /**
-  * @dev Throws if called by anyone thats not a deliverer.
+  * @dev Throws if called by anyone that's not a deliverer.
   */
   modifier OnlyDeliverer() {
     require(bytes(NameToDeliverer[msg.sender]).length > 0);
@@ -186,7 +185,7 @@ contract BlockTrack is ERC721Token, Ownable {
     }
   }
 
-  /// @notice registers a new shippingCompany to it's mapping.
+  /// @notice registers a new shippingCompany to its mapping.
   /// @param _shippingCompany address of the shipping company.
   /// @param _name name of the shipping company.
   function registerShippingCompany(address _shippingCompany, string _name) public onlyOwner {
@@ -194,7 +193,7 @@ contract BlockTrack is ERC721Token, Ownable {
     // emit shippingCompanyRegistered(_shippingCompany, _name);
   }
 
-  /// @notice registers a new deliverer to it's mapping.
+  /// @notice registers a new deliverer to its mapping.
   /// @param _deliverer address of the deliverer.
   /// @param _name name or identifier of the deliverer.
   function registerDeliverer(address _deliverer, string _name, string _location) public onlyShippingCompany() {
