@@ -17,7 +17,8 @@ window.addEventListener('load', function() {
 
 let timeOptions = {
     year: "numeric", month: "short",
-    day: "numeric", hour: "2-digit", minute: "2-digit"
+    day: "numeric", hour: "numeric", minute: "2-digit",
+    hour12: false
 };
 
 function startApp() {

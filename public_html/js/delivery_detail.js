@@ -121,19 +121,19 @@ function startOthers() {
 
                                     ActivateTriggers();
                                 } else {
-                                    $('#scannerModal').modal('hide')
+                                    $('#scannerModal').modal('hide');
                                     createAddressAlert('This address is not allowed to receive the parcel: ', data);
                                 }
                             }
                         });
                     } else {
-                        $('#scannerModal').modal('hide')
+                        $('#scannerModal').modal('hide');
                         createAddressAlert('This is not a correct address: ', data);
                     }
                 })
                 .catch(err => {
-                    $('#scannerModal').modal('hide')
-                    console.log('Error:', err)
+                    $('#scannerModal').modal('hide');
+                    console.log('Error:', err);
                 });
         } else {
             let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
@@ -156,7 +156,7 @@ function startOthers() {
 
                                 ActivateTriggers();
                             } else {
-                                $('#scannerModal').modal('hide')
+                                $('#scannerModal').modal('hide');
                                 createAddressAlert('This address is not allowed to receive the parcel: ', content);
                             }
                         }
