@@ -24,13 +24,13 @@ contract BlockTrack is ERC721Token, Ownable {
   // Mapping of all parcels (uint256) with their receiver (address).
   mapping (uint256 => address) internal ParcelToReceiver;
 
-  // Mapping a shippingCompany (address) to it's name (string).
+  // Mapping a shippingCompany (address) to its name (string).
   mapping (address => string) internal NameToShippingCompany;
 
-  // Mapping a deliverer (adddress) to it's name or identifier (string).
+  // Mapping a deliverer (adddress) to its name or identifier (string).
   mapping (address => string) internal NameToDeliverer;
 
-  // Mapping a deliverer (adddress) to it's location (string).
+  // Mapping a deliverer (adddress) to its location (string).
   mapping (address => string) internal LocationToDeliverer;
 
   // Mapping of parcels (uint256) receiving total to a receiver (address).
@@ -42,10 +42,10 @@ contract BlockTrack is ERC721Token, Ownable {
   /**** Events ****/
 
   event handOff(address indexed owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName, string location);
-  event delivererRegistered(address deliverer, string name, string company);
-  // event registerShippingCompany(address shippingcompany, string name);
+  // event delivererRegistered(address deliverer, string name, address shippingcompany);
+  // event shippingCompanyRegistered(address shippingcompany, string name);
 
-  // Consturctor of the token.
+  // Constructor of the token.
   struct Token {
     uint64 mintedAt; // Time of token creation
     address shippingCompany; // Company that processes the shipment as first
@@ -191,6 +191,7 @@ contract BlockTrack is ERC721Token, Ownable {
   /// @param _name name of the shipping company.
   function registerShippingCompany(address _shippingCompany, string _name) public onlyOwner {
     NameToShippingCompany[_shippingCompany] = _name;
+    // emit shippingCompanyRegistered(_shippingCompany, _name);
   }
 
   /// @notice registers a new deliverer to it's mapping.
@@ -200,8 +201,7 @@ contract BlockTrack is ERC721Token, Ownable {
     NameToDeliverer[_deliverer] = _name;
     LocationToDeliverer[_deliverer] = _location;
     CompanyToDeliverer[_deliverer] = msg.sender;
-
-    emit delivererRegistered(_deliverer, _name, NameToShippingCompany[msg.sender]);
+    // emit delivererRegistered(_deliverer, _name, msg.sender);
   }
 
   function _internalMint(address _deliverer, address _receivingAddress, string _receivingPostalAddress) internal {
