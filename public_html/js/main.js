@@ -800,5 +800,5 @@ function createAddressAlert(message, content) {
     alert.slideDown();
     setTimeout(function () {
         alert.slideToggle();
-    }, 5000);
+    }, 10000);
 }

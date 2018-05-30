@@ -109,7 +109,7 @@ function startOthers() {
 
                                     $('#scannerModal .modal-body #confirmation').empty().append(
                                         '<div class="transfer-content">' +
-                                        '<p class="align-center">Are you sure this is the right address?</p>' +
+                                        '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
                                         '<p class="align-center" id="transfer-id">' + data + '</p>' +
                                         '</div>');
 
@@ -122,7 +122,7 @@ function startOthers() {
                         });
                     } else {
                         $('#scannerModal').modal('hide');
-                        createAddressAlert('This is not a correct address: ', data);
+                        createAddressAlert('You should scan the receiver QR Code, this is not an address: ', data);
                     }
                 })
                 .catch(err => {
@@ -144,7 +144,7 @@ function startOthers() {
 
                                 $('#scannerModal .modal-body #confirmation').empty().append(
                                     '<div class="transfer-content">' +
-                                    '<p class="align-center">Are you sure this is the right address?</p>' +
+                                    '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
                                     '<p class="align-center" id="transfer-id">' + content + '</p>' +
                                     '</div>');
 
@@ -156,7 +156,7 @@ function startOthers() {
                         }
                     });
                 } else {
-                    createAddressAlert('This is not a correct address: ', content);
+                    createAddressAlert('You should scan the receiver QR Code, this is not an address: ', content);
                 }
             });
             Instascan.Camera.getCameras().then(function (cameras) {
