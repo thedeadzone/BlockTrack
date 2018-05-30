@@ -93,6 +93,7 @@ div.card.text-center div.card-footer p {
 
 .card-footer .progress {
     height: 2em;
+    width:100%;
 }
 
 div.no-data-card.card.border .card-body {
@@ -133,8 +134,6 @@ div.no-data-card.card.border .card-body .card-title {
 .card-subtitle {
     margin-top:10px !important;
 }
-
-
 
 
 /**

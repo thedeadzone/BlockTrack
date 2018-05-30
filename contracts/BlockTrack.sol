@@ -106,7 +106,6 @@ contract BlockTrack is ERC721Token, Ownable {
     receivingAddress = token.receivingAddress;
     receivingPostalAddress = token.receivingPostalAddress;
     tokenId = _tokenId;
-
   }
 
   /// @notice Returns a list of all tokens assigned to an address.
@@ -150,8 +149,7 @@ contract BlockTrack is ERC721Token, Ownable {
         uint256 totalParcels = totalSupply();
         uint256 resultIndex = 0;
 
-        // We count on the fact that all parcels have IDs starting at 0 and increasing
-        // sequentially up to the total count.
+        // We loop through all parcels starting at 0 all the way up to the total token count.
         uint256 parcelId;
 
         for (parcelId = 0; parcelId <= totalParcels; parcelId++) {

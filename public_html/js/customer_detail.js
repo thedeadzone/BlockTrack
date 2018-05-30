@@ -1,7 +1,8 @@
 function startOthers() {
     let slug = $('#slug').data('slug');
     let token = '';
-    let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
+    let html = '<span class="badge badge-pill badge-primary pull-right">In Transport</span>';
+    let html_footer = '<div class="card-footer bg-transparent"><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer">Refresh</button></div>';
     let house = '';
     let url = $('.url-home').data('url');
 
@@ -18,7 +19,8 @@ function startOthers() {
                                 house = '';
                                 if (result[i]['args']['delivered'] === true) {
                                     house = '<i class="fas fa-home"></i>';
-                                    html = '<div class="progress-bar bg-success" role="progressbar" style="width: 100%">Delivered</div>';
+                                    html = '<span class="badge badge-pill badge-success pull-right">Delivered</span>';
+                                    html_footer = '';
                                 }
 
                                 let date = new Date(result[i]['args']['time'] * 1000);
@@ -46,16 +48,16 @@ function startOthers() {
                             $('.page-content-1').append(
                                 '<div class="card border" data-token-id="' + slug + '">' +
                                     '<div class="card-body">' +
-                                        '<h5 class="card-title">Parcel ' + slug + '</h5>' +
+                                        '<h5 class="card-title">Parcel ' + slug + html +'</h5>' +
                                         '<p class="card-subtitle text-muted last-update-text">Delivery address:</p>' +
                                         '<p class="card-text text-muted">' + token[4] + '</p>' +
                                     '</div>' +
-                                    '<div class="card-footer bg-transparent">' +
-                                        '<div class="progress">' +
-                                            html +
-                                        '</div>' +
-                                    '</div>' +
+                                    html_footer +
                                 '</div>');
+
+                            $('#refreshData').on('click', function() {
+                                location.reload();
+                            });
                         } else {
                             console.log('No data');
                         }
