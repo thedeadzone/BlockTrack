@@ -95,6 +95,19 @@ contract BlockTrack is ERC721Token, Ownable {
     }
   }
 
+  /**
+  * @dev returns the role of the address that is submitted (Customer/Deliverer/Shipping Company)
+  */
+  function addressIsRole(address _address) public view returns (uint64 role) {
+    if (bytes(NameToShippingCompany[_address]).length > 0) {
+      return 2;
+    } else if (bytes(NameToDeliverer[_address]).length > 0) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   /// @notice Returns the number of parcels owned by a specific address.
   /// @param _receiver The owner address to check.
   /// @dev Required for ERC-721 compliance

@@ -1,11 +1,9 @@
 function startOthers() {
     let slug = $('#slug').data('slug');
-    let token = '';
     let targetId = '';
     let html = '<span class="badge badge-pill badge-primary pull-right">In Transport</span>';
     let html_footer = '<div class="card-footer bg-transparent"><button type="button" id="activate-scanner" href="#" class="btn btn-primary align-center-transfer margin-bottom" data-toggle="modal" data-target="#scannerModal">Transfer</button><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer margin-b">Refresh</button></div>';
-    let house = '';
-    let url = $('.url-home').data('url');
+    let url = $('.url').data('url-deliverer');
 
     // If cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
@@ -22,7 +20,7 @@ function startOthers() {
                         if (result.length !== 0) {
                             let i = 0;
                             for (i = result.length - 1; i >= 0; i--) {
-                                house = '';
+                                let house = '';
                                 if (result[i]['args']['delivered'] === true) {
                                     house = '<i class="fas fa-home"></i>';
                                     html = '<span class="badge badge-pill badge-success pull-right">Delivered</span>';

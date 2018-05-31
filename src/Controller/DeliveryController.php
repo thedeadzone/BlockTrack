@@ -12,7 +12,7 @@ class DeliveryController extends AbstractController
      *
      * Shows all the parcels the delivery person has as owner currently
      */
-    public function homeAction()
+    public function indexAction()
     {
         return $this->render('delivery/index.html.twig', [
 

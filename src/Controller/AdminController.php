@@ -12,7 +12,7 @@ class AdminController extends AbstractController
      *
      * Shows all the parcels the receiver is receiving
      */
-    public function homeAction()
+    public function indexAction()
     {
         return $this->render('admin/index.html.twig', [
 

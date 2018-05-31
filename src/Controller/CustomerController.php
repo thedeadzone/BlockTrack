@@ -12,7 +12,7 @@ class CustomerController extends AbstractController
      *
      * Shows all the parcels the receiver is receiving
      */
-    public function homeAction()
+    public function indexAction()
     {
         return $this->render('customer/index.html.twig', [
 

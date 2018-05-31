@@ -13,7 +13,7 @@
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     {% endblock %}
 </head>
-<body>
+<body class="url" data-url-shippingcompany="{{ path('app_admin_index') }}" data-url-deliverer="{{ path('app_delivery_index') }}" data-url-customer="{{ path('app_customer_index') }}" data-url-home="{{ path('app_home_index') }}">
     {% block body %}{% endblock %}
     <div id="alerts"></div>
     {% block javascripts %}
@@ -27,16 +27,18 @@
 
     {% if app.request.get('_route') == 'app_delivery_detail' %}
         <script src="{{ asset('js/delivery_detail.js') }}"></script>
-    {% elseif app.request.get('_route') == 'app_delivery_home'  %}
+    {% elseif app.request.get('_route') == 'app_delivery_index'  %}
         <script src="{{ asset('js/delivery_index.js') }}"></script>
-    {% elseif app.request.get('_route') == 'app_customer_home'  %}
+    {% elseif app.request.get('_route') == 'app_customer_index'  %}
         <script src="{{ asset('js/customer_index.js') }}"></script>
     {% elseif app.request.get('_route') == 'app_customer_detail'  %}
         <script src="{{ asset('js/customer_detail.js') }}"></script>
-    {% elseif app.request.get('_route') == 'app_admin_home'  %}
+    {% elseif app.request.get('_route') == 'app_admin_index'  %}
         <script src="{{ asset('js/admin_index.js') }}"></script>
     {% elseif app.request.get('_route') == 'app_admin_detail'  %}
         <script src="{{ asset('js/admin_detail.js') }}"></script>
+    {% elseif app.request.get('_route') == 'app_home_index'  %}
+        <script src="{{ asset('js/home_index.js') }}"></script>
     {% endif %}
 {% endblock %}
 </body>

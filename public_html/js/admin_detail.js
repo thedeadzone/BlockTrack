@@ -3,7 +3,7 @@ function startOthers() {
     let token = '';
     let html = '<div class="progress-bar" role="progressbar" style="width: 100%">In Transport</div>';
     let house = '';
-    let url = $('.url-home').data('url');
+    let url = $('.url').data('url-admin');
 
     myContract.getToken(slug, function(error, result) {
         if (!error) {

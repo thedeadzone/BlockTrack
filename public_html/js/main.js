@@ -10,7 +10,8 @@ window.addEventListener('load', function() {
         // web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/ALZ6zu5v1wM4s4xnMU7a"));
     }
 
-    let roles = ['user', 'deliverer', 'admin'];
+    roles = ['parcels', 'delivery', 'admin'];
+    roleName = '';
 
     startApp();
 });
@@ -30,8 +31,7 @@ function startApp() {
         window.web3.currentProvider.scanQRCode
     );
 
-
-    let coinbase = web3.eth.coinbase;
+    role = '';
     let account = web3.eth.accounts[0];
     web3.eth.defaultAccount = web3.eth.accounts[0];
     let network = getNetwork();
@@ -545,6 +545,25 @@ function startApp() {
             "constant": true,
             "inputs": [
                 {
+                    "name": "_address",
+                    "type": "address"
+                }
+            ],
+            "name": "addressIsRole",
+            "outputs": [
+                {
+                    "name": "role",
+                    "type": "uint64"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
                     "name": "_receiver",
                     "type": "address"
                 }
@@ -727,31 +746,31 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0xd7ca12b3ff7a98e519123649784a5076f0052526');
-    startOthers();
+    ]).at('0x4adb11fd4bf073a3fce8ca8a111c9e9a1bc22abc');
+    myContract.addressIsRole(web3.eth.accounts[0], function(error, result) {
+        if (!error) {
+            if (result.length !== 0) {
+                role = result;
+                roleName = roles[role];
 
-    // myContract.totalSupply.call(function(error, result) {
-    //         if (!error)
-    //             console.log(JSON.stringify(result));
-    //         else
-    //             console.error(error);
-    //     }
-    // );
-    //
-    // myContract.name.call(function(error, result) {
-    //         if (!error)
-    //             console.log(result);
-    //         else
-    //             console.error(error);
-    //     }
-    // );
-    //
-    // web3.eth.getBalance(coinbase, function(error, result){
-    // if(!error)
-    //     console.log(web3.fromWei(result.toNumber()), 'ether');
-    // else
-    //     console.error(error);
-    // });
+                if (roleName != window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') && window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') != null) {
+                    let url = $('.url').data('url-customer');
+
+                    if (role == 1) {
+                        url = $('.url').data('url-deliverer');
+                    } else if (role == 2) {
+                        url = $('.url').data('url-shippingcompany');
+                    }
+                    window.location.replace(url);
+                }
+
+                startOthers();
+            }
+        }
+    });
+
+
+
 }
 
 function getNetwork() {

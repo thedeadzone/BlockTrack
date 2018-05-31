@@ -1,15 +1,13 @@
 function startOthers() {
     let slug = $('#slug').data('slug');
-    let token = '';
     let html = '<span class="badge badge-pill badge-primary pull-right">In Transport</span>';
     let html_footer = '<div class="card-footer bg-transparent"><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer">Refresh</button></div>';
-    let house = '';
-    let url = $('.url-home').data('url');
+    let url = $('.url').data('url-customer');
 
     myContract.getToken(slug, function(error, result) {
         if (!error) {
             if (result.length !== 0) {
-                token = result;
+                let token = result;
 
                 if (token[3] != web3.eth.accounts[0]) {
                     window.location.replace(url);
@@ -20,7 +18,7 @@ function startOthers() {
                         if (result.length !== 0) {
                             let i = 0;
                             for (i = result.length - 1; i >= 0; i--) {
-                                house = '';
+                                let house = '';
                                 if (result[i]['args']['delivered'] === true) {
                                     house = '<i class="fas fa-home"></i>';
                                     html = '<span class="badge badge-pill badge-success pull-right">Delivered</span>';
