@@ -768,9 +768,6 @@ function startApp() {
             }
         }
     });
-
-
-
 }
 
 function getNetwork() {

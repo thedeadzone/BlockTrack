@@ -1,6 +1,7 @@
 function startOthers() {
     let finished = [0];
     let url = $('.url-detail').data('url-detail');
+    let refreshing = true;
 
     // if cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
@@ -25,7 +26,24 @@ function startOthers() {
 
     getData();
 
+    myContract.handOff({owner: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
+        if (!error) {
+            if (!refreshing) {
+                getData();
+            }
+        }
+    });
+
+    myContract.handOff({receiver: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
+        if (!error) {
+            if (!refreshing) {
+                getData();
+            }
+        }
+    });
+
     function getData() {
+        refreshing = true;
         myContract.getSecret(function (error, result) {
             if (!error) {
                 if (result.length !== 0) {
@@ -47,7 +65,6 @@ function startOthers() {
                 if (result.length !== 0) {
                     var date = '';
                     var length = result.length;
-
                     jQuery.each(result, function(i, val) {
                         var tokenId = val['c'][0];
                         myContract.getToken.call(val, function (error, result) {
@@ -197,6 +214,8 @@ function startOthers() {
                 console.error(error);
             }
         });
+
+        refreshing = false;
     }
 
     function activateScanner() {

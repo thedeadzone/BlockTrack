@@ -1,8 +1,17 @@
 function startOthers() {
+    let refreshing = true;
     getData();
 
     $('#refreshData').on('click', function() {
         getData();
+    });
+
+    myContract.handOff({receiver: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
+        if (!error) {
+            if (!refreshing) {
+                getData();
+            }
+        }
     });
 
     function getData() {
@@ -103,6 +112,10 @@ function startOthers() {
                                 console.error(error);
                             }
                         });
+                        if (i == 0) {
+                            refreshing = false;
+                        }
+
                         if (i == 0 && $('.todo').is(':empty')) {
                             $('.todo').append(
                                 '<div class="card border no-data-card">' +
@@ -123,6 +136,7 @@ function startOthers() {
                         }
                     }
                 } else {
+                    refreshing = false;
                     $('.todo').append(
                         '<div class="card border no-data-card">' +
                             '<div class="card-body">' +
