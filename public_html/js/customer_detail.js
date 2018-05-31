@@ -11,6 +11,10 @@ function startOthers() {
             if (result.length !== 0) {
                 token = result;
 
+                if (token[3] != web3.eth.accounts[0]) {
+                    window.location.replace(url);
+                }
+
                 myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
                         if (result.length !== 0) {

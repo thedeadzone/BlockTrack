@@ -38,6 +38,13 @@ contract BlockTrack is ERC721Token, Ownable {
   // Mapping a deliverer (address) to an existing ShippingCompany (address)
   mapping (address => address) internal CompanyToDeliverer;
 
+  // Mapping a secret code (uint256) to a receiver (address)
+  mapping (address => bytes32) internal secretToReceiver;
+
+  // Mapping a receiver (address) to a secret code (uint256)
+  mapping (bytes32 => address) internal receiverToSecret;
+
+
   /**** Events ****/
 
   event handOff(address indexed owner, address indexed receiver, uint256 indexed tokenId, uint64 time, bool delivered, string delivererName, string receiverName, string location);
@@ -68,24 +75,24 @@ contract BlockTrack is ERC721Token, Ownable {
     _;
   }
 
-  /**
-  * @dev Checks if the receiving address in the receiver of the token.
-  */
-  function isReceiver(uint256 _tokenId, address _receiver) internal view returns (bool receiver) {
-    Token memory token = tokens[_tokenId];
-    return token.receivingAddress  == _receiver;
-  }
-
-  /**
+   /**
   * @dev Checks if the receiving address is allowed to receive the token.
   */
-  function allowedToReceive(uint256 _tokenId, address _receiver) public view returns (bool allowed) {
+  function allowedToReceive(uint256 _tokenId, bytes32 _secret) public OnlyDeliverer() view returns (bool allowed) {
     require(
-        bytes(NameToDeliverer[_receiver]).length > 0 ||
-        isReceiver(_tokenId, _receiver)
+        receiverToSecret[_secret] != 0
       );
 
-    return true;
+    address _receiver = receiverToSecret[_secret];
+    bytes32 _newSecret = secretToReceiver[_receiver];
+
+    if (ParcelToReceiver[_tokenId] == _receiver && _secret == _newSecret) {
+      return true;
+    } else if (bytes(NameToDeliverer[_receiver]).length > 0 && _secret == _newSecret){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /// @notice Returns the number of parcels owned by a specific address.
@@ -164,16 +171,15 @@ contract BlockTrack is ERC721Token, Ownable {
   }
 
   /// @notice checks couple values before calling safeTransferFrom to transfer token
-  /// @param _to the future owner incase function executes.
   /// @param _tokenId id of the token to be transfered.
-  function transferTokenTo(address _to, uint256 _tokenId) public {
-    super.safeTransferFrom(msg.sender, _to, _tokenId);
-
+  function transferTokenTo(uint256 _tokenId, bytes32 _secret) public OnlyDeliverer() {
     require(
-        bytes(NameToDeliverer[msg.sender]).length > 0 ||
-        isReceiver(_tokenId, _to)
+        allowedToReceive(_tokenId, _secret)
       );
 
+    address _to = receiverToSecret[_secret];
+    _setSecret(_to);
+    super.safeTransferFrom(msg.sender, _to, _tokenId);
     Token memory token = tokens[_tokenId];
 
     if (ParcelToReceiver[_tokenId] == _to) {
@@ -198,6 +204,7 @@ contract BlockTrack is ERC721Token, Ownable {
     NameToDeliverer[_deliverer] = _name;
     LocationToDeliverer[_deliverer] = _location;
     CompanyToDeliverer[_deliverer] = msg.sender;
+    _setSecret(_deliverer);
     // emit delivererRegistered(_deliverer, _name, msg.sender);
   }
 
@@ -217,9 +224,25 @@ contract BlockTrack is ERC721Token, Ownable {
     // Maps Parcel to it's receiver.
     ParcelToReceiver[newTokenId] = _receivingAddress;
 
+    if (secretToReceiver[_receivingAddress].length != 0) {
+      _setSecret(_receivingAddress);
+    }
+
     emit handOff(msg.sender, _deliverer, newTokenId, uint64(now), false, NameToShippingCompany[msg.sender], NameToDeliverer[_deliverer], LocationToDeliverer[_deliverer]);
 
     super._mint(_deliverer, newTokenId);
+  }
+
+  /// @notice generates a hashed secret based on the time and parcel receiver.
+  function _setSecret(address _receiver) internal {
+    bytes32 _secret = keccak256(uint64(now), _receiver);
+    secretToReceiver[_receiver] = _secret;
+    receiverToSecret[_secret] = _receiver;
+  }
+
+  /// @notice Gets the secret of the msg.sender
+  function getSecret() external view returns (bytes32 secret) {
+    return secretToReceiver[msg.sender];
   }
 
    /**

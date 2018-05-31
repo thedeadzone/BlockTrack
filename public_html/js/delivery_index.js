@@ -23,11 +23,21 @@ function startOthers() {
         getData();
     });
 
-    $('#qrcodeModal').find('.modal-body').append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
-
     getData();
 
     function getData() {
+        myContract.getSecret(function (error, result) {
+            if (!error) {
+                if (result.length !== 0) {
+                    $('#qrcodeModal').find('.modal-body').empty().append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ result +'&choe=UTF-8&chs=500x500">');
+                } else {
+                    $('#qrcodeModal').find('.modal-body').empty().append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
+                }
+            } else {
+                $('#qrcodeModal').find('.modal-body').empty().append('<img class="img-fluid" src="https://chart.googleapis.com/chart?cht=qr&chl='+ web3.eth.accounts[0] +'&choe=UTF-8&chs=500x500">');
+            }
+        });
+
         finished = [0];
         $('.todo').empty();
         $('.done').empty();
@@ -85,7 +95,7 @@ function startOthers() {
                     $('.todo').append(
                         '<div class="card border no-data-card">' +
                         '<div class="card-body">' +
-                        '<h5 class="card-title">No parcels to deliver</h5>' +
+                        '<h5 class="card-title">No Parcels To Deliver</h5>' +
                         '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
                         '</div>' +
                         '</div>');
@@ -121,7 +131,7 @@ function startOthers() {
                                 $('.done').append(
                                     '<div class="card border no-data-card">' +
                                         '<div class="card-body">' +
-                                            '<h5 class="card-title">No parcels delivered</h5>' +
+                                            '<h5 class="card-title">No Parcels Delivered</h5>' +
                                             '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
                                         '</div>' +
                                     '</div>');
@@ -178,7 +188,7 @@ function startOthers() {
                     $('.done').append(
                         '<div class="card border no-data-card">' +
                         '<div class="card-body">' +
-                        '<h5 class="card-title">No parcels delivered</h5>' +
+                        '<h5 class="card-title">No Parcels Delivered</h5>' +
                         '<p class="card-subtitle text-muted last-update-text">(for now)</p>' +
                         '</div>' +
                         '</div>');

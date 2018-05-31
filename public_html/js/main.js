@@ -439,28 +439,6 @@ function startApp() {
             "anonymous": false,
             "inputs": [
                 {
-                    "indexed": false,
-                    "name": "deliverer",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "name": "name",
-                    "type": "string"
-                },
-                {
-                    "indexed": false,
-                    "name": "company",
-                    "type": "string"
-                }
-            ],
-            "name": "delivererRegistered",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
                     "indexed": true,
                     "name": "previousOwner",
                     "type": "address"
@@ -548,8 +526,8 @@ function startApp() {
                     "type": "uint256"
                 },
                 {
-                    "name": "_receiver",
-                    "type": "address"
+                    "name": "_secret",
+                    "type": "bytes32"
                 }
             ],
             "name": "allowedToReceive",
@@ -659,12 +637,12 @@ function startApp() {
             "constant": false,
             "inputs": [
                 {
-                    "name": "_to",
-                    "type": "address"
-                },
-                {
                     "name": "_tokenId",
                     "type": "uint256"
+                },
+                {
+                    "name": "_secret",
+                    "type": "bytes32"
                 }
             ],
             "name": "transferTokenTo",
@@ -714,6 +692,20 @@ function startApp() {
             "type": "function"
         },
         {
+            "constant": true,
+            "inputs": [],
+            "name": "getSecret",
+            "outputs": [
+                {
+                    "name": "secret",
+                    "type": "bytes32"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
             "constant": false,
             "inputs": [
                 {
@@ -735,7 +727,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0xb909e18d89cb4621b9c7cf6e99c832bebb7754b2');
+    ]).at('0xd7ca12b3ff7a98e519123649784a5076f0052526');
     startOthers();
 
     // myContract.totalSupply.call(function(error, result) {

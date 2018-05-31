@@ -98,32 +98,30 @@ function startOthers() {
             window.web3.currentProvider
                 .scanQRCode(/^.+$/)
                 .then(data => {
-                    if (web3.isAddress(web3.toChecksumAddress(data))) {
-                        myContract.allowedToReceive(slug, data, function (error, result) {
-                            if (!error) {
-                                if (result) {
-                                    targetId = data;
-                                    $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
-                                    $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
-                                    $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
+                    myContract.allowedToReceive(slug, data, function (error, result) {
+                        if (!error) {
+                            if (result) {
+                                targetId = data;
+                                $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
+                                $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
+                                $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
 
-                                    $('#scannerModal .modal-body #confirmation').empty().append(
-                                        '<div class="transfer-content">' +
-                                        '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
-                                        '<p class="align-center" id="transfer-id">' + data + '</p>' +
-                                        '</div>');
+                                $('#scannerModal .modal-body #confirmation').empty().append(
+                                    '<div class="transfer-content">' +
+                                    '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
+                                    // '<p class="align-center" id="transfer-id">' + data + '</p>' +
+                                    '</div>');
 
-                                    ActivateTriggers();
-                                } else {
-                                    $('#scannerModal').modal('hide');
-                                    createAddressAlert('This address is not allowed to receive the parcel: ', data);
-                                }
+                                ActivateTriggers();
+                            } else {
+                                $('#scannerModal').modal('hide');
+                                createAddressAlert('This person is not allowed to receive the parcel: ', content);
                             }
-                        });
-                    } else {
-                        $('#scannerModal').modal('hide');
-                        createAddressAlert('You should scan the receiver QR Code, this is not an address: ', data);
-                    }
+                        } else {
+                            $('#scannerModal').modal('hide');
+                            createAddressAlert('You should scan the (refreshed) receiver QR Code, incorrect data: ', data);
+                        }
+                    });
                 })
                 .catch(err => {
                     $('#scannerModal').modal('hide');
@@ -132,32 +130,31 @@ function startOthers() {
         } else {
             let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
             scanner.addListener('scan', function (content) {
-                if (web3.isAddress(web3.toChecksumAddress(content))) {
-                    myContract.allowedToReceive(slug, content, function (error, result) {
-                        if (!error) {
-                            if (result) {
-                                targetId = content;
-                                $('#scannerModal .modal-body video').addClass('hidden');
-                                $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
-                                $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
-                                $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
+                myContract.allowedToReceive(slug, content, function (error, result) {
+                    if (!error) {
+                        if (result) {
+                            targetId = content;
+                            $('#scannerModal .modal-body video').addClass('hidden');
+                            $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
+                            $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
+                            $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
 
-                                $('#scannerModal .modal-body #confirmation').empty().append(
-                                    '<div class="transfer-content">' +
-                                    '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
-                                    '<p class="align-center" id="transfer-id">' + content + '</p>' +
-                                    '</div>');
+                            $('#scannerModal .modal-body #confirmation').empty().append(
+                                '<div class="transfer-content">' +
+                                '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
+                                // '<p class="align-center" id="transfer-id">' + content + '</p>' +
+                                '</div>');
 
-                                ActivateTriggers();
-                            } else {
-                                $('#scannerModal').modal('hide');
-                                createAddressAlert('This address is not allowed to receive the parcel: ', content);
-                            }
+                            ActivateTriggers();
+                        } else {
+                            $('#scannerModal').modal('hide');
+                            createAddressAlert('This person is not allowed to receive the parcel: ', content);
                         }
-                    });
-                } else {
-                    createAddressAlert('You should scan the receiver QR Code, this is not an address: ', content);
-                }
+                    } else {
+                        $('#scannerModal').modal('hide');
+                        createAddressAlert('You should scan the (refreshed) receiver QR Code, incorrect data: ', data);
+                    }
+                });
             });
             Instascan.Camera.getCameras().then(function (cameras) {
                 if (cameras.length > 0) {
@@ -180,9 +177,9 @@ function startOthers() {
 
     function ActivateTriggers() {
         $('#transfer-confirm').on('click', function () {
-            myContract.transferTokenTo(targetId, slug, {
+            myContract.transferTokenTo(slug, targetId, {
                     from: web3.eth.accounts[0],
-                    gas: 200000,
+                    gas: 250000,
                     gasPrice: 2000000000
                 }, function (error, result) {
                     if (!error) {
