@@ -29,6 +29,7 @@ function startOthers() {
     myContract.handOff({owner: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
         if (!error) {
             if (!refreshing) {
+                refreshing = true;
                 getData();
             }
         }
@@ -37,13 +38,13 @@ function startOthers() {
     myContract.handOff({receiver: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
         if (!error) {
             if (!refreshing) {
+                refreshing = true;
                 getData();
             }
         }
     });
 
     function getData() {
-        refreshing = true;
         myContract.getSecret(function (error, result) {
             if (!error) {
                 if (result.length !== 0) {
@@ -214,7 +215,6 @@ function startOthers() {
                 console.error(error);
             }
         });
-
         refreshing = false;
     }
 

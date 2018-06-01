@@ -9,6 +9,7 @@ function startOthers() {
     myContract.handOff({receiver: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
         if (!error) {
             if (!refreshing) {
+                refreshing = true;
                 getData();
             }
         }

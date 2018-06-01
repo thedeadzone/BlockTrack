@@ -755,7 +755,6 @@ function startApp() {
 
                 if (roleName != window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') && window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') != null) {
                     let url = $('.url').data('url-customer');
-
                     if (role == 1) {
                         url = $('.url').data('url-deliverer');
                     } else if (role == 2) {
