@@ -753,7 +753,7 @@ function startApp() {
             "stateMutability": "nonpayable",
             "type": "function"
         }
-    ]).at('0x4adb11fd4bf073a3fce8ca8a111c9e9a1bc22abc');
+    ]).at('0x8ddd3c5ac296a6a48e457e85d58395fd61358062');
 
     // Enforces access restriction on user.
     myContract.addressIsRole(web3.eth.accounts[0], function(error, result) {
@@ -763,13 +763,16 @@ function startApp() {
                 roleName = roles[role];
 
                 if (roleName != window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') && window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') != null) {
-                    let url = $('.url').data('url-customer');
-                    if (role == 1) {
-                        url = $('.url').data('url-deliverer');
-                    } else if (role == 2) {
-                        url = $('.url').data('url-shippingcompany');
+                    if (!window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') == 'admin') {
+                        let url = $('.url').data('url-customer');
+                        if (role == 1) {
+                            url = $('.url').data('url-deliverer');
+                        } else if (role == 2) {
+                            url = $('.url').data('url-shippingcompany');
+                        }
+
+                        window.location.replace(url);
                     }
-                    window.location.replace(url);
                 }
 
                 startOthers();
