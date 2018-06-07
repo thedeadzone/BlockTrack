@@ -2,13 +2,13 @@ function startOthers() {
     let slug = $('#slug').data('slug');
     let targetId = '';
     let html = '<span class="badge badge-pill badge-primary pull-right">In Transport</span>';
-    let html_footer = '<div class="card-footer bg-transparent"><button type="button" id="activate-scanner" href="#" class="btn btn-primary align-center-transfer margin-bottom" data-toggle="modal" data-target="#scannerModal">Transfer</button><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer margin-b">Refresh</button></div>';
+    let html_footer = '<div class="card-footer bg-transparent"><button type="button" id="activate-scanner" href="#" class="btn btn-warning align-center-transfer margin-bottom" data-toggle="modal" data-target="#scannerModal">Scan Receiver QR</button><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer margin-b">Refresh</button></div>';
     let url = $('.url').data('url-deliverer');
 
     // If cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
         $('#scannerModal .modal-body video').addClass('hidden');
-        html_footer = '<div class="card-footer bg-transparent"><button type="button" id="activate-scanner" href="#" class="btn btn-primary align-center-transfer margin-bottom">Transfer</button><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer margin-b">Refresh</button></div>';
+        html_footer = '<div class="card-footer bg-transparent"><button type="button" id="activate-scanner" href="#" class="btn btn-warning align-center-transfer margin-bottom">Scan Receiver QR</button><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer margin-b">Refresh</button></div>';
     }
 
     // Gets all information for the current token
@@ -142,7 +142,7 @@ function startOthers() {
                         }
                     } else {
                         $('#scannerModal').modal('hide');
-                        createAddressAlert('You should scan the (refreshed) receiver QR Code, incorrect data: ', data);
+                        createAddressAlert('You should scan the (refreshed) Receiver QR Code, incorrect data: ', data);
                     }
                 });
             });
@@ -174,6 +174,7 @@ function startOthers() {
                 gasPrice: 2000000000
             }, function (error, result) {
                 if (!error) {
+                    $("#scannerModal").modal('show');
                     $('#scannerModal .modal-footer #transfer-close').removeClass('hidden');
                     $('#scannerModal .modal-body').empty().append(
                         '<div class="alert alert-primary">' +
