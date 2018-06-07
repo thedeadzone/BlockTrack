@@ -763,7 +763,7 @@ function startApp() {
                 roleName = roles[role];
 
                 if (roleName != window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') && window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') != null) {
-                    if (!window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') == 'admin') {
+                    if (window.location.pathname.replace(/^\/([^\/]*).*$/, '$1') !== 'admin') {
                         let url = $('.url').data('url-customer');
                         if (role == 1) {
                             url = $('.url').data('url-deliverer');

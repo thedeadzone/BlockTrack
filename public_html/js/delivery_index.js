@@ -6,11 +6,17 @@ function startOthers() {
     // if cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
         $('#scannerModal .modal-body video').addClass('hidden');
+        $('.container-fluid.blue-color-1 .card-body').append(
+            '<button type="button" id="activateScanner" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan Parcel QR Code</button>'
+        );
+    } else {
+        $('.container-fluid.blue-color-1 .card-body').append(
+            '<button type="button" id="activateScanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan Parcel QR Code</button>'
+        );
     }
 
     // Added in via Javascript to prevent clicking the button before its correctly initiated.
     $('.container-fluid.blue-color-1 .card-body').append(
-        '<button type="button" id="activateScanner" data-toggle="modal" data-target="#scannerModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Scan Parcel QR Code</button>' +
         '<button type="button" id="activate-qr" data-toggle="modal" data-target="#qrcodeModal" href="#" class="btn btn-primary button-lg align-center-transfer margin-bottom">Show My QR Code</button>' +
         '<button type="button" id="refreshData" href="#" class="btn btn-secondary button-lg align-center-transfer">Refresh</button>'
     );
