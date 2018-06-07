@@ -1,8 +1,10 @@
 function startOthers() {
+    // Activates the scanner button with on click action
     $('#activateScanner').on('click', function () {
         activateScanner();
     });
 
+    // If refresh button is pressed, refresh all the data.
     $('#refreshData').on('click', function() {
         getData();
     });
@@ -11,10 +13,12 @@ function startOthers() {
 
     var url = $('.url-detail').data('url-detail');
 
+    // Gets all the data available in the smart contract
     function getData() {
         $('.todo').empty();
         $('.done').empty();
 
+        // Total supply of tokens in the smart contract.
         myContract.totalSupply(function (error, result) {
             if (!error) {
                 if (result.length != 0) {
@@ -22,6 +26,7 @@ function startOthers() {
                     var length = result['c'][0];
                     for (i = 0; i < length; i++) {
                         id = i;
+                        // Get information for each token in smart contract
                         myContract.getToken.call(id, function (error, result) {
                             if (!error) {
                                 if (result.length != 0) {
@@ -31,6 +36,7 @@ function startOthers() {
                                     var date = '';
                                     var message = '';
                                     var token = result;
+                                    // Get all handoffs for the token
                                     myContract.handOff({tokenId: result[0]}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                                         if (!error) {
                                             if (result.length != 0 && token[0]['c'] != 0) {
@@ -43,6 +49,7 @@ function startOthers() {
                                                     }
                                                 }
 
+                                                // Check status of the token
                                                 if (done) {
                                                     div = $('.done');
                                                     badge = 'success';
@@ -55,6 +62,7 @@ function startOthers() {
 
                                                 url = url.replace(/\d+/, token[0]);
 
+                                                // Append token to the page content
                                                 div.append(
                                                     '<div class="card border" data-token-id="' + id + '">' +
                                                     '<div class="card-body">' +
@@ -91,12 +99,15 @@ function startOthers() {
         });
     }
 
+    // Activates the QR scanner to go to the token detailpage
     function activateScanner() {
         if (isCipher && canScanQRCode) {
+            // Scanner for mobile Cipher browser
             window.web3.currentProvider
                 .scanQRCode(/^.+$/)
                 .then(data => {
                     if (isInt(data)) {
+                        // based on scanned data a check is initiated if the token exists
                         myContract.getToken.call(data, function (error, result) {
                             if (!error && result.length !== 0) {
                                 window.location = url.replace(/\d+/, data);
@@ -115,9 +126,11 @@ function startOthers() {
                     console.log('Error:', err);
                 })
         } else {
+            // Scanner for computer browser
             let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
             scanner.addListener('scan', function (content) {
                 if (isInt(content)) {
+                    // based on scanned data a check is initiated if the token exists
                     myContract.getToken.call(content, function (error, result) {
                         if (!error && result.length !== 0) {
                             console.log(content);
@@ -132,6 +145,7 @@ function startOthers() {
                 }
             });
 
+            // Selects the second camera if there is multiple options, for mobile phones this is the back camera.
             Instascan.Camera.getCameras().then(function (cameras) {
                 if (cameras.length > 0) {
                     if (cameras[1]) {
@@ -150,21 +164,25 @@ function startOthers() {
         }
     }
 
+    // Shows content based on button click
     $('#registerParcel').on('click', function() {
         $('#parcelModal #form-parcel').removeClass('hidden');
         $('#parcelModal .modal-body .alert.alert-primary').addClass('hidden');
     });
 
+    // Shows content based on button click
     $('#registerShippingCompany').on('click', function() {
         $('#shippingModal #form-shipping').removeClass('hidden');
         $('#shippingModal .modal-body .alert.alert-primary').addClass('hidden');
     });
 
+    // Shows content based on button click
     $('#registerDeliverer').on('click', function() {
         $('#delivererModal #form-deliverer').removeClass('hidden');
         $('#delivererModal .modal-body .alert.alert-primary').addClass('hidden');
     });
 
+    // Creates transaction confirmation to create a shipping company with form data.
     $('.form-shippingcompany').on('submit', function(e) {
         e.preventDefault();
         myContract.registerShippingCompany($('#shippingcompany-address').val(), $('#shippingcompany-name').val(), {
@@ -190,6 +208,7 @@ function startOthers() {
         );
     });
 
+    // Creates transaction confirmation to create a deliverer with form data.
     $('.form-deliverer').on('submit', function(e) {
         e.preventDefault();
         myContract.registerDeliverer($('#deliverer-address').val(), $('#deliverer-name').val(), $('#deliverer-location').val(), {
@@ -215,6 +234,7 @@ function startOthers() {
         );
     });
 
+    // Creates transaction confirmation to create a parcel with form data.
     $('.form-parcel').on('submit', function(e) {
         e.preventDefault();
         myContract.registerParcel($('#parcel-address').val(), $('#parcel-name').val(), $('#parcel-location').val(), {

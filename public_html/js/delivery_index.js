@@ -20,12 +20,14 @@ function startOthers() {
         activateScanner();
     });
 
+    // If refresh button is pressed, refresh all the data.
     $('#refreshData').on('click', function() {
         getData();
     });
 
     getData();
 
+    // If the current adres is the owner of an transaction it automatically refreshes the page if not being done currently.
     myContract.handOff({owner: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
         if (!error) {
             if (!refreshing) {
@@ -35,6 +37,7 @@ function startOthers() {
         }
     });
 
+    // If the current adres is the receiver of an transaction it automatically refreshes the page if not being done currently.
     myContract.handOff({receiver: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
         if (!error) {
             if (!refreshing) {
@@ -44,7 +47,9 @@ function startOthers() {
         }
     });
 
+    // Gets all the data based on the adres
     function getData() {
+        // Gets the secret that's used for the QR code
         myContract.getSecret(function (error, result) {
             if (!error) {
                 if (result.length !== 0) {
@@ -61,6 +66,8 @@ function startOthers() {
         $('.todo').empty();
         $('.done').empty();
 
+        // Gets all tokens based on the owner and then appends them to the page content
+        // No content messages get applied if there is no parcels being delivered.
         myContract.tokensOfOwner(web3.eth.accounts[0], function (error, result) {
             if (!error) {
                 if (result.length !== 0) {
@@ -68,10 +75,12 @@ function startOthers() {
                     var length = result.length;
                     jQuery.each(result, function(i, val) {
                         var tokenId = val['c'][0];
+                        // Get token related information
                         myContract.getToken.call(val, function (error, result) {
                             if (!error) {
                                 if (result.length !== 0) {
                                     var token = result;
+                                    // Get all handoffs for the token from the getToken function
                                     myContract.handOff({tokenId: result[0]}, { fromBlock: 0, toBlock: 'latest'}).get(function(error, result) {
                                         if (!error) {
                                             if (result.length !== 0) {
@@ -79,6 +88,7 @@ function startOthers() {
                                                 url = url.replace(/\d+/, token[0]);
                                                 finished.push(token[0]['c'][0]);
 
+                                                // Append token information to the page
                                                 $('.todo').append(
                                                     '<div class="card border" data-token-id="' + token[0] + '">' +
                                                     '<div class="card-body">' +
@@ -124,7 +134,9 @@ function startOthers() {
         });
     }
 
+    // Get's the information for all tokens that are not in the todo list but have been owned by the adres
     function runOther() {
+        // Get all handoffs for the token
         myContract.handOff({owner: web3.eth.accounts[0]}, {
             fromBlock: 0,
             toBlock: 'latest'
@@ -141,6 +153,7 @@ function startOthers() {
                         let count = i;
                         let tokenId = handOff[count]['args']['tokenId']['c'];
 
+                        // If token is added to the page, add it to the array so there is no duplicates
                         if (jQuery.inArray(handOff[count]['args']['tokenId']['c'][0], finished) == -1) {
                             finished.push(handOff[count]['args']['tokenId']['c'][0]);
                             data.push([tokenId[0], handOff[count]['args']['time']['c'][0], handOff[count]]);
@@ -159,6 +172,7 @@ function startOthers() {
 
                     for (i = 0; i < data.length; i++) {
                         let count = i;
+                        // Get token related information
                         myContract.getToken.call(data[i][0], function (error, result) {
                             if (!error) {
                                 if (result.length !== 0) {
@@ -178,6 +192,7 @@ function startOthers() {
 
                                     url = url.replace(/\d+/, result[0]);
 
+                                    // Add token related information to the page
                                     $('.done').append(
                                         '<div class="card border" data-token-id="' + result[0] + '">' +
                                         '<div class="card-body">' +
@@ -220,12 +235,15 @@ function startOthers() {
         });
     }
 
+    // Activates the QR scanner to go to the token detailpage
     function activateScanner() {
         if (isCipher && canScanQRCode) {
+            // Scanner for mobile Cipher browser
             window.web3.currentProvider
                 .scanQRCode(/^.+$/)
                 .then(data => {
                     if (isInt(data)) {
+                        // based on scanned data a check is initiated if the token exists
                         myContract.getToken.call(data, function (error, result) {
                             if (!error && result.length !== 0) {
                                 window.location = url.replace(/\d+/, data);
@@ -244,9 +262,11 @@ function startOthers() {
                     console.log('Error:', err)
                 })
         } else {
+            // Scanner for computer browser
             let scanner = new Instascan.Scanner({ video: document.getElementById('preview')});
             scanner.addListener('scan', function (content) {
                 if (isInt(content)) {
+                    // based on scanned data a check is initiated if the token exists
                     myContract.getToken.call(content, function (error, result) {
                         if (!error && result.length !== 0) {
                             console.log(content);
@@ -261,6 +281,7 @@ function startOthers() {
                 }
             });
 
+            // Selects the second camera if there is multiple options, for mobile phones this is the back camera.
             Instascan.Camera.getCameras().then(function (cameras) {
                 if (cameras.length > 0) {
                     if (cameras[1]) {

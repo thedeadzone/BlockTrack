@@ -2,10 +2,12 @@ function startOthers() {
     let refreshing = true;
     getData();
 
+    // If refresh button is pressed, refresh all the data.
     $('#refreshData').on('click', function() {
         getData();
     });
 
+    // If the current adres is the receiver of an transaction it automatically refreshes the page if not being done currently.
     myContract.handOff({receiver: web3.eth.accounts[0]}, {fromBlock: 'latest', toBlock: 'pending'}, function(error, result) {
         if (!error) {
             if (!refreshing) {
@@ -15,7 +17,9 @@ function startOthers() {
         }
     });
 
+    // Gets all the data based on the adres
     function getData() {
+        // Gets the secret that's used for the QR code
         myContract.getSecret(function (error, result) {
             if (!error) {
                 if (result.length !== 0) {
@@ -31,6 +35,8 @@ function startOthers() {
         $('.todo').empty();
         $('.done').empty();
 
+        // Gets all tokens based on the receiver and then appends them to the page content
+        // No content messages get applied if there is no parcels being received.
         myContract.parcelsOfReceiver(web3.eth.accounts[0], function (error, result) {
             if (!error) {
                 if (result.length !== 0) {
@@ -38,12 +44,14 @@ function startOthers() {
                     let parcelsLength = result.length;
                     for (i = parcelsLength -1; i >= 0; i--) {
                         let tokenId = result[i];
+                        // Get token related information
                         myContract.getToken.call(tokenId, function (error, result) {
                             if (!error) {
                                 if (result.length !== 0) {
                                     let date = '';
                                     let token = result;
                                     let delivered = '';
+                                    // Get all handoffs for the token from the getToken function
                                     myContract.handOff({tokenId: token[0]}, {
                                         fromBlock: 0,
                                         toBlock: 'latest'
@@ -58,6 +66,7 @@ function startOthers() {
                                                 }
                                                 let url = $('.url-detail').data('url-detail').replace(/\d+/, tokenId);
 
+                                                // Append to page based on it's current status
                                                 if (delivered == false) {
                                                     $('.todo .no-data-card').remove();
                                                     $('.todo').append(

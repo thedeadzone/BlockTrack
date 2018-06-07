@@ -1,4 +1,5 @@
 function startOthers() {
+    // Routes the user to the right webpage based on the role.
     let url = $('.url').data('url-customer');
 
     if (role == 1) {

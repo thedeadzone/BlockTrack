@@ -4,15 +4,18 @@ function startOthers() {
     let html_footer = '<div class="card-footer bg-transparent"><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer">Refresh</button></div>';
     let url = $('.url').data('url-customer');
 
+    // Gets all information for the current token
     myContract.getToken(slug, function(error, result) {
         if (!error) {
             if (result.length !== 0) {
                 let token = result;
 
+                // Acces restriction check for token receiver
                 if (token[3] != web3.eth.accounts[0]) {
                     window.location.replace(url);
                 }
 
+                // Get all handoff events for the token
                 myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
                         if (result.length !== 0) {
@@ -27,6 +30,7 @@ function startOthers() {
 
                                 let date = new Date(result[i]['args']['time'] * 1000);
 
+                                // Append handoff event details to the list
                                 $('.page-content-2 #first-list').append(
                                     '<li>'+
                                         '<span></span>' +
@@ -35,11 +39,14 @@ function startOthers() {
                                         '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>'+
                                     '</li>');
 
+                                // Popover with link to the owner on etherscan
                                 $('.token-2-' + i).popover({
                                     content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
                                     html: true,
                                     placement: "bottom"
                                 });
+
+                                // Popover with link to the transaction on etherscan
                                 $('.token-3-' + i).popover({
                                     content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result[i]['transactionHash'] + "'>" + result[i]['transactionHash'] + "</a>",
                                     html: true,
@@ -47,6 +54,7 @@ function startOthers() {
                                 });
                             }
 
+                            // Add token information to the page
                             $('.page-content-1').append(
                                 '<div class="card border" data-token-id="' + slug + '">' +
                                     '<div class="card-body">' +

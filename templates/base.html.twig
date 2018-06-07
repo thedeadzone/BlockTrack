@@ -16,6 +16,23 @@
 <body class="url" data-url-shippingcompany="{{ path('app_admin_index') }}" data-url-deliverer="{{ path('app_delivery_index') }}" data-url-customer="{{ path('app_customer_index') }}" data-url-home="{{ path('app_home_index') }}">
     {% block body %}{% endblock %}
     <div id="alerts"></div>
+    <div class="modal fade alert alert-danger" data-backdrop="static" data-keyboard="false" id="errorModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        ERROR
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <h5 id="error-title">No Ethereum provider detected.</h5>
+                    <p id="error-text">Please reconnect using a web3.js supporting browser.</p>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
     {% block javascripts %}
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

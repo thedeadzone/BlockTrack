@@ -10,11 +10,13 @@ function startOthers() {
         $('#scannerModal .modal-body video').addClass('hidden');
     }
 
+    // Gets all information for the current token
     myContract.getToken(slug, function (error, result) {
         if (!error) {
             if (result.length !== 0) {
                 token = result;
 
+                // Get all handoff events that the token has had + the status of the token at this time.
                 myContract.handOff({tokenId: slug}, {fromBlock: 0, toBlock: 'latest'}).get(function (error, result) {
                     if (!error) {
                         if (result.length !== 0) {
@@ -37,11 +39,14 @@ function startOthers() {
                                     '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>' +
                                     '</li>');
 
+                                // Popover with link to the owner on etherscan
                                 $('.token-2-' + i).popover({
                                     content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
                                     html: true,
                                     placement: "bottom"
                                 });
+
+                                // Popover with link to the transaction on etherscan
                                 $('.token-3-' + i).popover({
                                     content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result[i]['transactionHash'] + "'>" + result[i]['transactionHash'] + "</a>",
                                     html: true,
@@ -49,6 +54,7 @@ function startOthers() {
                                 });
                             }
 
+                            // Checks the token owner based on the token
                             myContract.ownerOf.call(slug, function (error, result) {
                                 if (!error && result.length !== 0) {
                                     if (result != web3.eth.accounts[0]) {
@@ -57,6 +63,7 @@ function startOthers() {
                                         }
                                     }
 
+                                    // Add token information to the page
                                     $('.page-content-1').append(
                                         '<div class="card border" data-token-id="' + slug + '">' +
                                             '<div class="card-body">' +
@@ -91,11 +98,14 @@ function startOthers() {
         }
     });
 
+    // Activates the scanner on phone/computer
     function activateScanner() {
         if (isCipher && canScanQRCode) {
+            // Scanner for mobile Cipher browser
             window.web3.currentProvider
                 .scanQRCode(/^.+$/)
                 .then(data => {
+                    // Check if the scanned value is allowed to receive the package, if so then you can confirm the transaction
                     myContract.allowedToReceive(slug, data, function (error, result) {
                         if (!error) {
                             if (result) {
@@ -126,8 +136,10 @@ function startOthers() {
                     console.log('Error:', err);
                 });
         } else {
+            // Scanner for computer browser
             let scanner = new Instascan.Scanner({video: document.getElementById('preview')});
             scanner.addListener('scan', function (content) {
+                // Check if the scanned value is allowed to receive the package, if so then you can confirm the transaction
                 myContract.allowedToReceive(slug, content, function (error, result) {
                     if (!error) {
                         if (result) {
@@ -154,6 +166,8 @@ function startOthers() {
                     }
                 });
             });
+
+            // Selects the second camera if there is multiple options, for mobile phones this is the back camera.
             Instascan.Camera.getCameras().then(function (cameras) {
                 if (cameras.length > 0) {
                     if (cameras[1]) {
@@ -172,7 +186,7 @@ function startOthers() {
         }
     }
 
-
+    // Once called it will display the confirmation request via the external web3 provider
     function ActivateTriggers() {
         $('#transfer-confirm').on('click', function () {
             myContract.transferTokenTo(slug, targetId, {
@@ -208,7 +222,7 @@ function startOthers() {
             );
         });
 
-
+        // If transaction is denied, hide the modal and fields again.
         $('#transfer-deny').on('click', function () {
             $('#scannerModal .modal-footer #transfer-deny').addClass('hidden');
             $('#scannerModal .modal-footer #transfer-confirm').addClass('hidden');

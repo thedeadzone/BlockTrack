@@ -1,18 +1,19 @@
 window.addEventListener('load', function() {
 
-    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    // Check if web3 is injected by browser (Metamask/Cipher)
     if (typeof web3 !== 'undefined') {
-        // Use Mist/MetaMask's provider
+        // Use the injected provider
         web3 = new Web3(web3.currentProvider);
     } else {
-        // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-        // web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/ALZ6zu5v1wM4s4xnMU7a"));
+        // Show error screen incase no web3 provider detected.
+        $('#errorModal').modal('show');
     }
 
+    // Add possible roles to an array
     roles = ['parcels', 'delivery', 'admin'];
     roleName = '';
 
+    // After ensuring web3 exists you can start rest of the app
     startApp();
 });
 
@@ -34,15 +35,21 @@ function startApp() {
     role = '';
     let account = web3.eth.accounts[0];
     web3.eth.defaultAccount = web3.eth.accounts[0];
-    let network = getNetwork();
+
+    // Display error for incorrect Ethereum net used
+    if (getNetwork() != 4) {
+        $('#error-title').text('Incorrect network');
+        $('#error-text').text('Please swap to the rinkeby testnet (4) in your web3 provider.');
+        $('#errorModal').modal('show');
+    }
+
+    // Automatic refresh of all pages if account is switched in web3 provider.
     let accountInterval = setInterval(function () {
         if (web3.eth.accounts[0] !== account) {
             account = web3.eth.accounts[0];
             location.reload();
         }
     }, 100);
-
-    //TODO: Check for right network or display stuff otherwise
 
     // Hardcoded address to the contract being used
     myContract = web3.eth.contract([
@@ -747,6 +754,8 @@ function startApp() {
             "type": "function"
         }
     ]).at('0x4adb11fd4bf073a3fce8ca8a111c9e9a1bc22abc');
+
+    // Enforces access restriction on user.
     myContract.addressIsRole(web3.eth.accounts[0], function(error, result) {
         if (!error) {
             if (result.length !== 0) {
@@ -769,35 +778,44 @@ function startApp() {
     });
 }
 
+// Returns the used network id.
 function getNetwork() {
     let netId = web3.version.network;
     switch (netId) {
         case "1":
             console.log('This is mainnet');
+            return netId;
             break;
         case "2":
             console.log('This is the deprecated Morden test network.');
+            return netId;
             break;
         case "3":
             console.log('This is the ropsten test network.');
+            return netId;
             break;
         case "4":
             console.log('This is the Rinkeby test network.');
+            return netId;
             break;
         case "42":
             console.log('This is the Kovan test network.');
+            return netId;
             break;
         default:
             console.log('This is an unknown network.')
+            return netId;
     }
 
     return netId;
 }
 
+// Checks if value is an int
 function isInt(value) {
     return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
 }
 
+// Creates the display error when called
 function createAddressAlert(message, content) {
     let alert =
         $('<div class="alert alert-danger alert-dismissable">' +
