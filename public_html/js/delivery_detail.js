@@ -8,6 +8,7 @@ function startOthers() {
     // If cipher browser, remove the modal that's not used
     if (isCipher && canScanQRCode) {
         $('#scannerModal .modal-body video').addClass('hidden');
+        html_footer = '<div class="card-footer bg-transparent"><button type="button" id="activate-scanner" href="#" class="btn btn-primary align-center-transfer margin-bottom">Transfer</button><button type="button" id="refreshData" class="btn btn-secondary align-center-transfer margin-b">Refresh</button></div>';
     }
 
     // Gets all information for the current token
@@ -110,29 +111,16 @@ function startOthers() {
                         if (!error) {
                             if (result) {
                                 targetId = data;
-                                $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
-                                $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
-                                $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
-
-                                $('#scannerModal .modal-body #confirmation').empty().append(
-                                    '<div class="transfer-content">' +
-                                    '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
-                                    // '<p class="align-center" id="transfer-id">' + data + '</p>' +
-                                    '</div>');
-
                                 ActivateTriggers();
                             } else {
-                                $('#scannerModal').modal('hide');
                                 createAddressAlert('This person is not allowed to receive the parcel: ', content);
                             }
                         } else {
-                            $('#scannerModal').modal('hide');
                             createAddressAlert('You should scan the (refreshed) receiver QR Code, incorrect data: ', data);
                         }
                     });
                 })
                 .catch(err => {
-                    $('#scannerModal').modal('hide');
                     console.log('Error:', err);
                 });
         } else {
@@ -146,14 +134,6 @@ function startOthers() {
                             targetId = content;
                             $('#scannerModal .modal-body video').addClass('hidden');
                             $('#scannerModal .modal-footer #transfer-close').addClass('hidden');
-                            $('#scannerModal .modal-footer #transfer-deny').removeClass('hidden');
-                            $('#scannerModal .modal-footer #transfer-confirm').removeClass('hidden');
-
-                            $('#scannerModal .modal-body #confirmation').empty().append(
-                                '<div class="transfer-content">' +
-                                '<p class="align-center">Are you sure you want to transfer the parcel to this address?</p>' +
-                                // '<p class="align-center" id="transfer-id">' + content + '</p>' +
-                                '</div>');
 
                             ActivateTriggers();
                         } else {
@@ -188,51 +168,33 @@ function startOthers() {
 
     // Once called it will display the confirmation request via the external web3 provider
     function ActivateTriggers() {
-        $('#transfer-confirm').on('click', function () {
-            myContract.transferTokenTo(slug, targetId, {
-                    from: web3.eth.accounts[0],
-                    gas: 250000,
-                    gasPrice: 2000000000
-                }, function (error, result) {
-                    if (!error) {
-                        $('#scannerModal .modal-footer #transfer-deny').addClass('hidden');
-                        $('#scannerModal .modal-footer #transfer-confirm').addClass('hidden');
-                        $('#scannerModal .modal-footer #transfer-close').removeClass('hidden');
-                        $('#scannerModal .modal-body').empty().append(
-                            '<div class="alert alert-primary">' +
-                            'Parcel <u id="transfer-hash">transferred!</u> Results will be reflected in ~30 seconds.' +
-                            '</div>');
+        myContract.transferTokenTo(slug, targetId, {
+                from: web3.eth.accounts[0],
+                gas: 250000,
+                gasPrice: 2000000000
+            }, function (error, result) {
+                if (!error) {
+                    $('#scannerModal .modal-footer #transfer-close').removeClass('hidden');
+                    $('#scannerModal .modal-body').empty().append(
+                        '<div class="alert alert-primary">' +
+                        'Parcel <u id="transfer-hash">transferred!</u> Results will be reflected in ~30 seconds.' +
+                        '</div>');
 
-                        $('#transfer-close').on('click', function () {
-                            window.location.replace(url);
-                        });
+                    $('#transfer-close').on('click', function () {
+                        window.location.replace(url);
+                    });
 
-                        $('#transfer-hash').popover({
-                            content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
-                            html: true,
-                            placement: "bottom"
-                        });
+                    $('#transfer-hash').popover({
+                        content: "<a target='_blank' href='https://rinkeby.etherscan.io/tx/" + result + "'>" + result + "</a>",
+                        html: true,
+                        placement: "bottom"
+                    });
 
-                        console.log(result);
-                        console.log("https://rinkeby.etherscan.io/tx/" + result);
-                    } else {
-                        $("#scannerModal").modal('hide');
-                    }
+                    console.log(result);
+                    console.log("https://rinkeby.etherscan.io/tx/" + result);
+                } else {
+                    $("#scannerModal").modal('hide');
                 }
-            );
-        });
-
-        // If transaction is denied, hide the modal and fields again.
-        $('#transfer-deny').on('click', function () {
-            $('#scannerModal .modal-footer #transfer-deny').addClass('hidden');
-            $('#scannerModal .modal-footer #transfer-confirm').addClass('hidden');
-            $('#scannerModal .modal-body #confirmation').empty();
-            if (!isCipher && !canScanQRCode) {
-                $('#scannerModal .modal-body video').removeClass('hidden');
-            } else {
-                $("#scannerModal").modal('hide');
-            }
-            $('#scannerModal .modal-footer #transfer-close').removeClass('hidden');
-        });
+            });
     }
 }
