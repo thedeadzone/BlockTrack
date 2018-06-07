@@ -202,7 +202,9 @@ function startOthers() {
                             }
                         });
                     }
+                    refreshing = false;
                 } else {
+                    refreshing = false;
                     $('.done').append(
                         '<div class="card border no-data-card">' +
                         '<div class="card-body">' +
@@ -212,10 +214,10 @@ function startOthers() {
                         '</div>');
                 }
             } else {
+                refreshing = false;
                 console.error(error);
             }
         });
-        refreshing = false;
     }
 
     function activateScanner() {
