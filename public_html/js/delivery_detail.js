@@ -35,17 +35,10 @@ function startOthers() {
                                 $('.page-content-2 #first-list').append(
                                     '<li>' +
                                     '<span></span>' +
-                                    '<div class="title token-2-' + i + '" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' ' + house + '</div>' +
+                                    '<div class="title" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' ' + house + '</div>' +
                                     '<div class="info">' + result[i]["args"]["location"] + '</div>' +
                                     '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>' +
                                     '</li>');
-
-                                // Popover with link to the owner on etherscan
-                                $('.token-2-' + i).popover({
-                                    content: "<a target='_blank' href='https://rinkeby.etherscan.io/address/" + result[i]['args']['owner'] + "'>" + result[i]['args']['owner'] + "</a>",
-                                    html: true,
-                                    placement: "bottom"
-                                });
 
                                 // Popover with link to the transaction on etherscan
                                 $('.token-3-' + i).popover({
