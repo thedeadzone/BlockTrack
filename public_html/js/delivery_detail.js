@@ -35,7 +35,7 @@ function startOthers() {
                                 $('.page-content-2 #first-list').append(
                                     '<li>' +
                                     '<span></span>' +
-                                    '<div class="title" tabindex="0" data-trigger="focus">' + result[i]["args"]["receiverName"] + ' ' + house + '</div>' +
+                                    '<div class="title">' + result[i]["args"]["receiverName"] + ' ' + house + '</div>' +
                                     '<div class="info">' + result[i]["args"]["location"] + '</div>' +
                                     '<div class="name token-3-' + i + '" tabindex="0" data-trigger="focus">' + date.toLocaleTimeString("en-us", timeOptions) + '</div>' +
                                     '</li>');
