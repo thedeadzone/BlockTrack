@@ -50,8 +50,18 @@ function startApp() {
     } else {
         web3.eth.defaultAccount = web3.eth.accounts[0];
 
-        // Display error for incorrect Ethereum net used
-        if (getNetwork() != 4) {
+        let networkId = getNetwork();
+        let address = '';
+
+        // Added backup networks based on provider that can be used as backup for presentation
+        if (networkId == 4) {
+            // Rinkeby
+            address = '0x8db40f11967b9045a98619fda8e247a6451c9913';
+        } else if (networkId == 42) {
+            // Kovan
+            address = '0xe30f8f7e92fd4a8dc960fc3ab8dfc7459459682e';
+        } else {
+            // Display error for incorrect Ethereum net used
             $('#error-title').text('Incorrect network');
             $('#error-text').text('Please swap to the rinkeby testnet (4) in your web3 provider.');
             $('#errorModal').modal('show');
@@ -759,7 +769,7 @@ function startApp() {
                 "stateMutability": "nonpayable",
                 "type": "function"
             }
-        ]).at('0x8ddd3c5ac296a6a48e457e85d58395fd61358062');
+        ]).at(address);
 
         // Enforces access restriction on user.
         myContract.addressIsRole(web3.eth.accounts[0], function(error, result) {
