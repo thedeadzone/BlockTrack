@@ -56,7 +56,7 @@ function startApp() {
         // Added backup networks based on provider that can be used as backup for presentation
         if (networkId == 4) {
             // Rinkeby
-            address = '0x8db40f11967b9045a98619fda8e247a6451c9913';
+            address = '0x8259748d306abf12983f62bfb0968c490b6aa98d';
         } else if (networkId == 42) {
             // Kovan
             address = '0xe30f8f7e92fd4a8dc960fc3ab8dfc7459459682e';
